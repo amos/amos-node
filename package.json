@@ -34,6 +34,14 @@
 	],
 	"author": "Amos",
 	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/amos/amos-node.git"
+	},
+	"bugs": {
+		"url": "https://github.com/amos/amos-node/issues"
+	},
+	"homepage": "https://github.com/amos/amos-node#readme",
 	"dependencies": {
 		"openapi-fetch": "0.17.0"
 	},
