@@ -1,0 +1,6 @@
+{
+	"$comment": "Source of truth for the OpenAPI spec this package was last released against. Updated automatically by .github/workflows/regenerate.yml. Do not edit by hand.",
+	"repo": "subfico/openapi",
+	"path": "amos/openapi.public.yaml",
+	"sha": "1074d9ce4c418070a186dc7f1d89158c5cf782a1"
+}
