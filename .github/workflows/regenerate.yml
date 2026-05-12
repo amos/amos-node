@@ -1,0 +1,237 @@
+name: Regenerate from OpenAPI
+
+on:
+  repository_dispatch:
+    types: [public-openapi-spec-updated]
+  workflow_dispatch:
+    inputs:
+      spec_repo:
+        description: "Spec repo (owner/name)"
+        required: false
+        default: "amos/openapi"
+      spec_path:
+        description: "Path to the public spec inside the spec repo"
+        required: false
+        default: "amos/openapi.public.yaml"
+      spec_sha:
+        description: "Spec commit SHA to sync (defaults to spec_ref HEAD)"
+        required: false
+      spec_ref:
+        description: "Spec branch/ref"
+        required: false
+        default: "main"
+
+concurrency:
+  group: regenerate-from-openapi
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+
+    env:
+      SPEC_REPO: ${{ github.event.client_payload.spec_repo || inputs.spec_repo || 'amos/openapi' }}
+      SPEC_PATH: ${{ github.event.client_payload.spec_path || inputs.spec_path || 'amos/openapi.public.yaml' }}
+      SPEC_SHA: ${{ github.event.client_payload.spec_sha || inputs.spec_sha }}
+      SPEC_REF: ${{ github.event.client_payload.spec_ref || inputs.spec_ref || 'main' }}
+      PKG_NAME: "@amos.com/node"
+
+    steps:
+      - name: Checkout amos-node
+        uses: actions/checkout@v4
+        with:
+          path: amos-node
+
+      - name: Read previously-synced spec SHA
+        id: prev
+        working-directory: amos-node
+        run: |
+          set -euo pipefail
+          prev_sha="$(jq -r '.sha // ""' openapi/source.json)"
+          echo "sha=$prev_sha" >> "$GITHUB_OUTPUT"
+
+      # The `generate` npm script expects the OpenAPI repo as a sibling at
+      # `../openapi` and runs `git -C ../openapi pull` from there, so we
+      # check it out on a branch (not detached at a SHA) into the sibling
+      # path so the existing build pipeline works unchanged. fetch-depth: 0
+      # is needed so we can `git show` the previously-synced spec and walk
+      # the commit log between the two SHAs for the changeset.
+      - name: Checkout OpenAPI spec
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.SPEC_REPO }}
+          ref: ${{ env.SPEC_REF }}
+          token: ${{ secrets.OPENAPI_REPO_TOKEN }}
+          path: openapi
+          fetch-depth: 0
+
+      - name: Pin OpenAPI spec to dispatched SHA
+        if: ${{ env.SPEC_SHA != '' }}
+        working-directory: openapi
+        run: |
+          set -euo pipefail
+          git fetch origin "$SPEC_SHA"
+          git reset --hard "$SPEC_SHA"
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: amos-node/.nvmrc
+          cache: npm
+          cache-dependency-path: amos-node/package-lock.json
+
+      - name: Install dependencies
+        working-directory: amos-node
+        run: npm ci --ignore-scripts
+
+      - name: Build (regenerates schema and compiles)
+        working-directory: amos-node
+        run: npm run build
+
+      - name: Resolve synced spec SHA
+        working-directory: amos-node
+        run: |
+          set -euo pipefail
+          spec_sha="$(git -C ../openapi rev-parse HEAD)"
+          spec_short="$(git -C ../openapi rev-parse --short HEAD)"
+          {
+            echo "RESOLVED_SPEC_SHA=$spec_sha"
+            echo "RESOLVED_SPEC_SHORT=$spec_short"
+          } >> "$GITHUB_ENV"
+
+      - name: Update openapi/source.json
+        working-directory: amos-node
+        run: |
+          set -euo pipefail
+          tmp="$(mktemp)"
+          jq \
+            --arg repo "$SPEC_REPO" \
+            --arg path "$SPEC_PATH" \
+            --arg sha "$RESOLVED_SPEC_SHA" \
+            '.repo = $repo | .path = $path | .sha = $sha' \
+            openapi/source.json > "$tmp"
+          mv "$tmp" openapi/source.json
+
+      - name: Classify version bump with oasdiff
+        id: bump
+        if: ${{ steps.prev.outputs.sha != '' && steps.prev.outputs.sha != env.RESOLVED_SPEC_SHA }}
+        working-directory: amos-node
+        env:
+          PREV_SPEC_SHA: ${{ steps.prev.outputs.sha }}
+        run: |
+          set -euo pipefail
+
+          if ! git -C ../openapi cat-file -e "${PREV_SPEC_SHA}:${SPEC_PATH}" 2>/dev/null; then
+            echo "::warning::Previous spec at ${PREV_SPEC_SHA} unavailable from openapi history; defaulting to patch bump with no diff."
+            echo "bump=patch" >> "$GITHUB_OUTPUT"
+            : > "${RUNNER_TEMP}/upstream-commits.txt"
+            : > "${RUNNER_TEMP}/oasdiff-changelog.txt"
+            exit 0
+          fi
+
+          # Stage both specs in a single directory so we can mount it into
+          # the oasdiff container with predictable paths.
+          mount_dir="${RUNNER_TEMP}/oasdiff"
+          mkdir -p "$mount_dir"
+          git -C ../openapi show "${PREV_SPEC_SHA}:${SPEC_PATH}" > "${mount_dir}/old.yaml"
+          cp "../openapi/${SPEC_PATH}" "${mount_dir}/new.yaml"
+
+          oasdiff() {
+            docker run --rm -v "${mount_dir}:/specs" tufin/oasdiff:latest "$@"
+          }
+
+          set +e
+          oasdiff breaking /specs/old.yaml /specs/new.yaml --fail-on ERR -f text \
+            > "${RUNNER_TEMP}/oasdiff-breaking.txt" 2>&1
+          breaking_exit=$?
+          set -e
+
+          oasdiff changelog /specs/old.yaml /specs/new.yaml -f text \
+            > "${RUNNER_TEMP}/oasdiff-changelog.txt" 2>&1 || true
+
+          if [ "$breaking_exit" -ne 0 ]; then
+            bump="major"
+          elif grep -q '[^[:space:]]' "${RUNNER_TEMP}/oasdiff-changelog.txt"; then
+            bump="minor"
+          else
+            bump="patch"
+          fi
+
+          git -C ../openapi log \
+            --pretty='format:- %h %s' "${PREV_SPEC_SHA}..HEAD" -- "${SPEC_PATH}" \
+            > "${RUNNER_TEMP}/upstream-commits.txt" \
+            2>/dev/null || : > "${RUNNER_TEMP}/upstream-commits.txt"
+
+          echo "bump=$bump" >> "$GITHUB_OUTPUT"
+          echo "Classified as: $bump"
+
+      - name: Write changeset
+        if: ${{ steps.prev.outputs.sha != '' && steps.prev.outputs.sha != env.RESOLVED_SPEC_SHA }}
+        working-directory: amos-node
+        env:
+          BUMP: ${{ steps.bump.outputs.bump }}
+        run: |
+          set -euo pipefail
+          mkdir -p .changeset
+          changeset=".changeset/regen-${RESOLVED_SPEC_SHORT}.md"
+          {
+            echo "---"
+            echo "\"${PKG_NAME}\": ${BUMP}"
+            echo "---"
+            echo ""
+            echo "Regenerated from \`${SPEC_REPO}\` at \`${RESOLVED_SPEC_SHORT}\` (\`${RESOLVED_SPEC_SHA}\`)."
+            echo ""
+            if [ -s "${RUNNER_TEMP}/upstream-commits.txt" ]; then
+              echo "**Upstream commits:**"
+              echo ""
+              cat "${RUNNER_TEMP}/upstream-commits.txt"
+              echo ""
+              echo ""
+            fi
+            if grep -q '[^[:space:]]' "${RUNNER_TEMP}/oasdiff-changelog.txt" 2>/dev/null; then
+              echo "**API changes detected by oasdiff:**"
+              echo ""
+              echo '```'
+              cat "${RUNNER_TEMP}/oasdiff-changelog.txt"
+              echo '```'
+            fi
+          } > "$changeset"
+
+      - name: Open pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          path: amos-node
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: regen/openapi-${{ env.RESOLVED_SPEC_SHORT }}
+          base: main
+          title: "chore: regenerate from OpenAPI ${{ env.SPEC_REPO }}@${{ env.RESOLVED_SPEC_SHORT }}"
+          commit-message: |
+            chore: regenerate from OpenAPI
+
+            Source: ${{ env.SPEC_REPO }}@${{ env.RESOLVED_SPEC_SHA }}
+            Spec path: ${{ env.SPEC_PATH }}
+          body: |
+            Automated regeneration from the public OpenAPI spec.
+
+            - Source repo: `${{ env.SPEC_REPO }}`
+            - Spec path: `${{ env.SPEC_PATH }}`
+            - Spec SHA: `${{ env.RESOLVED_SPEC_SHA }}`
+
+            Triggered by `${{ github.event_name }}`.
+
+            > Review the bump in the `.changeset/regen-*.md` file. `oasdiff`
+            > is a best-effort classifier: promote to `major` if the change
+            > breaks exhaustive switches on response enums, narrows a type
+            > consumers were depending on, etc.
+          labels: |
+            openapi-sync
+            automated
+          add-paths: |
+            openapi/schema.ts
+            openapi/source.json
+            .changeset/regen-*.md
+          delete-branch: true

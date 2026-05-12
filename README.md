@@ -2,8 +2,6 @@
 
 A typed Node.js client for the **Amos Pay** API, generated from the public OpenAPI spec with [`openapi-typescript`](https://openapi-ts.dev/) and powered by [`openapi-fetch`](https://openapi-ts.dev/openapi-fetch).
 
-Every endpoint, path/query/header parameter, request body, and response body is checked at compile time.
-
 > **Docs:** the full Amos API reference lives at [docs.amos.com](https://docs.amos.com/). This package is the typed Node.js binding for that API.
 
 ## Installation
@@ -126,7 +124,7 @@ The npm version in `package.json` is **decoupled** from the `info.version` field
 What we _do_ track per release is the upstream commit SHA, in two places:
 
 - [`openapi/source.json`](./openapi/source.json) — the spec commit this package was last released against.
-- `CHANGELOG.md` — every release entry references the upstream `subfico/openapi` commit(s) that produced it (auto-populated by the regeneration workflow, see below).
+- `CHANGELOG.md` — every release entry references the upstream `amos/openapi` commit(s) that produced it (auto-populated by the regeneration workflow, see below).
 
 ## Release process
 
@@ -134,9 +132,9 @@ Releases are managed with [Changesets](https://github.com/changesets/changesets)
 
 ### Path A: regenerated from the OpenAPI spec (the common case)
 
-1. The [`Regenerate from OpenAPI`](./.github/workflows/regenerate.yml) workflow runs on a daily schedule, on `workflow_dispatch`, or when the `openapi` repo fires a `repository_dispatch` event of type `openapi-updated`.
-2. It clones `subfico/openapi`, diffs the upstream spec at `HEAD` against the SHA recorded in [`openapi/source.json`](./openapi/source.json) using [`oasdiff`](https://github.com/Tufin/oasdiff), and classifies the change as `major` / `minor` / `patch`.
-3. If anything changed, it regenerates `openapi/schema.ts`, updates `openapi/source.json`, writes a `.changeset/regen-<sha>.md` file with the recommended bump and the upstream commit log, and opens a PR.
+1. The [`Regenerate from OpenAPI`](./.github/workflows/regenerate.yml) workflow runs on `workflow_dispatch`, or when the OpenAPI source repo fires a `repository_dispatch` event of type `public-openapi-spec-updated` (dispatched by the upstream sync workflow whenever the public spec changes on its `main`).
+2. It checks out the spec repo at the dispatched commit, diffs that spec against the SHA recorded in [`openapi/source.json`](./openapi/source.json) using [`oasdiff`](https://github.com/oasdiff/oasdiff), and classifies the change as `major` / `minor` / `patch`.
+3. If anything changed, it regenerates `openapi/schema.ts` (via `npm run build`), updates `openapi/source.json`, writes a `.changeset/regen-<sha>.md` file with the recommended bump and the upstream commit log, and opens a PR.
 4. A maintainer reviews the PR — **adjust the bump in the changeset file if `oasdiff` misclassified anything** (e.g., a response-only enum addition that breaks exhaustive switches in your consumers should be promoted to `major`) — and merges.
 5. The [`Release`](./.github/workflows/release.yml) workflow then opens or updates a "Version Packages" PR. Merging that PR publishes to npm and tags the commit.
 
@@ -152,7 +150,7 @@ Releases are managed with [Changesets](https://github.com/changesets/changesets)
 | Secret               | Used by          | Purpose                                                                       |
 | -------------------- | ---------------- | ----------------------------------------------------------------------------- |
 | `NPM_TOKEN`          | `release.yml`    | Publishing to npm. Use an automation token from the `amos` org/account.       |
-| `OPENAPI_REPO_TOKEN` | `regenerate.yml` | Fine-grained PAT with `Contents: Read` on `subfico/openapi`. Spec is private. |
+| `OPENAPI_REPO_TOKEN` | `regenerate.yml` | Fine-grained PAT with `Contents: Read` on `amos/openapi`. Spec is private. |
 
 The default `GITHUB_TOKEN` handles everything else. Make sure **Settings -> Actions -> General -> Workflow permissions -> "Allow GitHub Actions to create and approve pull requests"** is enabled so the regenerate workflow can open PRs.
 

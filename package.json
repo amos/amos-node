@@ -1,58 +1,58 @@
 {
-	"name": "amos",
-	"version": "0.1.0",
-	"description": "Node.js client for the Amos Pay API.",
-	"main": "dist/index.js",
-	"module": "dist/index.mjs",
-	"types": "dist/index.d.ts",
-	"exports": {
-		".": {
-			"types": "./dist/index.d.ts",
-			"import": "./dist/index.mjs",
-			"require": "./dist/index.js"
-		}
-	},
-	"files": [
-		"dist",
-		"openapi/schema.ts",
-		"src"
-	],
-	"scripts": {
-		"biome": "biome check --write",
-		"prebuild": "npm run generate",
-		"build": "tsc",
-		"generate": "git -C ../openapi pull && rm -rf openapi/schema.ts && openapi-typescript ../openapi/amos/openapi.public.yaml --output openapi/schema.ts",
-		"changeset": "changeset",
-		"version": "changeset version",
-		"release": "npm run build && changeset publish"
-	},
-	"keywords": [
-		"amos",
-		"payment processing",
-		"credit cards",
-		"api"
-	],
-	"author": "Amos",
-	"license": "MIT",
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/amos/amos-node.git"
-	},
-	"bugs": {
-		"url": "https://github.com/amos/amos-node/issues"
-	},
-	"homepage": "https://github.com/amos/amos-node#readme",
-	"dependencies": {
-		"openapi-fetch": "0.17.0"
-	},
-	"devDependencies": {
-		"@biomejs/biome": "2.4.14",
-		"@changesets/cli": "^2.31.0",
-		"@types/node": "25.6.2",
-		"openapi-typescript": "7.13.0",
-		"typescript": "5.9.3"
-	},
-	"engines": {
-		"node": ">=24.11.0"
-	}
+  "name": "@amos.com/node",
+  "version": "0.1.0",
+  "description": "Node.js client for the Amos Pay API.",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "openapi/schema.ts",
+    "src"
+  ],
+  "scripts": {
+    "biome": "biome check --write",
+    "prebuild": "npm run generate",
+    "build": "tsc",
+    "generate": "git -C ../openapi pull && rm -rf openapi/schema.ts && openapi-typescript ../openapi/amos/openapi.public.yaml --output openapi/schema.ts",
+    "changeset": "changeset",
+    "version": "changeset version",
+    "release": "npm run build && changeset publish"
+  },
+  "keywords": [
+    "amos",
+    "payment processing",
+    "credit cards",
+    "api"
+  ],
+  "author": "Amos",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amos/amos-node.git"
+  },
+  "bugs": {
+    "url": "https://github.com/amos/amos-node/issues"
+  },
+  "homepage": "https://github.com/amos/amos-node#readme",
+  "dependencies": {
+    "openapi-fetch": "0.17.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.4.14",
+    "@changesets/cli": "2.31.0",
+    "@types/node": "25.6.2",
+    "openapi-typescript": "7.13.0",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=24.11.0"
+  }
 }
