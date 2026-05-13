@@ -88,7 +88,11 @@ jobs:
         working-directory: amos-node
         run: npm ci --ignore-scripts
 
-      - name: Build (regenerates schema and compiles)
+      - name: Regenerate schema from OpenAPI
+        working-directory: amos-node
+        run: npm run generate
+
+      - name: Build
         working-directory: amos-node
         run: npm run build
 

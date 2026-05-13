@@ -1,6 +1,6 @@
 {
   "name": "@amos.com/node",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Node.js client for the Amos Pay API.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -19,9 +19,10 @@
   ],
   "scripts": {
     "biome": "biome check --write",
-    "prebuild": "npm run generate",
-    "build": "tsc",
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
     "generate": "git -C ../openapi pull && rm -rf openapi/schema.ts && openapi-typescript ../openapi/amos/openapi.public.yaml --output openapi/schema.ts",
+    "prepack": "npm run build",
     "changeset": "changeset",
     "version": "changeset version",
     "release": "npm run build && changeset publish"
@@ -50,6 +51,7 @@
     "@changesets/cli": "2.31.0",
     "@types/node": "25.6.2",
     "openapi-typescript": "7.13.0",
+    "tsup": "^8.5.1",
     "typescript": "5.9.3"
   },
   "engines": {
