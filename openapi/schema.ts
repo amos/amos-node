@@ -65,7 +65,8 @@ export interface paths {
         };
         /** Retrieve a charge */
         get: operations["GetCharge"];
-        put?: never;
+        /** Update a charge */
+        put: operations["UpdateCharge"];
         post?: never;
         delete?: never;
         options?: never;
@@ -521,6 +522,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/payment_links": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List payment links */
+        get: operations["ListPaymentLinks"];
+        put?: never;
+        /** Create a new payment link */
+        post: operations["CreatePaymentLink"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/payment_intents/{id}": {
         parameters: {
             query?: never;
@@ -737,7 +756,8 @@ export interface paths {
         };
         /** Retrieve a refund by ID */
         get: operations["GetRefund"];
-        put?: never;
+        /** Update a refund */
+        put: operations["UpdateRefund"];
         post?: never;
         delete?: never;
         options?: never;
@@ -979,7 +999,8 @@ export interface paths {
         };
         /** Retrieve a void by ID */
         get: operations["GetVoid"];
-        put?: never;
+        /** Update a void */
+        put: operations["UpdateVoid"];
         post?: never;
         delete?: never;
         options?: never;
@@ -1069,6 +1090,23 @@ export interface paths {
         put?: never;
         /** Resend webhook request by ID */
         post: operations["ResendWebhookRequest"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/webhook_requests/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get webhook request by ID */
+        get: operations["RetrieveWebhookRequest"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1667,6 +1705,59 @@ export interface components {
             /** Format: date-time */
             updated_at?: string;
         };
+        CreatePaymentLinkInput: {
+            slug?: string;
+            active?: boolean;
+            /** @enum {string} */
+            amount_type?: "fixed" | "open";
+            amount?: number;
+            /** Format: uri */
+            image_url?: string;
+            minimum_amount?: number;
+            maximum_amount?: number;
+            suggested_amounts?: number[];
+            currency?: string;
+            description?: string | null;
+            statement_descriptor?: string;
+            /** Format: uri */
+            success_url?: string;
+            title?: string;
+            /** Format: uri */
+            cancel_url?: string;
+            allowed_payment_method_types?: string[];
+            metadata?: components["schemas"]["Metadata"];
+        };
+        CreatePaymentLinkRequest: {
+            payment_link: components["schemas"]["CreatePaymentLinkInput"];
+        };
+        PaymentLink: {
+            /** Format: uuid */
+            id?: string;
+            /** Format: uuid */
+            organization_id?: string;
+            /** Format: uuid */
+            account_id?: string;
+            slug?: string;
+            active?: boolean;
+            /** @enum {string} */
+            amount_type?: "fixed" | "open";
+            amount?: number;
+            /** Format: uri */
+            image_url?: string;
+            minimum_amount?: number;
+            maximum_amount?: number;
+            suggested_amounts?: number[];
+            currency?: string;
+            description?: string | null;
+            statement_descriptor?: string;
+            /** Format: uri */
+            success_url?: string;
+            title?: string;
+            /** Format: uri */
+            cancel_url?: string;
+            allowed_payment_method_types?: string[];
+            metadata?: components["schemas"]["Metadata"];
+        };
         PaymentMethod: {
             /** Format: uuid */
             id?: string;
@@ -1792,6 +1883,13 @@ export interface components {
         };
         CreateRefundRequest: {
             refund: components["schemas"]["CreateRefundInput"];
+        };
+        UpdateRefundInput: {
+            description?: string;
+            metadata?: components["schemas"]["Metadata"];
+        };
+        UpdateRefundRequest: {
+            refund: components["schemas"]["UpdateRefundInput"];
         };
         Refund: {
             /** Format: uuid */
@@ -1949,6 +2047,13 @@ export interface components {
         CreateSubscriptionPlanRequest: {
             subscription_plan: components["schemas"]["CreateSubscriptionPlanInput"];
         };
+        UpdateChargeInput: {
+            description?: string;
+            metadata?: components["schemas"]["Metadata"];
+        };
+        UpdateChargeRequest: {
+            charge: components["schemas"]["UpdateChargeInput"];
+        };
         SubscriptionPlan: {
             /** Format: uuid */
             id?: string;
@@ -1983,6 +2088,13 @@ export interface components {
         };
         CreateVoidRequest: {
             void: components["schemas"]["CreateVoidInput"];
+        };
+        UpdateVoidInput: {
+            description?: string;
+            metadata?: components["schemas"]["Metadata"];
+        };
+        UpdateVoidRequest: {
+            void: components["schemas"]["UpdateVoidInput"];
         };
         Void: {
             /** Format: uuid */
@@ -2232,6 +2344,35 @@ export interface operations {
         requestBody?: never;
         responses: {
             /** @description A single charge */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Charge"];
+                };
+            };
+        };
+    };
+    UpdateCharge: {
+        parameters: {
+            query?: never;
+            header: {
+                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
+                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateChargeRequest"];
+            };
+        };
+        responses: {
+            /** @description Charge updated successfully */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -3163,6 +3304,64 @@ export interface operations {
             };
         };
     };
+    ListPaymentLinks: {
+        parameters: {
+            query?: {
+                /** @description The page of results to retrieve. */
+                page?: components["parameters"]["PageQuery"];
+                /** @description Number of results per page. */
+                per_page?: components["parameters"]["PerPageQuery"];
+            };
+            header: {
+                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
+                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A list of payment links */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: components["schemas"]["PaymentLink"][];
+                        meta?: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
+    CreatePaymentLink: {
+        parameters: {
+            query?: never;
+            header: {
+                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
+                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreatePaymentLinkRequest"];
+            };
+        };
+        responses: {
+            /** @description Payment link created successfully */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaymentLink"];
+                };
+            };
+        };
+    };
     GetPaymentIntent: {
         parameters: {
             query?: never;
@@ -3682,6 +3881,36 @@ export interface operations {
             };
         };
     };
+    UpdateRefund: {
+        parameters: {
+            query?: never;
+            header: {
+                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
+                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
+            };
+            path: {
+                /** @description The ID of the refund to update */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateRefundRequest"];
+            };
+        };
+        responses: {
+            /** @description Refund updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Refund"];
+                };
+            };
+        };
+    };
     CancelRefund: {
         parameters: {
             query?: never;
@@ -4188,6 +4417,36 @@ export interface operations {
             };
         };
     };
+    UpdateVoid: {
+        parameters: {
+            query?: never;
+            header: {
+                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
+                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
+            };
+            path: {
+                /** @description The ID of the void to update */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateVoidRequest"];
+            };
+        };
+        responses: {
+            /** @description Void updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Void"];
+                };
+            };
+        };
+    };
     ListWebhookAttempts: {
         parameters: {
             query: {
@@ -4400,6 +4659,31 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    RetrieveWebhookRequest: {
+        parameters: {
+            query?: never;
+            header: {
+                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
+            };
+            path: {
+                /** @description The ID of the webhook request to retrieve */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Webhook request retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WebhookRequest"];
+                };
             };
         };
     };
