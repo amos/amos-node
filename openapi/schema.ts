@@ -1131,7 +1131,9 @@ export interface components {
             [key: string]: string | null;
         };
         Error: {
-            errors?: Record<string, never>;
+            errors: {
+                [key: string]: string[];
+            };
         };
         /** @description Decoded JWT payload for embed token responses. */
         EmbedTokenJwt: {
@@ -2442,6 +2444,15 @@ export interface operations {
                     "application/json": components["schemas"]["Customer"];
                 };
             };
+            /** @description Unprocessable entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
         };
     };
     GetCustomer: {
@@ -2552,6 +2563,15 @@ export interface operations {
                     "application/json": components["schemas"]["ExternalAccount"];
                 };
             };
+            /** @description Unprocessable entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
         };
     };
     GetExternalAccount: {
@@ -2603,6 +2623,15 @@ export interface operations {
                     "application/json": components["schemas"]["FileUpload"];
                 };
             };
+            /** @description Unprocessable entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
         };
     };
     GetFileUpload: {
@@ -2649,6 +2678,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["FileDownload"];
+                };
+            };
+            /** @description Unprocessable entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
                 };
             };
         };
@@ -2796,6 +2834,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["LegalEntityApplication"];
+                };
+            };
+            /** @description Unprocessable entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
                 };
             };
         };
@@ -3188,6 +3235,15 @@ export interface operations {
                     "application/json": components["schemas"]["Origin"];
                 };
             };
+            /** @description Unprocessable entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
         };
     };
     GetEmbedPaymentIntent: {
@@ -3242,6 +3298,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PaymentIntent"];
+                };
+            };
+            /** @description Unprocessable entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
                 };
             };
         };
@@ -3302,6 +3367,15 @@ export interface operations {
                     "application/json": components["schemas"]["EmbedToken"];
                 };
             };
+            /** @description Unprocessable entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
         };
     };
     ListPaymentLinks: {
@@ -3360,6 +3434,15 @@ export interface operations {
                     "application/json": components["schemas"]["PaymentLink"];
                 };
             };
+            /** @description Unprocessable entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
         };
     };
     GetPaymentIntent: {
@@ -3412,6 +3495,15 @@ export interface operations {
                     "application/json": components["schemas"]["PaymentIntent"];
                 };
             };
+            /** @description Unprocessable entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
         };
     };
     CapturePaymentIntent: {
@@ -3436,6 +3528,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PaymentIntent"];
+                };
+            };
+            /** @description Unprocessable entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
                 };
             };
         };
@@ -3992,6 +4093,15 @@ export interface operations {
                     "application/json": components["schemas"]["RenderTemplate"];
                 };
             };
+            /** @description Unprocessable entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
         };
     };
     GetRenderTemplate: {
@@ -4038,6 +4148,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["RenderToken"];
+                };
+            };
+            /** @description Unprocessable entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
                 };
             };
         };
@@ -4096,6 +4215,15 @@ export interface operations {
                     "application/json": components["schemas"]["SetupIntent"];
                 };
             };
+            /** @description Unprocessable entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
         };
     };
     CreateSetupIntent: {
@@ -4121,6 +4249,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EmbedToken"];
+                };
+            };
+            /** @description Unprocessable entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
                 };
             };
         };
@@ -4179,6 +4316,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SubscriptionPlan"];
+                };
+            };
+            /** @description Unprocessable entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
                 };
             };
         };
@@ -4263,6 +4409,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Subscription"];
+                };
+            };
+            /** @description Unprocessable entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
                 };
             };
         };
@@ -4533,6 +4688,15 @@ export interface operations {
                     "application/json": components["schemas"]["WebhookEndpoint"];
                 };
             };
+            /** @description Unprocessable entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
         };
     };
     GetWebhookEndpoint: {
@@ -4659,6 +4823,15 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description Unprocessable entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
             };
         };
     };
