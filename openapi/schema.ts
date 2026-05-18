@@ -2239,8 +2239,8 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["Account"][];
-                        meta?: components["schemas"]["Meta"];
+                        data: components["schemas"]["Account"][];
+                        meta: components["schemas"]["Meta"];
                     };
                 };
             };
@@ -2324,8 +2324,8 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["Charge"][];
-                        meta?: components["schemas"]["Meta"];
+                        data: components["schemas"]["Charge"][];
+                        meta: components["schemas"]["Meta"];
                     };
                 };
             };
@@ -2413,8 +2413,8 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["Customer"][];
-                        meta?: components["schemas"]["Meta"];
+                        data: components["schemas"]["Customer"][];
+                        meta: components["schemas"]["Meta"];
                     };
                 };
             };
@@ -2531,8 +2531,8 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["ExternalAccount"][];
-                        meta?: components["schemas"]["Meta"];
+                        data: components["schemas"]["ExternalAccount"][];
+                        meta: components["schemas"]["Meta"];
                     };
                 };
             };
@@ -2713,7 +2713,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["LegalEntityApplicationDocument"][];
+                        data: components["schemas"]["LegalEntityApplicationDocument"][];
                     };
                 };
             };
@@ -2782,7 +2782,8 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["LegalEntity"][];
+                        data: components["schemas"]["LegalEntity"][];
+                        meta: Record<string, never>;
                     };
                 };
             };
@@ -3028,7 +3029,8 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["LegalEntityPrincipal"][];
+                        data: components["schemas"]["LegalEntityPrincipal"][];
+                        meta: Record<string, never>;
                     };
                 };
             };
@@ -3149,8 +3151,8 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["Merchant"][];
-                        meta?: components["schemas"]["Meta"];
+                        data: components["schemas"]["Merchant"][];
+                        meta: components["schemas"]["Meta"];
                     };
                 };
             };
@@ -3204,8 +3206,8 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["Origin"][];
-                        meta?: components["schemas"]["Meta"];
+                        data: components["schemas"]["Origin"][];
+                        meta: components["schemas"]["Meta"];
                     };
                 };
             };
@@ -3335,8 +3337,8 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["PaymentIntent"][];
-                        meta?: components["schemas"]["Meta"];
+                        data: components["schemas"]["PaymentIntent"][];
+                        meta: components["schemas"]["Meta"];
                     };
                 };
             };
@@ -3402,8 +3404,8 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["PaymentLink"][];
-                        meta?: components["schemas"]["Meta"];
+                        data: components["schemas"]["PaymentLink"][];
+                        meta: components["schemas"]["Meta"];
                     };
                 };
             };
@@ -3566,8 +3568,8 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["PaymentMethod"][];
-                        meta?: components["schemas"]["Meta"];
+                        data: components["schemas"]["PaymentMethod"][];
+                        meta: components["schemas"]["Meta"];
                     };
                 };
             };
@@ -3625,8 +3627,8 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["Payout"][];
-                        meta?: components["schemas"]["Meta"];
+                        data: components["schemas"]["Payout"][];
+                        meta: components["schemas"]["Meta"];
                     };
                 };
             };
@@ -3771,8 +3773,8 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["ProcessorTransaction"][];
-                        meta?: components["schemas"]["Meta"];
+                        data: components["schemas"]["ProcessorTransaction"][];
+                        meta: components["schemas"]["Meta"];
                     };
                 };
             };
@@ -3802,8 +3804,8 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["Product"][];
-                        meta?: components["schemas"]["Meta"];
+                        data: components["schemas"]["Product"][];
+                        meta: components["schemas"]["Meta"];
                     };
                 };
             };
@@ -3912,8 +3914,8 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["Refund"][];
-                        meta?: components["schemas"]["Meta"];
+                        data: components["schemas"]["Refund"][];
+                        meta: components["schemas"]["Meta"];
                     };
                 };
             };
@@ -4062,8 +4064,8 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["RenderTemplate"][];
-                        meta?: components["schemas"]["Meta"];
+                        data: components["schemas"]["RenderTemplate"][];
+                        meta: components["schemas"]["Meta"];
                     };
                 };
             };
@@ -4286,8 +4288,8 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["SubscriptionPlan"][];
-                        meta?: components["schemas"]["Meta"];
+                        data: components["schemas"]["SubscriptionPlan"][];
+                        meta: components["schemas"]["Meta"];
                     };
                 };
             };
@@ -4379,8 +4381,8 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["Subscription"][];
-                        meta?: components["schemas"]["Meta"];
+                        data: components["schemas"]["Subscription"][];
+                        meta: components["schemas"]["Meta"];
                     };
                 };
             };
@@ -4502,8 +4504,8 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["Void"][];
-                        meta?: components["schemas"]["Meta"];
+                        data: components["schemas"]["Void"][];
+                        meta: components["schemas"]["Meta"];
                     };
                 };
             };
@@ -4627,8 +4629,8 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["WebhookAttempt"][];
-                        meta?: components["schemas"]["Meta"];
+                        data: components["schemas"]["WebhookAttempt"][];
+                        meta: components["schemas"]["Meta"];
                     };
                 };
             };
@@ -4657,8 +4659,8 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["WebhookEndpoint"][];
-                        meta?: components["schemas"]["Meta"];
+                        data: components["schemas"]["WebhookEndpoint"][];
+                        meta: components["schemas"]["Meta"];
                     };
                 };
             };
@@ -4796,8 +4798,8 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["WebhookRequest"][];
-                        meta?: components["schemas"]["Meta"];
+                        data: components["schemas"]["WebhookRequest"][];
+                        meta: components["schemas"]["Meta"];
                     };
                 };
             };
