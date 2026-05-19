@@ -2181,8 +2181,6 @@ export interface components {
     };
     responses: never;
     parameters: {
-        XAccountIdHeader: string;
-        XApiVersionHeader: string;
         XIdempotencyHeader: string;
         /** @description The ID of the customer to filter by */
         CustomerIdQuery: string;
@@ -2224,9 +2222,7 @@ export interface operations {
                 per_page?: components["parameters"]["PerPageQuery"];
                 merchant_id: string;
             };
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -2249,9 +2245,7 @@ export interface operations {
     GetAccount: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path: {
                 id: string;
             };
@@ -2273,9 +2267,7 @@ export interface operations {
     UpdateAccount: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path: {
                 id: string;
             };
@@ -2308,10 +2300,7 @@ export interface operations {
                 /** @description The ID of the payment intent to filter by */
                 payment_intent_id?: components["parameters"]["PaymentIntentIdQuery"];
             };
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -2334,10 +2323,7 @@ export interface operations {
     GetCharge: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
-            };
+            header?: never;
             path: {
                 id: string;
             };
@@ -2359,10 +2345,7 @@ export interface operations {
     UpdateCharge: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
-            };
+            header?: never;
             path: {
                 id: string;
             };
@@ -2398,9 +2381,7 @@ export interface operations {
                 phone?: components["parameters"]["PhoneQuery"];
                 account_id?: string;
             };
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -2423,9 +2404,7 @@ export interface operations {
     CreateCustomer: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -2458,9 +2437,7 @@ export interface operations {
     GetCustomer: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path: {
                 id: string;
             };
@@ -2482,9 +2459,7 @@ export interface operations {
     UpdateCustomer: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path: {
                 id: string;
             };
@@ -2515,10 +2490,7 @@ export interface operations {
                 /** @description Number of results per page. */
                 per_page?: components["parameters"]["PerPageQuery"];
             };
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -2541,10 +2513,7 @@ export interface operations {
     CreateExternalAccount: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -2577,10 +2546,7 @@ export interface operations {
     GetExternalAccount: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
-            };
+            header?: never;
             path: {
                 id: string;
             };
@@ -2602,9 +2568,7 @@ export interface operations {
     CreateFileUpload: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -2637,9 +2601,7 @@ export interface operations {
     GetFileUpload: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path: {
                 id: string;
             };
@@ -2661,9 +2623,7 @@ export interface operations {
     CompleteFileUpload: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path: {
                 id: string;
             };
@@ -2722,9 +2682,7 @@ export interface operations {
     CreateLegalEntityApplicationDocument: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -2792,9 +2750,7 @@ export interface operations {
     GetLegalEntity: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path: {
                 id: string;
             };
@@ -2816,9 +2772,7 @@ export interface operations {
     CreateLegalEntityApplication: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -2851,9 +2805,7 @@ export interface operations {
     GetLegalEntityApplication: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path: {
                 id: string;
             };
@@ -2875,9 +2827,7 @@ export interface operations {
     SubmitLegalEntityApplication: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path: {
                 id: string;
             };
@@ -2908,9 +2858,7 @@ export interface operations {
     ApproveLegalEntityApplication: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path: {
                 id: string;
             };
@@ -2941,9 +2889,7 @@ export interface operations {
     CreateLegalEntityApplicationPrincipal: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -2983,9 +2929,7 @@ export interface operations {
     GetLegalEntityApplicationPrincipal: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path: {
                 id: string;
             };
@@ -3014,9 +2958,7 @@ export interface operations {
                 /** @description The ID of the legal_entity */
                 legal_entity_id: string;
             };
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -3039,9 +2981,7 @@ export interface operations {
     GetLegalEntityPrincipal: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path: {
                 /** @description The ID of the legal entity principal to retrieve */
                 id: string;
@@ -3064,9 +3004,7 @@ export interface operations {
     CreateMerchantApplication: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -3106,9 +3044,7 @@ export interface operations {
     GetMerchantApplication: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path: {
                 /** @description The ID of the merchant application to retrieve */
                 id: string;
@@ -3136,9 +3072,7 @@ export interface operations {
                 /** @description Number of results per page. */
                 per_page?: components["parameters"]["PerPageQuery"];
             };
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -3161,9 +3095,7 @@ export interface operations {
     GetMerchant: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path: {
                 /** @description The ID of the merchant to retrieve */
                 id: string;
@@ -3191,9 +3123,7 @@ export interface operations {
                 /** @description Number of results per page. */
                 per_page?: components["parameters"]["PerPageQuery"];
             };
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -3216,9 +3146,7 @@ export interface operations {
     CreateOrigin: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -3251,10 +3179,7 @@ export interface operations {
     GetEmbedPaymentIntent: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
-            };
+            header?: never;
             path: {
                 /** @description The ID of the payment intent to retrieve */
                 id: string;
@@ -3277,10 +3202,7 @@ export interface operations {
     ConfirmEmbedPaymentIntent: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
-            };
+            header?: never;
             path: {
                 /** @description The ID of the payment intent to confirm */
                 id: string;
@@ -3321,10 +3243,7 @@ export interface operations {
                 /** @description Number of results per page. */
                 per_page?: components["parameters"]["PerPageQuery"];
             };
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -3347,10 +3266,7 @@ export interface operations {
     CreatePaymentIntent: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -3388,10 +3304,7 @@ export interface operations {
                 /** @description Number of results per page. */
                 per_page?: components["parameters"]["PerPageQuery"];
             };
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -3414,10 +3327,7 @@ export interface operations {
     CreatePaymentLink: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -3450,10 +3360,7 @@ export interface operations {
     GetPaymentIntent: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
-            };
+            header?: never;
             path: {
                 /** @description The ID of the payment intent to retrieve */
                 id: string;
@@ -3476,10 +3383,7 @@ export interface operations {
     CancelPaymentIntent: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
-            };
+            header?: never;
             path: {
                 /** @description The ID of the payment intent to cancel */
                 id: string;
@@ -3511,10 +3415,7 @@ export interface operations {
     CapturePaymentIntent: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
-            };
+            header?: never;
             path: {
                 /** @description The ID of the payment intent to capture */
                 id: string;
@@ -3553,9 +3454,7 @@ export interface operations {
                 /** @description The ID of the customer to filter by */
                 customer_id: components["parameters"]["CustomerIdQuery"];
             };
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -3578,9 +3477,7 @@ export interface operations {
     GetPaymentMethod: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path: {
                 id: string;
             };
@@ -3611,10 +3508,7 @@ export interface operations {
                 /** @description The payout state to filter by */
                 state?: components["parameters"]["PayoutStateQuery"];
             };
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -3637,9 +3531,7 @@ export interface operations {
     CreatePayout: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
+            header?: {
                 "X-Idempotency-Key"?: components["parameters"]["XIdempotencyHeader"];
             };
             path?: never;
@@ -3674,10 +3566,7 @@ export interface operations {
     BulkCreatePayouts: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -3721,10 +3610,7 @@ export interface operations {
     GetPayout: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
-            };
+            header?: never;
             path: {
                 id: string;
             };
@@ -3757,10 +3643,7 @@ export interface operations {
                 /** @description The ID of the payment transaction to filter by */
                 payment_transaction_id?: components["parameters"]["PaymentTransactionIdQuery"];
             };
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -3788,10 +3671,7 @@ export interface operations {
                 /** @description Number of results per page. */
                 per_page?: components["parameters"]["PerPageQuery"];
             };
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -3814,10 +3694,7 @@ export interface operations {
     CreateProduct: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -3850,10 +3727,7 @@ export interface operations {
     UpdateProduct: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
-            };
+            header?: never;
             path: {
                 /** @description The ID of the product to update */
                 id: string;
@@ -3898,10 +3772,7 @@ export interface operations {
                 /** @description The ID of the original transaction to filter by */
                 parent_transaction_id?: components["parameters"]["ParentTransactionIdQuery"];
             };
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -3924,9 +3795,7 @@ export interface operations {
     CreateRefund: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
+            header?: {
                 "X-Idempotency-Key"?: components["parameters"]["XIdempotencyHeader"];
             };
             path?: never;
@@ -3961,10 +3830,7 @@ export interface operations {
     GetRefund: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
-            };
+            header?: never;
             path: {
                 /** @description The ID of the refund to retrieve */
                 id: string;
@@ -3987,10 +3853,7 @@ export interface operations {
     UpdateRefund: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
-            };
+            header?: never;
             path: {
                 /** @description The ID of the refund to update */
                 id: string;
@@ -4017,10 +3880,7 @@ export interface operations {
     CancelRefund: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
-            };
+            header?: never;
             path: {
                 /** @description The ID of the refund to cancel. */
                 id: string;
@@ -4049,9 +3909,7 @@ export interface operations {
                 per_page?: components["parameters"]["PerPageQuery"];
                 account_id?: string;
             };
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -4074,9 +3932,7 @@ export interface operations {
     CreateRenderTemplate: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -4109,9 +3965,7 @@ export interface operations {
     GetRenderTemplate: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path: {
                 id: string;
             };
@@ -4133,9 +3987,7 @@ export interface operations {
     CreateRenderToken: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path: {
                 id: string;
             };
@@ -4166,10 +4018,7 @@ export interface operations {
     GetSetupIntent: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
-            };
+            header?: never;
             path: {
                 /** @description The ID of the setup intent to retrieve */
                 id: string;
@@ -4192,10 +4041,7 @@ export interface operations {
     ConfirmSetupIntent: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
-            };
+            header?: never;
             path: {
                 /** @description The ID of the setup intent to confirm */
                 id: string;
@@ -4231,10 +4077,7 @@ export interface operations {
     CreateSetupIntent: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -4272,10 +4115,7 @@ export interface operations {
                 /** @description Number of results per page. */
                 per_page?: components["parameters"]["PerPageQuery"];
             };
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -4298,10 +4138,7 @@ export interface operations {
     CreateSubscriptionPlan: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -4334,10 +4171,7 @@ export interface operations {
     GetSubscriptionPlan: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
-            };
+            header?: never;
             path: {
                 /** @description The ID of the subscription plan to retrieve */
                 id: string;
@@ -4365,10 +4199,7 @@ export interface operations {
                 /** @description Number of results per page. */
                 per_page?: components["parameters"]["PerPageQuery"];
             };
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -4391,10 +4222,7 @@ export interface operations {
     CreateSubscription: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -4427,10 +4255,7 @@ export interface operations {
     GetSubscription: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
-            };
+            header?: never;
             path: {
                 /** @description The ID of the subscription to retrieve */
                 id: string;
@@ -4453,10 +4278,7 @@ export interface operations {
     CancelSubscription: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
-            };
+            header?: never;
             path: {
                 /** @description The ID of the subscription to cancel */
                 id: string;
@@ -4488,10 +4310,7 @@ export interface operations {
                 /** @description The ID of the original transaction to filter by */
                 parent_transaction_id?: components["parameters"]["ParentTransactionIdQuery"];
             };
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -4514,9 +4333,7 @@ export interface operations {
     CreateVoid: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
+            header?: {
                 "X-Idempotency-Key"?: components["parameters"]["XIdempotencyHeader"];
             };
             path?: never;
@@ -4551,10 +4368,7 @@ export interface operations {
     GetVoid: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
-            };
+            header?: never;
             path: {
                 /** @description The ID of the void to retrieve */
                 id: string;
@@ -4577,10 +4391,7 @@ export interface operations {
     UpdateVoid: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-                "X-Account-Id": components["parameters"]["XAccountIdHeader"];
-            };
+            header?: never;
             path: {
                 /** @description The ID of the void to update */
                 id: string;
@@ -4614,9 +4425,7 @@ export interface operations {
                 /** @description Number of results per page. */
                 per_page?: components["parameters"]["PerPageQuery"];
             };
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -4644,9 +4453,7 @@ export interface operations {
                 /** @description Number of results per page. */
                 per_page?: components["parameters"]["PerPageQuery"];
             };
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -4669,9 +4476,7 @@ export interface operations {
     CreateWebhookEndpoint: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -4704,9 +4509,7 @@ export interface operations {
     GetWebhookEndpoint: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path: {
                 id: string;
             };
@@ -4728,9 +4531,7 @@ export interface operations {
     UpdateWebhookEndpoint: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path: {
                 id: string;
             };
@@ -4756,9 +4557,7 @@ export interface operations {
     DeleteWebhookEndpoint: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path: {
                 id: string;
             };
@@ -4783,9 +4582,7 @@ export interface operations {
                 /** @description Number of results per page. */
                 per_page?: components["parameters"]["PerPageQuery"];
             };
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -4808,9 +4605,7 @@ export interface operations {
     ResendWebhookRequest: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path: {
                 /** @description The ID of the webhook request to resend */
                 id: string;
@@ -4840,9 +4635,7 @@ export interface operations {
     RetrieveWebhookRequest: {
         parameters: {
             query?: never;
-            header: {
-                "X-Api-Version": components["parameters"]["XApiVersionHeader"];
-            };
+            header?: never;
             path: {
                 /** @description The ID of the webhook request to retrieve */
                 id: string;
