@@ -1,17 +1,17 @@
 import createClient, {
-  type ClientOptions,
-  type Middleware,
+	type ClientOptions,
+	type Middleware,
 } from "openapi-fetch";
 import type { paths } from "../openapi/schema";
 
 export * from "../openapi/schema";
 
-export const PAY_API_BASE_URL_PRODUCTION = "https://pay.subfi.com";
-export const PAY_API_BASE_URL_SANDBOX = "https://pay-sandbox.subfi.com";
+export const PAY_API_BASE_URL_PRODUCTION = "https://pay.amos.com";
+export const PAY_API_BASE_URL_SANDBOX = "https://pay-sandbox.amos.com";
 export const PAY_API_VERSION = "1";
 
 /**
- * Create a typed `openapi-fetch` client for the SubFi Pay API.
+ * Create a typed `openapi-fetch` client for the Amos Pay API.
  *
  * The returned client exposes `GET`, `POST`, `PUT`, `DELETE`, etc., each
  * fully typed against the OpenAPI spec — paths, path/query/header params,
@@ -28,12 +28,12 @@ export const PAY_API_VERSION = "1";
  *   createPayApiClient,
  *   PAY_API_BASE_URL_SANDBOX,
  *   PAY_API_VERSION,
- * } from "@subfico/pay-js-sdk/api";
+ * } from "@amos.com/node";
  *
  * const pay = createPayApiClient({
  *   baseUrl: PAY_API_BASE_URL_SANDBOX,
  *   headers: {
- *     "X-Api-Key": process.env.SUBFI_API_KEY!,
+ *     "X-Api-Key": process.env.AMOS_API_KEY!,
  *     "X-Api-Version": PAY_API_VERSION,
  *   },
  * });
@@ -45,10 +45,10 @@ export const PAY_API_VERSION = "1";
  * ```
  */
 export function createPayApiClient(options: ClientOptions) {
-  return createClient<paths>(options);
+	return createClient<paths>(options);
 }
 
-/** A configured SubFi Pay API client returned by {@link createPayApiClient}. */
+/** A configured Amos Pay API client returned by {@link createPayApiClient}. */
 export type PayApiClient = ReturnType<typeof createPayApiClient>;
 
 export type { ClientOptions, Middleware };

@@ -1,5 +1,11 @@
 # @amos.com/node
 
+## 0.1.6
+
+### Patch Changes
+
+- Use amos.com
+
 ## 0.1.5
 
 ### Patch Changes
