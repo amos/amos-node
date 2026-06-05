@@ -947,7 +947,8 @@ export interface paths {
         };
         /** Retrieve a subscription by ID */
         get: operations["GetSubscription"];
-        put?: never;
+        /** Update a subscription by ID */
+        put: operations["UpdateSubscription"];
         post?: never;
         delete?: never;
         options?: never;
@@ -1558,7 +1559,7 @@ export interface components {
             bank_account_number?: string;
             bank_routing_number?: string;
             /** @enum {string} */
-            business_category?: "sporting_goods" | "services" | "medical" | "charity" | "civic" | "political" | "religious";
+            business_category?: "business_association" | "charity" | "church" | "county" | "federal" | "fraternal_org" | "government" | "higher_education" | "k12" | "labor_union" | "local" | "ministry" | "pac" | "parachurch" | "party" | "preschool" | "social_club" | "social_welfare" | "state" | "tribal" | "vendor" | "veterans_org";
             business_description?: string;
             city?: string;
             country_code?: string;
@@ -1585,7 +1586,7 @@ export interface components {
             id?: string;
             annual_credit_card_sales_volume?: number;
             /** @enum {string} */
-            business_category?: "sporting_goods" | "services" | "medical" | "charity" | "civic" | "political" | "religious";
+            business_category?: "business_association" | "charity" | "church" | "county" | "federal" | "fraternal_org" | "government" | "higher_education" | "k12" | "labor_union" | "local" | "ministry" | "pac" | "parachurch" | "party" | "preschool" | "social_club" | "social_welfare" | "state" | "tribal" | "vendor" | "veterans_org";
             business_description?: string;
             city?: string;
             country_code?: string;
@@ -1781,6 +1782,8 @@ export interface components {
             external_account_id: string;
             amount: number;
             currency?: string;
+            /** @enum {string} */
+            direction: "credit" | "debit";
             metadata?: components["schemas"]["Metadata"];
         };
         CreatePayoutRequest: {
@@ -1793,6 +1796,8 @@ export interface components {
             external_account_id: string;
             amount: number;
             currency?: string;
+            /** @enum {string} */
+            direction: "credit" | "debit";
             metadata?: components["schemas"]["Metadata"];
         };
         CreateBulkPayoutsRequest: {
@@ -1807,6 +1812,8 @@ export interface components {
             external_account_id?: string;
             amount?: number;
             currency?: string;
+            /** @enum {string} */
+            direction?: "credit" | "debit";
             metadata?: components["schemas"]["Metadata"];
             /** @enum {string} */
             state?: "pending" | "succeeded" | "failed" | "accepted" | "rejected";
@@ -1998,6 +2005,14 @@ export interface components {
         CreateSubscriptionRequest: {
             subscription: components["schemas"]["CreateSubscriptionInput"];
         };
+        UpdateSubscriptionInput: {
+            /** Format: uuid */
+            payment_method_id?: string;
+            metadata?: components["schemas"]["Metadata"];
+        };
+        UpdateSubscriptionRequest: {
+            subscription: components["schemas"]["UpdateSubscriptionInput"];
+        };
         Subscription: {
             /** Format: uuid */
             id?: string;
@@ -2147,7 +2162,8 @@ export interface components {
             updated_at?: string;
         };
         CreateWebhookEndpointInput: {
-            event?: string;
+            /** @enum {string} */
+            event?: "charge.cancelled" | "charge.created" | "charge.errored" | "charge.failed" | "charge.processing" | "charge.requires_capture" | "charge.requires_confirmation" | "charge.succeeded" | "customer.created" | "customer.updated" | "legal_entity.created" | "legal_entity.updated" | "legal_entity_principal.created" | "legal_entity_principal.updated" | "merchant.created" | "merchant.updated" | "payment_intent.cancelled" | "payment_intent.created" | "payment_intent.processing_authorization" | "payment_intent.processing_capture" | "payment_intent.processing_sale" | "payment_intent.requires_capture" | "payment_intent.requires_confirmation" | "payment_intent.requires_payment_method" | "payment_intent.requires_review" | "payment_intent.succeeded" | "processor_transaction.completed" | "reconciliation.created" | "refund.cancelled" | "refund.created" | "refund.failed" | "refund.pending" | "refund.processing" | "refund.requires_review" | "refund.succeeded" | "void.created" | "void.failed" | "void.pending" | "void.processing" | "void.requires_review" | "void.succeeded";
             metadata?: components["schemas"]["Metadata"];
             active?: boolean;
             url?: string;
@@ -2158,7 +2174,8 @@ export interface components {
         WebhookEndpoint: {
             /** Format: uuid */
             id?: string;
-            event?: string;
+            /** @enum {string} */
+            event?: "charge.cancelled" | "charge.created" | "charge.errored" | "charge.failed" | "charge.processing" | "charge.requires_capture" | "charge.requires_confirmation" | "charge.succeeded" | "customer.created" | "customer.updated" | "legal_entity.created" | "legal_entity.updated" | "legal_entity_principal.created" | "legal_entity_principal.updated" | "merchant.created" | "merchant.updated" | "payment_intent.cancelled" | "payment_intent.created" | "payment_intent.processing_authorization" | "payment_intent.processing_capture" | "payment_intent.processing_sale" | "payment_intent.requires_capture" | "payment_intent.requires_confirmation" | "payment_intent.requires_payment_method" | "payment_intent.requires_review" | "payment_intent.succeeded" | "processor_transaction.completed" | "reconciliation.created" | "refund.cancelled" | "refund.created" | "refund.failed" | "refund.pending" | "refund.processing" | "refund.requires_review" | "refund.succeeded" | "void.created" | "void.failed" | "void.pending" | "void.processing" | "void.requires_review" | "void.succeeded";
             metadata?: components["schemas"]["Metadata"];
             secret?: string;
             url?: string;
@@ -4271,6 +4288,42 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Subscription"];
+                };
+            };
+        };
+    };
+    UpdateSubscription: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The ID of the subscription to update */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateSubscriptionRequest"];
+            };
+        };
+        responses: {
+            /** @description Subscription updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Subscription"];
+                };
+            };
+            /** @description Unprocessable entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
                 };
             };
         };
