@@ -101,13 +101,13 @@ export interface paths {
         };
         /** Retrieve a customer by ID */
         get: operations["GetCustomer"];
-        put?: never;
+        /** Update a customer by ID */
+        put: operations["UpdateCustomer"];
         post?: never;
         delete?: never;
         options?: never;
         head?: never;
-        /** Update a customer by ID */
-        patch: operations["UpdateCustomer"];
+        patch?: never;
         trace?: never;
     };
     "/external_accounts": {
@@ -720,13 +720,13 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        put?: never;
+        /** Update a product by ID */
+        put: operations["UpdateProduct"];
         post?: never;
         delete?: never;
         options?: never;
         head?: never;
-        /** Update a product by ID */
-        patch: operations["UpdateProduct"];
+        patch?: never;
         trace?: never;
     };
     "/refunds": {
@@ -949,6 +949,23 @@ export interface paths {
         get: operations["GetSubscription"];
         /** Update a subscription by ID */
         put: operations["UpdateSubscription"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/subscriptions/{id}/skip": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Skip subscription billing periods by ID */
+        put: operations["SkipSubscription"];
         post?: never;
         delete?: never;
         options?: never;
@@ -1274,6 +1291,8 @@ export interface components {
             /** Format: uuid */
             customer_id?: string;
             description?: string | null;
+            failure_code?: string | null;
+            failure_reason?: string | null;
             /** @enum {string|null} */
             allowed_reverse_action?: "void" | "refund" | null;
             metadata?: components["schemas"]["Metadata"];
@@ -1310,14 +1329,12 @@ export interface components {
             customer: components["schemas"]["CreateCustomerInput"];
         };
         UpdateCustomerInput: {
-            /** Format: uuid */
-            account_id?: string;
-            name?: string;
             email?: string;
-            metadata?: components["schemas"]["Metadata"];
-            phone?: string;
+            name?: string;
             /** Format: uuid */
             payment_method_id?: string;
+            phone?: string;
+            metadata?: components["schemas"]["Metadata"];
         };
         UpdateCustomerRequest: {
             customer: components["schemas"]["UpdateCustomerInput"];
@@ -1911,6 +1928,8 @@ export interface components {
             /** Format: uuid */
             customer_id?: string;
             description?: string | null;
+            failure_code?: string | null;
+            failure_reason?: string | null;
             metadata?: components["schemas"]["Metadata"];
             /** Format: uuid */
             original_transaction_id?: string;
@@ -2013,6 +2032,12 @@ export interface components {
         UpdateSubscriptionRequest: {
             subscription: components["schemas"]["UpdateSubscriptionInput"];
         };
+        SkipSubscriptionInput: {
+            period_count?: number;
+        };
+        SkipSubscriptionRequest: {
+            subscription: components["schemas"]["SkipSubscriptionInput"];
+        };
         Subscription: {
             /** Format: uuid */
             id?: string;
@@ -2033,6 +2058,8 @@ export interface components {
             /** @enum {string} */
             state?: "active" | "paused" | "past_due" | "cancelled";
             cycles_completed?: number;
+            skip_billing_periods_remaining?: number;
+            skipped_billing_periods_count?: number;
             /** Format: date-time */
             current_billing_period_start?: string;
             /** Format: date-time */
@@ -2124,6 +2151,8 @@ export interface components {
             /** Format: uuid */
             customer_id?: string;
             description?: string | null;
+            failure_code?: string | null;
+            failure_reason?: string | null;
             metadata?: components["schemas"]["Metadata"];
             /** Format: uuid */
             original_transaction_id?: string;
@@ -2162,8 +2191,7 @@ export interface components {
             updated_at?: string;
         };
         CreateWebhookEndpointInput: {
-            /** @enum {string} */
-            event?: "charge.cancelled" | "charge.created" | "charge.errored" | "charge.failed" | "charge.processing" | "charge.requires_capture" | "charge.requires_confirmation" | "charge.succeeded" | "customer.created" | "customer.updated" | "legal_entity.created" | "legal_entity.updated" | "legal_entity_principal.created" | "legal_entity_principal.updated" | "merchant.created" | "merchant.updated" | "payment_intent.cancelled" | "payment_intent.created" | "payment_intent.processing_authorization" | "payment_intent.processing_capture" | "payment_intent.processing_sale" | "payment_intent.requires_capture" | "payment_intent.requires_confirmation" | "payment_intent.requires_payment_method" | "payment_intent.requires_review" | "payment_intent.succeeded" | "processor_transaction.completed" | "reconciliation.created" | "refund.cancelled" | "refund.created" | "refund.failed" | "refund.pending" | "refund.processing" | "refund.requires_review" | "refund.succeeded" | "void.created" | "void.failed" | "void.pending" | "void.processing" | "void.requires_review" | "void.succeeded";
+            events?: ("charge.cancelled" | "charge.created" | "charge.errored" | "charge.failed" | "charge.processing" | "charge.requires_capture" | "charge.requires_confirmation" | "charge.requires_review" | "charge.succeeded" | "customer.created" | "customer.updated" | "legal_entity.created" | "legal_entity.updated" | "legal_entity_principal.created" | "legal_entity_principal.updated" | "merchant.created" | "merchant.updated" | "payment_intent.cancelled" | "payment_intent.created" | "payment_intent.processing_authorization" | "payment_intent.processing_capture" | "payment_intent.processing_sale" | "payment_intent.requires_capture" | "payment_intent.requires_confirmation" | "payment_intent.requires_payment_method" | "payment_intent.requires_review" | "payment_intent.succeeded" | "processor_transaction.completed" | "reconciliation.created" | "refund.cancelled" | "refund.created" | "refund.failed" | "refund.pending" | "refund.processing" | "refund.requires_review" | "refund.succeeded" | "void.created" | "void.failed" | "void.pending" | "void.processing" | "void.requires_review" | "void.succeeded")[];
             metadata?: components["schemas"]["Metadata"];
             active?: boolean;
             url?: string;
@@ -2174,8 +2202,7 @@ export interface components {
         WebhookEndpoint: {
             /** Format: uuid */
             id?: string;
-            /** @enum {string} */
-            event?: "charge.cancelled" | "charge.created" | "charge.errored" | "charge.failed" | "charge.processing" | "charge.requires_capture" | "charge.requires_confirmation" | "charge.succeeded" | "customer.created" | "customer.updated" | "legal_entity.created" | "legal_entity.updated" | "legal_entity_principal.created" | "legal_entity_principal.updated" | "merchant.created" | "merchant.updated" | "payment_intent.cancelled" | "payment_intent.created" | "payment_intent.processing_authorization" | "payment_intent.processing_capture" | "payment_intent.processing_sale" | "payment_intent.requires_capture" | "payment_intent.requires_confirmation" | "payment_intent.requires_payment_method" | "payment_intent.requires_review" | "payment_intent.succeeded" | "processor_transaction.completed" | "reconciliation.created" | "refund.cancelled" | "refund.created" | "refund.failed" | "refund.pending" | "refund.processing" | "refund.requires_review" | "refund.succeeded" | "void.created" | "void.failed" | "void.pending" | "void.processing" | "void.requires_review" | "void.succeeded";
+            events?: ("charge.cancelled" | "charge.created" | "charge.errored" | "charge.failed" | "charge.processing" | "charge.requires_capture" | "charge.requires_confirmation" | "charge.requires_review" | "charge.succeeded" | "customer.created" | "customer.updated" | "legal_entity.created" | "legal_entity.updated" | "legal_entity_principal.created" | "legal_entity_principal.updated" | "merchant.created" | "merchant.updated" | "payment_intent.cancelled" | "payment_intent.created" | "payment_intent.processing_authorization" | "payment_intent.processing_capture" | "payment_intent.processing_sale" | "payment_intent.requires_capture" | "payment_intent.requires_confirmation" | "payment_intent.requires_payment_method" | "payment_intent.requires_review" | "payment_intent.succeeded" | "processor_transaction.completed" | "reconciliation.created" | "refund.cancelled" | "refund.created" | "refund.failed" | "refund.pending" | "refund.processing" | "refund.requires_review" | "refund.succeeded" | "void.created" | "void.failed" | "void.pending" | "void.processing" | "void.requires_review" | "void.succeeded")[];
             metadata?: components["schemas"]["Metadata"];
             secret?: string;
             url?: string;
@@ -4309,6 +4336,42 @@ export interface operations {
         };
         responses: {
             /** @description Subscription updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Subscription"];
+                };
+            };
+            /** @description Unprocessable entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    SkipSubscription: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The ID of the subscription to skip billing periods for */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SkipSubscriptionRequest"];
+            };
+        };
+        responses: {
+            /** @description Subscription billing periods skipped successfully */
             200: {
                 headers: {
                     [name: string]: unknown;
