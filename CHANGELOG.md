@@ -1,5 +1,11 @@
 # @amos.com/node
 
+## 0.1.10
+
+### Patch Changes
+
+- Update generated OpenAPI schema.
+
 ## 0.1.9
 
 ### Patch Changes

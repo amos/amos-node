@@ -1471,11 +1471,9 @@ export interface components {
             id?: string;
             /** Format: uuid */
             legal_entity_application_id?: string;
-            title?: string;
             first_name?: string;
             last_name?: string;
             email?: string;
-            tax_id?: string;
             date_of_birth?: string;
             address_line1?: string;
             address_line2?: string;
@@ -1485,6 +1483,8 @@ export interface components {
             postal_code?: string;
             stake_percent?: number;
             contact_phone?: string;
+            tax_id_last4?: string;
+            title?: string;
         };
         LegalEntityPrincipal: {
             /** Format: uuid */
@@ -1495,7 +1495,6 @@ export interface components {
             first_name?: string;
             last_name?: string;
             email?: string;
-            tax_id?: string;
             date_of_birth?: string;
             address_line1?: string;
             address_line2?: string;
@@ -1504,6 +1503,7 @@ export interface components {
             country?: string;
             postal_code?: string;
             contact_phone?: string;
+            tax_id_last4?: string;
         };
         CreateLegalEntityApplicationInput: {
             legal_name?: string;
@@ -1540,8 +1540,6 @@ export interface components {
             legal_name?: string;
             entity_type?: string;
             ownership_type?: string;
-            tax_id?: string;
-            tax_id_last4?: string;
             contact_email?: string;
             contact_phone?: string;
             business_address_line1?: string;
@@ -1550,6 +1548,7 @@ export interface components {
             business_state?: string;
             business_postal_code?: string;
             business_country?: string;
+            tax_id_last4?: string;
         };
         LegalEntityApplication: {
             /** Format: uuid */
@@ -1559,7 +1558,6 @@ export interface components {
             legal_entity_id?: string;
             entity_type?: string;
             ownership_type?: string;
-            tax_id?: string;
             contact_email?: string;
             contact_phone?: string;
             business_address_line1?: string;
@@ -1569,6 +1567,7 @@ export interface components {
             business_postal_code?: string;
             business_country?: string;
             state?: string;
+            tax_id_last4?: string;
             requirements?: components["schemas"]["LegalEntityApplicationRequirement"][];
         };
         CreateMerchantApplicationInput: {
@@ -2181,7 +2180,6 @@ export interface components {
             /** Format: uuid */
             webhook_request_id?: string;
             error_message?: string;
-            request_body?: Record<string, never>;
             response_body?: Record<string, never>;
             status_code?: number;
             success?: boolean;
