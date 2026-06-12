@@ -1238,7 +1238,8 @@ export interface components {
             wallet_brand?: string;
             wallet_last4?: string;
             wallet_payload?: string;
-            wallet_provider?: string;
+            /** @enum {string|null} */
+            wallet_provider?: "googlepay" | "applepay" | null;
         };
         CardProfile: {
             avs_check?: string;
@@ -1255,7 +1256,8 @@ export interface components {
             state?: string;
             three_d_secure_supported?: boolean | null;
             token?: string;
-            wallet_provider?: string;
+            /** @enum {string|null} */
+            wallet_provider?: "googlepay" | "applepay" | null;
             /** Format: date-time */
             created_at?: string;
             /** Format: date-time */
@@ -2214,6 +2216,8 @@ export interface components {
             id?: string;
             /** Format: uuid */
             webhook_endpoint_id?: string;
+            /** Format: date-time */
+            expires_at?: string;
             request_body?: Record<string, never>;
             /** Format: date-time */
             created_at?: string;
