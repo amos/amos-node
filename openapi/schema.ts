@@ -1238,8 +1238,7 @@ export interface components {
             wallet_brand?: string;
             wallet_last4?: string;
             wallet_payload?: string;
-            /** @enum {string|null} */
-            wallet_provider?: "googlepay" | "applepay" | null;
+            wallet_provider?: components["schemas"]["WalletProviderType"];
         };
         CardProfile: {
             avs_check?: string;
@@ -1256,8 +1255,7 @@ export interface components {
             state?: string;
             three_d_secure_supported?: boolean | null;
             token?: string;
-            /** @enum {string|null} */
-            wallet_provider?: "googlepay" | "applepay" | null;
+            wallet_provider?: components["schemas"]["WalletProviderType"];
             /** Format: date-time */
             created_at?: string;
             /** Format: date-time */
@@ -1307,8 +1305,7 @@ export interface components {
             /** Format: uuid */
             payment_method_id?: string;
             platform_fee?: number;
-            /** @enum {string} */
-            source?: "api" | "dashboard" | "iframe" | "system" | "subscription";
+            source?: components["schemas"]["TransactionSourceType"];
             /** @enum {string} */
             state?: "cancelled" | "errored" | "failed" | "processing" | "requires_capture" | "requires_confirmation" | "requires_review" | "succeeded";
             statement_descriptor?: string;
@@ -1429,8 +1426,7 @@ export interface components {
         CreateLegalEntityApplicationDocumentInput: {
             /** Format: uuid */
             legal_entity_application_id?: string;
-            /** @enum {string} */
-            document_type?: "irs_cp_575";
+            document_type?: components["schemas"]["LegalEntityDocumentType"];
             /** Format: uuid */
             file_upload_id?: string;
         };
@@ -1442,8 +1438,7 @@ export interface components {
             id?: string;
             /** Format: uuid */
             legal_entity_application_id?: string;
-            /** @enum {string} */
-            document_type?: "irs_cp_575";
+            document_type?: components["schemas"]["LegalEntityDocumentType"];
             /** Format: uuid */
             file_upload_id?: string;
         };
@@ -1507,10 +1502,38 @@ export interface components {
             contact_phone?: string;
             tax_id_last4?: string;
         };
+        /** @enum {string} */
+        LegalEntityEntityType: "individual_sole_proprietorship" | "corporation" | "limited_liability_company" | "partnership" | "limited_partnership" | "general_partnership" | "tax_exempt_organization" | "government_agency";
+        /** @enum {string} */
+        LegalEntityOwnershipType: "public" | "private";
+        /** @enum {string} */
+        LegalEntityDocumentType: "irs_cp_575";
+        /** @enum {string} */
+        MerchantBusinessCategoryType: "business_association" | "charity" | "church" | "county" | "federal" | "fraternal_org" | "government" | "higher_education" | "k12" | "labor_union" | "local" | "ministry" | "pac" | "parachurch" | "party" | "preschool" | "social_club" | "social_welfare" | "state" | "tribal" | "vendor" | "veterans_org";
+        /** @enum {string} */
+        PaymentLinkAmountType: "fixed" | "open";
+        /** @enum {string} */
+        PaymentMethodType: "card" | "bank_account";
+        /** @enum {string} */
+        PayoutDirectionType: "credit" | "debit";
+        /** @enum {string} */
+        PayoutStateType: "pending" | "succeeded" | "failed" | "accepted" | "rejected";
+        /** @enum {string} */
+        RefundStateType: "pending" | "processing" | "requires_review" | "succeeded" | "cancelled" | "failed";
+        /** @enum {string} */
+        SubscriptionIntervalType: "day" | "week" | "month" | "year";
+        /** @enum {string} */
+        SubscriptionPlanType: "fixed" | "variable";
+        /** @enum {string} */
+        TransactionSourceType: "api" | "dashboard" | "iframe" | "system" | "subscription";
+        /** @enum {string} */
+        WalletProviderType: "googlepay" | "applepay";
+        /** @enum {string} */
+        WebhookEventType: "charge.cancelled" | "charge.created" | "charge.errored" | "charge.failed" | "charge.processing" | "charge.requires_capture" | "charge.requires_confirmation" | "charge.requires_review" | "charge.succeeded" | "customer.created" | "customer.updated" | "legal_entity.created" | "legal_entity.updated" | "legal_entity_principal.created" | "legal_entity_principal.updated" | "merchant.created" | "merchant.updated" | "payment_intent.cancelled" | "payment_intent.created" | "payment_intent.errored_authorization" | "payment_intent.errored_capture" | "payment_intent.errored_sale" | "payment_intent.processing_authorization" | "payment_intent.processing_capture" | "payment_intent.processing_sale" | "payment_intent.requires_capture" | "payment_intent.requires_confirmation" | "payment_intent.requires_payment_method" | "payment_intent.requires_review" | "payment_intent.succeeded" | "processor_transaction.completed" | "reconciliation.created" | "refund.cancelled" | "refund.created" | "refund.failed" | "refund.pending" | "refund.processing" | "refund.requires_review" | "refund.succeeded" | "void.created" | "void.failed" | "void.pending" | "void.processing" | "void.requires_review" | "void.succeeded";
         CreateLegalEntityApplicationInput: {
             legal_name?: string;
-            entity_type?: string;
-            ownership_type?: string;
+            entity_type?: components["schemas"]["LegalEntityEntityType"];
+            ownership_type?: components["schemas"]["LegalEntityOwnershipType"];
             tax_id?: string;
             contact_email?: string;
             contact_phone?: string;
@@ -1540,8 +1563,8 @@ export interface components {
             /** Format: uuid */
             id?: string;
             legal_name?: string;
-            entity_type?: string;
-            ownership_type?: string;
+            entity_type?: components["schemas"]["LegalEntityEntityType"];
+            ownership_type?: components["schemas"]["LegalEntityOwnershipType"];
             contact_email?: string;
             contact_phone?: string;
             business_address_line1?: string;
@@ -1558,8 +1581,8 @@ export interface components {
             legal_name?: string;
             /** Format: uuid */
             legal_entity_id?: string;
-            entity_type?: string;
-            ownership_type?: string;
+            entity_type?: components["schemas"]["LegalEntityEntityType"];
+            ownership_type?: components["schemas"]["LegalEntityOwnershipType"];
             contact_email?: string;
             contact_phone?: string;
             business_address_line1?: string;
@@ -1576,8 +1599,7 @@ export interface components {
             annual_credit_card_sales_volume?: number;
             bank_account_number?: string;
             bank_routing_number?: string;
-            /** @enum {string} */
-            business_category?: "business_association" | "charity" | "church" | "county" | "federal" | "fraternal_org" | "government" | "higher_education" | "k12" | "labor_union" | "local" | "ministry" | "pac" | "parachurch" | "party" | "preschool" | "social_club" | "social_welfare" | "state" | "tribal" | "vendor" | "veterans_org";
+            business_category?: components["schemas"]["MerchantBusinessCategoryType"];
             business_description?: string;
             city?: string;
             country_code?: string;
@@ -1603,8 +1625,7 @@ export interface components {
             /** Format: uuid */
             id?: string;
             annual_credit_card_sales_volume?: number;
-            /** @enum {string} */
-            business_category?: "business_association" | "charity" | "church" | "county" | "federal" | "fraternal_org" | "government" | "higher_education" | "k12" | "labor_union" | "local" | "ministry" | "pac" | "parachurch" | "party" | "preschool" | "social_club" | "social_welfare" | "state" | "tribal" | "vendor" | "veterans_org";
+            business_category?: components["schemas"]["MerchantBusinessCategoryType"];
             business_description?: string;
             city?: string;
             country_code?: string;
@@ -1673,6 +1694,7 @@ export interface components {
             description?: string | null;
             statement_descriptor?: string;
             metadata?: components["schemas"]["Metadata"];
+            recurring_payment?: components["schemas"]["RecurringPayment"];
         };
         CreatePaymentIntentRequest: {
             payment_intent: components["schemas"]["CreatePaymentIntentInput"];
@@ -1696,6 +1718,7 @@ export interface components {
             payment_method_id?: string;
             amount?: number;
             metadata?: components["schemas"]["Metadata"];
+            recurring_payment?: components["schemas"]["RecurringPayment"];
         };
         UpdatePaymentIntentRequest: {
             payment_intent: components["schemas"]["UpdatePaymentIntentInput"];
@@ -1714,10 +1737,10 @@ export interface components {
             customer_id?: string;
             description?: string;
             metadata?: components["schemas"]["Metadata"];
+            recurring_payment?: components["schemas"]["RecurringPayment"];
             /** Format: uuid */
             payment_method_id?: string;
-            /** @enum {string} */
-            source?: "api" | "dashboard" | "iframe" | "system" | "subscription";
+            source?: components["schemas"]["TransactionSourceType"];
             /** @enum {string} */
             state?: "requires_payment_method" | "requires_confirmation" | "requires_capture" | "processing_authorization" | "processing_capture" | "processing_sale" | "requires_review" | "succeeded" | "cancelled" | "errored_authorization" | "errored_capture" | "errored_sale";
             statement_descriptor?: string;
@@ -1726,11 +1749,13 @@ export interface components {
             /** Format: date-time */
             updated_at?: string;
         };
+        RecurringPayment: {
+            network_transaction_id?: string;
+        };
         CreatePaymentLinkInput: {
             slug?: string;
             active?: boolean;
-            /** @enum {string} */
-            amount_type?: "fixed" | "open";
+            amount_type?: components["schemas"]["PaymentLinkAmountType"];
             amount?: number;
             /** Format: uri */
             image_url?: string;
@@ -1760,8 +1785,7 @@ export interface components {
             account_id?: string;
             slug?: string;
             active?: boolean;
-            /** @enum {string} */
-            amount_type?: "fixed" | "open";
+            amount_type?: components["schemas"]["PaymentLinkAmountType"];
             amount?: number;
             /** Format: uri */
             image_url?: string;
@@ -1785,8 +1809,7 @@ export interface components {
             /** Format: uuid */
             customer_id?: string;
             metadata?: components["schemas"]["Metadata"];
-            /** @enum {string} */
-            type?: "card" | "bank_account";
+            type?: components["schemas"]["PaymentMethodType"];
             bank_account_profile?: components["schemas"]["BankAccountProfile"];
             billing_address?: components["schemas"]["BillingAddress"];
             card_profile?: components["schemas"]["CardProfile"];
@@ -1800,8 +1823,7 @@ export interface components {
             external_account_id: string;
             amount: number;
             currency?: string;
-            /** @enum {string} */
-            direction: "credit" | "debit";
+            direction: components["schemas"]["PayoutDirectionType"];
             metadata?: components["schemas"]["Metadata"];
         };
         CreatePayoutRequest: {
@@ -1814,8 +1836,7 @@ export interface components {
             external_account_id: string;
             amount: number;
             currency?: string;
-            /** @enum {string} */
-            direction: "credit" | "debit";
+            direction: components["schemas"]["PayoutDirectionType"];
             metadata?: components["schemas"]["Metadata"];
         };
         CreateBulkPayoutsRequest: {
@@ -1830,11 +1851,9 @@ export interface components {
             external_account_id?: string;
             amount?: number;
             currency?: string;
-            /** @enum {string} */
-            direction?: "credit" | "debit";
+            direction?: components["schemas"]["PayoutDirectionType"];
             metadata?: components["schemas"]["Metadata"];
-            /** @enum {string} */
-            state?: "pending" | "succeeded" | "failed" | "accepted" | "rejected";
+            state?: components["schemas"]["PayoutStateType"];
             /** Format: date-time */
             created_at?: string;
             /** Format: date-time */
@@ -1861,6 +1880,7 @@ export interface components {
             /** Format: uuid */
             processor_transaction_id?: string;
             processor_reference?: string;
+            network_transaction_id?: string;
             /** @enum {string} */
             transaction_type?: "authorization" | "authorization_reversal" | "capture" | "credit" | "echeck_credit" | "echeck_sale" | "echeck_void" | "sale" | "void";
             /** Format: date-time */
@@ -1941,10 +1961,8 @@ export interface components {
             /** Format: uuid */
             payment_method_id?: string;
             platform_fee?: number;
-            /** @enum {string} */
-            source?: "api" | "dashboard" | "iframe" | "system" | "subscription";
-            /** @enum {string} */
-            state?: "pending" | "processing" | "requires_review" | "succeeded" | "cancelled" | "failed";
+            source?: components["schemas"]["TransactionSourceType"];
+            state?: components["schemas"]["RefundStateType"];
             statement_descriptor?: string;
             /** Format: date-time */
             succeeded_at?: string;
@@ -1956,8 +1974,9 @@ export interface components {
             allowed_reverse_action?: "void" | null;
         };
         CreateRenderTemplateInput: {
-            allowed_payment_method_types?: ("card" | "bank_account")[];
+            allowed_payment_method_types?: components["schemas"]["PaymentMethodType"][];
             currency?: string;
+            moto?: boolean;
             origin_ids?: string[];
         };
         CreateRenderTemplateRequest: {
@@ -1968,8 +1987,9 @@ export interface components {
             id?: string;
             /** Format: uuid */
             organization_id?: string;
-            allowed_payment_method_types?: ("card" | "bank_account")[];
+            allowed_payment_method_types?: components["schemas"]["PaymentMethodType"][];
             currency?: string;
+            moto?: boolean;
         };
         CreateSetupIntentInput: {
             /** Format: uuid */
@@ -2001,8 +2021,7 @@ export interface components {
             metadata?: components["schemas"]["Metadata"];
             /** Format: uuid */
             payment_method_id?: string;
-            /** @enum {string} */
-            source?: "api" | "dashboard" | "iframe" | "system" | "subscription";
+            source?: components["schemas"]["TransactionSourceType"];
             /** @enum {string} */
             state?: "requires_payment_method" | "requires_confirmation" | "verifying" | "requires_review" | "succeeded" | "failed" | "cancelled" | "errored";
             /** Format: date-time */
@@ -2016,8 +2035,7 @@ export interface components {
             /** Format: uuid */
             customer_id?: string;
             cycles?: number;
-            /** @enum {string} */
-            interval?: "day" | "week" | "month" | "year";
+            interval?: components["schemas"]["SubscriptionIntervalType"];
             interval_count?: number;
             /** Format: uuid */
             subscription_plan_id?: string;
@@ -2053,8 +2071,7 @@ export interface components {
             customer_id?: string;
             /** Format: uuid */
             payment_method_id?: string;
-            /** @enum {string} */
-            interval?: "day" | "week" | "month" | "year";
+            interval?: components["schemas"]["SubscriptionIntervalType"];
             interval_count?: number;
             /** @enum {string} */
             state?: "active" | "paused" | "past_due" | "cancelled";
@@ -2080,13 +2097,11 @@ export interface components {
             /** Format: uuid */
             product_id?: string;
             description?: string;
-            /** @enum {string} */
-            interval?: "day" | "week" | "month" | "year";
+            interval?: components["schemas"]["SubscriptionIntervalType"];
             interval_count?: number;
             metadata?: components["schemas"]["Metadata"];
             name?: string;
-            /** @enum {string} */
-            plan_type?: "fixed" | "variable";
+            plan_type?: components["schemas"]["SubscriptionPlanType"];
             trial_period_days?: number;
         };
         CreateSubscriptionPlanRequest: {
@@ -2111,13 +2126,11 @@ export interface components {
             currency?: string;
             cycles?: number;
             description?: string;
-            /** @enum {string} */
-            interval?: "day" | "week" | "month" | "year";
+            interval?: components["schemas"]["SubscriptionIntervalType"];
             interval_count?: number;
             metadata?: components["schemas"]["Metadata"];
             name?: string;
-            /** @enum {string} */
-            plan_type?: "fixed" | "variable";
+            plan_type?: components["schemas"]["SubscriptionPlanType"];
             trial_period_days?: number;
             /** Format: date-time */
             created_at?: string;
@@ -2164,10 +2177,8 @@ export interface components {
             /** Format: uuid */
             payment_method_id?: string;
             platform_fee?: number;
-            /** @enum {string} */
-            source?: "api" | "dashboard" | "iframe" | "system" | "subscription";
-            /** @enum {string} */
-            state?: "pending" | "processing" | "requires_review" | "succeeded" | "cancelled" | "failed";
+            source?: components["schemas"]["TransactionSourceType"];
+            state?: components["schemas"]["RefundStateType"];
             statement_descriptor?: string;
             /** Format: date-time */
             succeeded_at?: string;
@@ -2191,7 +2202,7 @@ export interface components {
             updated_at?: string;
         };
         CreateWebhookEndpointInput: {
-            events?: ("charge.cancelled" | "charge.created" | "charge.errored" | "charge.failed" | "charge.processing" | "charge.requires_capture" | "charge.requires_confirmation" | "charge.requires_review" | "charge.succeeded" | "customer.created" | "customer.updated" | "legal_entity.created" | "legal_entity.updated" | "legal_entity_principal.created" | "legal_entity_principal.updated" | "merchant.created" | "merchant.updated" | "payment_intent.cancelled" | "payment_intent.created" | "payment_intent.errored_authorization" | "payment_intent.errored_capture" | "payment_intent.errored_sale" | "payment_intent.processing_authorization" | "payment_intent.processing_capture" | "payment_intent.processing_sale" | "payment_intent.requires_capture" | "payment_intent.requires_confirmation" | "payment_intent.requires_payment_method" | "payment_intent.requires_review" | "payment_intent.succeeded" | "processor_transaction.completed" | "reconciliation.created" | "refund.cancelled" | "refund.created" | "refund.failed" | "refund.pending" | "refund.processing" | "refund.requires_review" | "refund.succeeded" | "void.created" | "void.failed" | "void.pending" | "void.processing" | "void.requires_review" | "void.succeeded")[];
+            events?: components["schemas"]["WebhookEventType"][];
             metadata?: components["schemas"]["Metadata"];
             active?: boolean;
             url?: string;
@@ -2202,7 +2213,7 @@ export interface components {
         WebhookEndpoint: {
             /** Format: uuid */
             id?: string;
-            events?: ("charge.cancelled" | "charge.created" | "charge.errored" | "charge.failed" | "charge.processing" | "charge.requires_capture" | "charge.requires_confirmation" | "charge.requires_review" | "charge.succeeded" | "customer.created" | "customer.updated" | "legal_entity.created" | "legal_entity.updated" | "legal_entity_principal.created" | "legal_entity_principal.updated" | "merchant.created" | "merchant.updated" | "payment_intent.cancelled" | "payment_intent.created" | "payment_intent.errored_authorization" | "payment_intent.errored_capture" | "payment_intent.errored_sale" | "payment_intent.processing_authorization" | "payment_intent.processing_capture" | "payment_intent.processing_sale" | "payment_intent.requires_capture" | "payment_intent.requires_confirmation" | "payment_intent.requires_payment_method" | "payment_intent.requires_review" | "payment_intent.succeeded" | "processor_transaction.completed" | "reconciliation.created" | "refund.cancelled" | "refund.created" | "refund.failed" | "refund.pending" | "refund.processing" | "refund.requires_review" | "refund.succeeded" | "void.created" | "void.failed" | "void.pending" | "void.processing" | "void.requires_review" | "void.succeeded")[];
+            events?: components["schemas"]["WebhookEventType"][];
             metadata?: components["schemas"]["Metadata"];
             secret?: string;
             url?: string;
@@ -2245,7 +2256,7 @@ export interface components {
         /** @description The ID of the payment transaction to filter by */
         PaymentTransactionIdQuery: string;
         /** @description The payout state to filter by */
-        PayoutStateQuery: "pending" | "succeeded" | "failed" | "accepted" | "rejected";
+        PayoutStateQuery: components["schemas"]["PayoutStateType"];
         /** @description Number of results per page. */
         PerPageQuery: number;
         /** @description The phone to filter by */
