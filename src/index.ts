@@ -1,6 +1,6 @@
 import createClient, {
-	type ClientOptions,
-	type Middleware,
+  type ClientOptions,
+  type Middleware,
 } from "openapi-fetch";
 import type { paths } from "../openapi/schema";
 
@@ -45,7 +45,7 @@ export const PAY_API_VERSION = "1";
  * ```
  */
 export function createPayApiClient(options: ClientOptions) {
-	return createClient<paths>(options);
+  return createClient<paths>(options);
 }
 
 /** A configured Amos Pay API client returned by {@link createPayApiClient}. */
