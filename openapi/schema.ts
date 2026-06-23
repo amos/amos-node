@@ -1164,7 +1164,7 @@ export interface components {
         };
         /** @description Decoded JWT payload for render token responses. */
         RenderTokenJwt: {
-            allowed_payment_method_types?: ("bank_account" | "card" | "applepay" | "googlepay")[];
+            allowed_payment_methods?: components["schemas"]["AllowedPaymentMethod"][];
             env?: string;
             origins?: string[];
             /** Format: uuid */
@@ -1514,6 +1514,19 @@ export interface components {
         PaymentLinkAmountType: "fixed" | "open";
         /** @enum {string} */
         PaymentMethodType: "card" | "bank_account";
+        AllowedPaymentMethodOptions: {
+            moto?: boolean;
+        } & {
+            [key: string]: unknown;
+        };
+        AllowedPaymentMethodInput: {
+            type: components["schemas"]["PaymentMethodType"];
+            options?: components["schemas"]["AllowedPaymentMethodOptions"];
+        };
+        AllowedPaymentMethod: {
+            type: components["schemas"]["PaymentMethodType"];
+            options: components["schemas"]["AllowedPaymentMethodOptions"];
+        };
         /** @enum {string} */
         PayoutDirectionType: "credit" | "debit";
         /** @enum {string} */
@@ -1597,6 +1610,7 @@ export interface components {
         };
         CreateMerchantApplicationInput: {
             annual_credit_card_sales_volume?: number;
+            allowed_payment_methods?: components["schemas"]["AllowedPaymentMethodInput"][];
             bank_account_number?: string;
             bank_routing_number?: string;
             business_category?: components["schemas"]["MerchantBusinessCategoryType"];
@@ -1625,6 +1639,7 @@ export interface components {
             /** Format: uuid */
             id?: string;
             annual_credit_card_sales_volume?: number;
+            allowed_payment_methods?: components["schemas"]["AllowedPaymentMethod"][];
             business_category?: components["schemas"]["MerchantBusinessCategoryType"];
             business_description?: string;
             city?: string;
@@ -1662,6 +1677,7 @@ export interface components {
             /** Format: uuid */
             legal_entity_id?: string;
             annual_credit_card_sales_volume?: number;
+            allowed_payment_methods?: components["schemas"]["AllowedPaymentMethod"][];
             has_accepted_credit_cards?: boolean;
             dba_name?: string;
             metadata?: components["schemas"]["Metadata"];
@@ -1770,7 +1786,7 @@ export interface components {
             title?: string;
             /** Format: uri */
             cancel_url?: string;
-            allowed_payment_method_types?: string[];
+            allowed_payment_methods?: components["schemas"]["AllowedPaymentMethodInput"][];
             metadata?: components["schemas"]["Metadata"];
         };
         CreatePaymentLinkRequest: {
@@ -1800,7 +1816,7 @@ export interface components {
             title?: string;
             /** Format: uri */
             cancel_url?: string;
-            allowed_payment_method_types?: string[];
+            allowed_payment_methods?: components["schemas"]["AllowedPaymentMethod"][];
             metadata?: components["schemas"]["Metadata"];
         };
         PaymentMethod: {
@@ -1974,7 +1990,7 @@ export interface components {
             allowed_reverse_action?: "void" | null;
         };
         CreateRenderTemplateInput: {
-            allowed_payment_method_types?: components["schemas"]["PaymentMethodType"][];
+            allowed_payment_methods?: components["schemas"]["AllowedPaymentMethodInput"][];
             currency?: string;
             moto?: boolean;
             origin_ids?: string[];
@@ -1987,7 +2003,7 @@ export interface components {
             id?: string;
             /** Format: uuid */
             organization_id?: string;
-            allowed_payment_method_types?: components["schemas"]["PaymentMethodType"][];
+            allowed_payment_methods?: components["schemas"]["AllowedPaymentMethod"][];
             currency?: string;
             moto?: boolean;
         };
