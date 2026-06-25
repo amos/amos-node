@@ -1270,6 +1270,8 @@ export interface components {
             exp_month?: number;
             exp_year?: number;
             moto?: boolean;
+        };
+        GooglePayCardProfileInput: {
             wallet_brand?: string;
             wallet_last4?: string;
             wallet_payload?: string;
@@ -1579,7 +1581,7 @@ export interface components {
             type: "googlepay";
             metadata?: components["schemas"]["Metadata"];
             billing_address_attributes?: components["schemas"]["BillingAddressInput"];
-            card_profile_attributes: components["schemas"]["CardProfileInput"];
+            card_profile_attributes: components["schemas"]["GooglePayCardProfileInput"];
         };
         EmbedConfirmApplePayPaymentMethodInput: {
             /**
