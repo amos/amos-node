@@ -504,6 +504,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/embed/payment_intents/{id}/confirm_with_payment_method": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Confirm a payment intent with a new payment method */
+        post: operations["ConfirmEmbedPaymentIntentWithPaymentMethod"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/payment_intents": {
         parameters: {
             query?: never;
@@ -862,6 +879,23 @@ export interface paths {
         put?: never;
         /** Confirm a setup intent */
         post: operations["ConfirmSetupIntent"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/embed/setup_intents/{id}/confirm_with_payment_method": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Confirm a setup intent with a new payment method */
+        post: operations["ConfirmSetupIntentWithPaymentMethod"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1235,6 +1269,7 @@ export interface components {
             encrypted_card_number?: string;
             exp_month?: number;
             exp_year?: number;
+            moto?: boolean;
             wallet_brand?: string;
             wallet_last4?: string;
             wallet_payload?: string;
@@ -1514,6 +1549,48 @@ export interface components {
         PaymentLinkAmountType: "fixed" | "open";
         /** @enum {string} */
         PaymentMethodType: "card" | "bank_account";
+        /** @description Payment method details used when confirming an embedded intent with a new payment method. */
+        EmbedConfirmPaymentMethodInput: components["schemas"]["EmbedConfirmCardPaymentMethodInput"] | components["schemas"]["EmbedConfirmBankAccountPaymentMethodInput"] | components["schemas"]["EmbedConfirmGooglePayPaymentMethodInput"] | components["schemas"]["EmbedConfirmApplePayPaymentMethodInput"];
+        EmbedConfirmCardPaymentMethodInput: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "card";
+            metadata?: components["schemas"]["Metadata"];
+            billing_address_attributes?: components["schemas"]["BillingAddressInput"];
+            card_profile_attributes: components["schemas"]["CardProfileInput"];
+        };
+        EmbedConfirmBankAccountPaymentMethodInput: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "bank_account";
+            metadata?: components["schemas"]["Metadata"];
+            bank_account_profile_attributes: components["schemas"]["BankAccountProfileInput"];
+            billing_address_attributes?: components["schemas"]["BillingAddressInput"];
+        };
+        EmbedConfirmGooglePayPaymentMethodInput: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "googlepay";
+            metadata?: components["schemas"]["Metadata"];
+            billing_address_attributes?: components["schemas"]["BillingAddressInput"];
+            card_profile_attributes: components["schemas"]["CardProfileInput"];
+        };
+        EmbedConfirmApplePayPaymentMethodInput: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "applepay";
+            metadata?: components["schemas"]["Metadata"];
+            billing_address_attributes?: components["schemas"]["BillingAddressInput"];
+            card_profile_attributes: components["schemas"]["CardProfileInput"];
+        };
         AllowedPaymentMethodOptions: {
             moto?: boolean;
         } & {
@@ -1728,6 +1805,12 @@ export interface components {
         };
         ConfirmPaymentIntentRequest: {
             payment_intent: components["schemas"]["ConfirmPaymentIntentInput"];
+        };
+        ConfirmPaymentIntentWithPaymentMethodInput: {
+            payment_method: components["schemas"]["EmbedConfirmPaymentMethodInput"];
+        };
+        ConfirmPaymentIntentWithPaymentMethodRequest: {
+            payment_intent: components["schemas"]["ConfirmPaymentIntentWithPaymentMethodInput"];
         };
         UpdatePaymentIntentInput: {
             /** Format: uuid */
@@ -2026,6 +2109,13 @@ export interface components {
         };
         ConfirmSetupIntentRequest: {
             setup_intent: components["schemas"]["ConfirmSetupIntentInput"];
+        };
+        ConfirmSetupIntentWithPaymentMethodInput: {
+            moto?: boolean;
+            payment_method: components["schemas"]["EmbedConfirmPaymentMethodInput"];
+        };
+        ConfirmSetupIntentWithPaymentMethodRequest: {
+            setup_intent: components["schemas"]["ConfirmSetupIntentWithPaymentMethodInput"];
         };
         SetupIntent: {
             /** Format: uuid */
@@ -3308,6 +3398,51 @@ export interface operations {
             };
         };
     };
+    ConfirmEmbedPaymentIntentWithPaymentMethod: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The ID of the payment intent to confirm */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConfirmPaymentIntentWithPaymentMethodRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful confirmation of payment intent */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaymentIntent"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unprocessable content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
     ListPaymentIntents: {
         parameters: {
             query?: {
@@ -4137,6 +4272,51 @@ export interface operations {
                 };
             };
             /** @description Unprocessable entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    ConfirmSetupIntentWithPaymentMethod: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The ID of the setup intent to confirm */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConfirmSetupIntentWithPaymentMethodRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful confirmation of setup intent */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SetupIntent"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unprocessable content */
             422: {
                 headers: {
                     [name: string]: unknown;
