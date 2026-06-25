@@ -1,6 +1,6 @@
 {
   "name": "@amos.com/node",
-  "version": "0.1.17",
+  "version": "0.1.18",
   "description": "Node.js client for the Amos Pay API.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

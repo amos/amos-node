@@ -1595,8 +1595,6 @@ export interface components {
         };
         AllowedPaymentMethodOptions: {
             moto?: boolean;
-        } & {
-            [key: string]: unknown;
         };
         AllowedPaymentMethodInput: {
             type: components["schemas"]["PaymentMethodType"];
