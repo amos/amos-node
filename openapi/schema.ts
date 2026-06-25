@@ -1550,7 +1550,7 @@ export interface components {
         /** @enum {string} */
         PaymentLinkAmountType: "fixed" | "open";
         /** @enum {string} */
-        PaymentMethodType: "card" | "bank_account";
+        PaymentMethodType: "card" | "bank_account" | "googlepay";
         /** @description Payment method details used when confirming an embedded intent with a new payment method. */
         EmbedConfirmPaymentMethodInput: components["schemas"]["EmbedConfirmCardPaymentMethodInput"] | components["schemas"]["EmbedConfirmBankAccountPaymentMethodInput"] | components["schemas"]["EmbedConfirmGooglePayPaymentMethodInput"] | components["schemas"]["EmbedConfirmApplePayPaymentMethodInput"];
         EmbedConfirmCardPaymentMethodInput: {
