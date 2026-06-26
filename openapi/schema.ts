@@ -1593,21 +1593,69 @@ export interface components {
             billing_address_attributes?: components["schemas"]["BillingAddressInput"];
             card_profile_attributes: components["schemas"]["CardProfileInput"];
         };
-        AllowedPaymentMethodOptions: {
+        AllowedCardPaymentMethodOptions: {
             moto?: boolean;
         };
-        AllowedPaymentMethodInput: {
-            type: components["schemas"]["PaymentMethodType"];
-            options?: components["schemas"]["AllowedPaymentMethodOptions"];
+        /** @description No configurable options for bank account payment methods. */
+        AllowedBankAccountPaymentMethodOptions: Record<string, never>;
+        /** @description No configurable options for Google Pay payment methods. */
+        AllowedGooglePayPaymentMethodOptions: Record<string, never>;
+        AllowedCardPaymentMethodInput: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "card";
+            options?: components["schemas"]["AllowedCardPaymentMethodOptions"];
         };
-        AllowedPaymentMethod: {
-            type: components["schemas"]["PaymentMethodType"];
-            options: components["schemas"]["AllowedPaymentMethodOptions"];
+        AllowedBankAccountPaymentMethodInput: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "bank_account";
+            options?: components["schemas"]["AllowedBankAccountPaymentMethodOptions"];
         };
+        AllowedGooglePayPaymentMethodInput: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "googlepay";
+            options?: components["schemas"]["AllowedGooglePayPaymentMethodOptions"];
+        };
+        /** @description Payment method allowed on a render template, payment link, or merchant application. */
+        AllowedPaymentMethodInput: components["schemas"]["AllowedCardPaymentMethodInput"] | components["schemas"]["AllowedBankAccountPaymentMethodInput"] | components["schemas"]["AllowedGooglePayPaymentMethodInput"];
+        AllowedCardPaymentMethod: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "card";
+            options: components["schemas"]["AllowedCardPaymentMethodOptions"];
+        };
+        AllowedBankAccountPaymentMethod: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "bank_account";
+            options: components["schemas"]["AllowedBankAccountPaymentMethodOptions"];
+        };
+        AllowedGooglePayPaymentMethod: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "googlepay";
+            options: components["schemas"]["AllowedGooglePayPaymentMethodOptions"];
+        };
+        /** @description Allowed payment method returned in API responses and render token JWT payloads. */
+        AllowedPaymentMethod: components["schemas"]["AllowedCardPaymentMethod"] | components["schemas"]["AllowedBankAccountPaymentMethod"] | components["schemas"]["AllowedGooglePayPaymentMethod"];
         /** @enum {string} */
         PayoutDirectionType: "credit" | "debit";
         /** @enum {string} */
-        PayoutStateType: "pending" | "succeeded" | "failed" | "accepted" | "rejected";
+        PayoutStateType: "pending" | "processing" | "succeeded" | "failed" | "errored" | "accepted" | "rejected";
         /** @enum {string} */
         RefundStateType: "pending" | "processing" | "requires_review" | "succeeded" | "cancelled" | "failed";
         /** @enum {string} */
@@ -1923,6 +1971,8 @@ export interface components {
             amount: number;
             currency?: string;
             direction: components["schemas"]["PayoutDirectionType"];
+            prefix?: string;
+            addenda?: string | null;
             metadata?: components["schemas"]["Metadata"];
         };
         CreatePayoutRequest: {
@@ -1936,6 +1986,8 @@ export interface components {
             amount: number;
             currency?: string;
             direction: components["schemas"]["PayoutDirectionType"];
+            prefix?: string;
+            addenda?: string | null;
             metadata?: components["schemas"]["Metadata"];
         };
         CreateBulkPayoutsRequest: {
@@ -1946,12 +1998,15 @@ export interface components {
             id?: string;
             /** Format: uuid */
             account_id?: string;
+            addenda?: string | null;
             /** Format: uuid */
             external_account_id?: string;
             amount?: number;
             currency?: string;
             direction?: components["schemas"]["PayoutDirectionType"];
             metadata?: components["schemas"]["Metadata"];
+            prefix?: string;
+            public_id?: string;
             state?: components["schemas"]["PayoutStateType"];
             /** Format: date-time */
             created_at?: string;
@@ -2361,6 +2416,8 @@ export interface components {
         PaymentMethodIdQuery: string;
         /** @description The ID of the payment transaction to filter by */
         PaymentTransactionIdQuery: string;
+        /** @description The payout direction to filter by */
+        PayoutDirectionQuery: components["schemas"]["PayoutDirectionType"];
         /** @description The payout state to filter by */
         PayoutStateQuery: components["schemas"]["PayoutStateType"];
         /** @description Number of results per page. */
@@ -3713,6 +3770,8 @@ export interface operations {
                 per_page?: components["parameters"]["PerPageQuery"];
                 /** @description The external account ID to filter by */
                 external_account_id?: components["parameters"]["ExternalAccountIdQuery"];
+                /** @description The payout direction to filter by */
+                direction?: components["parameters"]["PayoutDirectionQuery"];
                 /** @description The payout state to filter by */
                 state?: components["parameters"]["PayoutStateQuery"];
             };
