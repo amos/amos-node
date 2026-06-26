@@ -2130,7 +2130,6 @@ export interface components {
         CreateRenderTemplateInput: {
             allowed_payment_methods?: components["schemas"]["AllowedPaymentMethodInput"][];
             currency?: string;
-            moto?: boolean;
             origin_ids?: string[];
         };
         CreateRenderTemplateRequest: {
@@ -2143,7 +2142,6 @@ export interface components {
             organization_id?: string;
             allowed_payment_methods?: components["schemas"]["AllowedPaymentMethod"][];
             currency?: string;
-            moto?: boolean;
         };
         CreateSetupIntentInput: {
             /** Format: uuid */
