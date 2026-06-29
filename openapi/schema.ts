@@ -2164,7 +2164,6 @@ export interface components {
             setup_intent: components["schemas"]["ConfirmSetupIntentInput"];
         };
         ConfirmSetupIntentWithPaymentMethodInput: {
-            moto?: boolean;
             payment_method: components["schemas"]["EmbedConfirmPaymentMethodInput"];
         };
         ConfirmSetupIntentWithPaymentMethodRequest: {
