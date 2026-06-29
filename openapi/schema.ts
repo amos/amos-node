@@ -5037,3 +5037,44 @@ export interface operations {
         };
     };
 }
+type FlattenedDeepRequired<T> = {
+    [K in keyof T]-?: FlattenedDeepRequired<T[K] extends unknown[] | undefined | null ? Extract<T[K], unknown[]>[number] : T[K]>;
+};
+type ReadonlyArray<T> = [
+    Exclude<T, undefined>
+] extends [
+    unknown[]
+] ? Readonly<Exclude<T, undefined>> : Readonly<Exclude<T, undefined>[]>;
+export const chargeAllowed_reverse_actionValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["Charge"]["allowed_reverse_action"]> = ["void", "refund"];
+export const chargeStateValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["Charge"]["state"]> = ["cancelled", "errored", "failed", "processing", "requires_capture", "requires_confirmation", "requires_review", "succeeded"];
+export const externalAccountTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["ExternalAccount"]["type"]> = ["external_card", "external_bank_account"];
+export const legalEntityEntityTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["LegalEntityEntityType"]> = ["individual_sole_proprietorship", "corporation", "limited_liability_company", "partnership", "limited_partnership", "general_partnership", "tax_exempt_organization", "government_agency"];
+export const legalEntityOwnershipTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["LegalEntityOwnershipType"]> = ["public", "private"];
+export const legalEntityDocumentTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["LegalEntityDocumentType"]> = ["irs_cp_575"];
+export const merchantBusinessCategoryTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["MerchantBusinessCategoryType"]> = ["business_association", "charity", "church", "county", "federal", "fraternal_org", "government", "higher_education", "k12", "labor_union", "local", "ministry", "pac", "parachurch", "party", "preschool", "social_club", "social_welfare", "state", "tribal", "vendor", "veterans_org"];
+export const paymentLinkAmountTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["PaymentLinkAmountType"]> = ["fixed", "open"];
+export const paymentMethodTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["PaymentMethodType"]> = ["card", "bank_account", "googlepay"];
+export const embedConfirmCardPaymentMethodInputTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["EmbedConfirmCardPaymentMethodInput"]["type"]> = ["card"];
+export const embedConfirmBankAccountPaymentMethodInputTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["EmbedConfirmBankAccountPaymentMethodInput"]["type"]> = ["bank_account"];
+export const embedConfirmGooglePayPaymentMethodInputTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["EmbedConfirmGooglePayPaymentMethodInput"]["type"]> = ["googlepay"];
+export const embedConfirmApplePayPaymentMethodInputTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["EmbedConfirmApplePayPaymentMethodInput"]["type"]> = ["applepay"];
+export const allowedCardPaymentMethodInputTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["AllowedCardPaymentMethodInput"]["type"]> = ["card"];
+export const allowedBankAccountPaymentMethodInputTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["AllowedBankAccountPaymentMethodInput"]["type"]> = ["bank_account"];
+export const allowedGooglePayPaymentMethodInputTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["AllowedGooglePayPaymentMethodInput"]["type"]> = ["googlepay"];
+export const allowedCardPaymentMethodTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["AllowedCardPaymentMethod"]["type"]> = ["card"];
+export const allowedBankAccountPaymentMethodTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["AllowedBankAccountPaymentMethod"]["type"]> = ["bank_account"];
+export const allowedGooglePayPaymentMethodTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["AllowedGooglePayPaymentMethod"]["type"]> = ["googlepay"];
+export const payoutDirectionTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["PayoutDirectionType"]> = ["credit", "debit"];
+export const payoutStateTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["PayoutStateType"]> = ["pending", "processing", "succeeded", "failed", "errored", "accepted", "rejected"];
+export const refundStateTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["RefundStateType"]> = ["pending", "processing", "requires_review", "succeeded", "cancelled", "failed"];
+export const subscriptionIntervalTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["SubscriptionIntervalType"]> = ["day", "week", "month", "year"];
+export const subscriptionPlanTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["SubscriptionPlanType"]> = ["fixed", "variable"];
+export const transactionSourceTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["TransactionSourceType"]> = ["api", "dashboard", "iframe", "system", "subscription"];
+export const walletProviderTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["WalletProviderType"]> = ["googlepay", "applepay"];
+export const webhookEventTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["WebhookEventType"]> = ["charge.cancelled", "charge.created", "charge.errored", "charge.failed", "charge.processing", "charge.requires_capture", "charge.requires_confirmation", "charge.requires_review", "charge.succeeded", "customer.created", "customer.updated", "legal_entity.created", "legal_entity.updated", "legal_entity_principal.created", "legal_entity_principal.updated", "merchant.created", "merchant.updated", "payment_intent.cancelled", "payment_intent.created", "payment_intent.errored_authorization", "payment_intent.errored_capture", "payment_intent.errored_sale", "payment_intent.processing_authorization", "payment_intent.processing_capture", "payment_intent.processing_sale", "payment_intent.requires_capture", "payment_intent.requires_confirmation", "payment_intent.requires_payment_method", "payment_intent.requires_review", "payment_intent.succeeded", "processor_transaction.completed", "reconciliation.created", "refund.cancelled", "refund.created", "refund.failed", "refund.pending", "refund.processing", "refund.requires_review", "refund.succeeded", "void.created", "void.failed", "void.pending", "void.processing", "void.requires_review", "void.succeeded"];
+export const paymentIntentStateValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["PaymentIntent"]["state"]> = ["requires_payment_method", "requires_confirmation", "requires_capture", "processing_authorization", "processing_capture", "processing_sale", "requires_review", "succeeded", "cancelled", "errored_authorization", "errored_capture", "errored_sale"];
+export const processorTransactionPayment_transaction_typeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["ProcessorTransaction"]["payment_transaction_type"]> = ["charge", "refund", "void"];
+export const processorTransactionTransaction_typeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["ProcessorTransaction"]["transaction_type"]> = ["authorization", "authorization_reversal", "capture", "credit", "echeck_credit", "echeck_sale", "echeck_void", "sale", "void"];
+export const refundAllowed_reverse_actionValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["Refund"]["allowed_reverse_action"]> = ["void"];
+export const setupIntentStateValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["SetupIntent"]["state"]> = ["requires_payment_method", "requires_confirmation", "verifying", "requires_review", "succeeded", "failed", "cancelled", "errored"];
+export const subscriptionStateValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["Subscription"]["state"]> = ["active", "paused", "past_due", "cancelled"];
