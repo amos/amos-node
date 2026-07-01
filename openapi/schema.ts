@@ -1228,6 +1228,7 @@ export interface components {
             account_holder_type?: string;
             account_type?: string;
             bank_name?: string;
+            fingerprint?: string | null;
             last4?: string;
             routing_number?: string;
             state?: string;
@@ -1288,6 +1289,7 @@ export interface components {
             exp_year?: number;
             first6?: string;
             funding?: string | null;
+            fingerprint?: string | null;
             last4?: string;
             state?: string;
             three_d_secure_supported?: boolean | null;
