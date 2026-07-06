@@ -1315,6 +1315,7 @@ export interface components {
             merchant_id?: string;
             /** Format: uuid */
             processor_id?: string;
+            worldpay_mid?: string;
             /** Format: date-time */
             created_at?: string;
             /** Format: date-time */
@@ -1480,6 +1481,10 @@ export interface components {
             document_type?: components["schemas"]["LegalEntityDocumentType"];
             /** Format: uuid */
             file_upload_id?: string;
+            file_name?: string;
+            byte_size?: number;
+            /** Format: date-time */
+            created_at?: string;
         };
         CreateLegalEntityApplicationPrincipalInput: {
             /** Format: uuid */
@@ -1552,7 +1557,7 @@ export interface components {
         /** @enum {string} */
         PaymentLinkAmountType: "fixed" | "open";
         /** @enum {string} */
-        PaymentMethodType: "card" | "bank_account" | "googlepay";
+        PaymentMethodType: "card" | "bank_account" | "googlepay" | "applepay";
         /** @description Payment method details used when confirming an embedded intent with a new payment method. */
         EmbedConfirmPaymentMethodInput: components["schemas"]["EmbedConfirmCardPaymentMethodInput"] | components["schemas"]["EmbedConfirmBankAccountPaymentMethodInput"] | components["schemas"]["EmbedConfirmGooglePayPaymentMethodInput"] | components["schemas"]["EmbedConfirmApplePayPaymentMethodInput"];
         EmbedConfirmCardPaymentMethodInput: {
@@ -1602,6 +1607,8 @@ export interface components {
         AllowedBankAccountPaymentMethodOptions: Record<string, never>;
         /** @description No configurable options for Google Pay payment methods. */
         AllowedGooglePayPaymentMethodOptions: Record<string, never>;
+        /** @description No configurable options for Apple Pay payment methods. */
+        AllowedApplePayPaymentMethodOptions: Record<string, never>;
         AllowedCardPaymentMethodInput: {
             /**
              * @description discriminator enum property added by openapi-typescript
@@ -1626,8 +1633,16 @@ export interface components {
             type: "googlepay";
             options?: components["schemas"]["AllowedGooglePayPaymentMethodOptions"];
         };
+        AllowedApplePayPaymentMethodInput: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "applepay";
+            options?: components["schemas"]["AllowedApplePayPaymentMethodOptions"];
+        };
         /** @description Payment method allowed on a render template, payment link, or merchant application. */
-        AllowedPaymentMethodInput: components["schemas"]["AllowedCardPaymentMethodInput"] | components["schemas"]["AllowedBankAccountPaymentMethodInput"] | components["schemas"]["AllowedGooglePayPaymentMethodInput"];
+        AllowedPaymentMethodInput: components["schemas"]["AllowedCardPaymentMethodInput"] | components["schemas"]["AllowedBankAccountPaymentMethodInput"] | components["schemas"]["AllowedGooglePayPaymentMethodInput"] | components["schemas"]["AllowedApplePayPaymentMethodInput"];
         AllowedCardPaymentMethod: {
             /**
              * @description discriminator enum property added by openapi-typescript
@@ -1652,8 +1667,16 @@ export interface components {
             type: "googlepay";
             options: components["schemas"]["AllowedGooglePayPaymentMethodOptions"];
         };
+        AllowedApplePayPaymentMethod: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "applepay";
+            options: components["schemas"]["AllowedApplePayPaymentMethodOptions"];
+        };
         /** @description Allowed payment method returned in API responses and render token JWT payloads. */
-        AllowedPaymentMethod: components["schemas"]["AllowedCardPaymentMethod"] | components["schemas"]["AllowedBankAccountPaymentMethod"] | components["schemas"]["AllowedGooglePayPaymentMethod"];
+        AllowedPaymentMethod: components["schemas"]["AllowedCardPaymentMethod"] | components["schemas"]["AllowedBankAccountPaymentMethod"] | components["schemas"]["AllowedGooglePayPaymentMethod"] | components["schemas"]["AllowedApplePayPaymentMethod"];
         /** @enum {string} */
         PayoutDirectionType: "credit" | "debit";
         /** @enum {string} */
@@ -1702,7 +1725,11 @@ export interface components {
         LegalEntity: {
             /** Format: uuid */
             id?: string;
+            /** Format: uuid */
+            organization_id?: string;
             legal_name?: string;
+            /** Format: uuid */
+            parent_legal_entity_id?: string | null;
             entity_type?: components["schemas"]["LegalEntityEntityType"];
             ownership_type?: components["schemas"]["LegalEntityOwnershipType"];
             contact_email?: string;
@@ -1714,6 +1741,8 @@ export interface components {
             business_postal_code?: string;
             business_country?: string;
             tax_id_last4?: string;
+            /** Format: date-time */
+            created_at?: string;
         };
         LegalEntityApplication: {
             /** Format: uuid */
@@ -1733,6 +1762,17 @@ export interface components {
             business_country?: string;
             state?: string;
             tax_id_last4?: string;
+            /** Format: date-time */
+            approved_at?: string | null;
+            /** Format: date-time */
+            denied_at?: string | null;
+            /** Format: date-time */
+            needs_information_at?: string | null;
+            decision_reason?: string | null;
+            /** Format: date-time */
+            created_at?: string;
+            /** Format: date-time */
+            updated_at?: string;
             requirements?: components["schemas"]["LegalEntityApplicationRequirement"][];
         };
         CreateMerchantApplicationInput: {
@@ -1799,16 +1839,40 @@ export interface components {
         Merchant: {
             /** Format: uuid */
             id?: string;
+            active?: boolean;
             /** Format: uuid */
             organization_id?: string;
             /** Format: uuid */
             legal_entity_id?: string;
             annual_credit_card_sales_volume?: number;
             allowed_payment_methods?: components["schemas"]["AllowedPaymentMethod"][];
+            business_category?: components["schemas"]["MerchantBusinessCategoryType"];
+            business_description?: string;
+            city?: string;
+            country_code?: string;
+            customer_service_number?: string;
             has_accepted_credit_cards?: boolean;
             dba_name?: string;
-            metadata?: components["schemas"]["Metadata"];
+            echeck_billing_descriptor?: string;
+            echeck_company_name?: string;
+            echeck_enabled?: boolean;
+            hard_coded_billing_descriptor?: string;
+            max_transaction_amount?: number;
+            /** Format: uuid */
+            merchant_application_id?: string;
             mcc?: string;
+            naics_code?: string;
+            postal_code?: string;
+            primary_contact_email_address?: string;
+            primary_contact_first_name?: string;
+            primary_contact_last_name?: string;
+            primary_contact_phone?: string;
+            purchase_currency?: string;
+            settlement_currency?: string;
+            street_address1?: string;
+            street_address2?: string;
+            sub_merchant_id?: string;
+            website_url?: string;
             /** Format: date-time */
             created_at?: string;
             /** Format: date-time */
@@ -5055,7 +5119,7 @@ export const legalEntityOwnershipTypeValues: ReadonlyArray<FlattenedDeepRequired
 export const legalEntityDocumentTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["LegalEntityDocumentType"]> = ["irs_cp_575"];
 export const merchantBusinessCategoryTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["MerchantBusinessCategoryType"]> = ["business_association", "charity", "church", "county", "federal", "fraternal_org", "government", "higher_education", "k12", "labor_union", "local", "ministry", "pac", "parachurch", "party", "preschool", "social_club", "social_welfare", "state", "tribal", "vendor", "veterans_org"];
 export const paymentLinkAmountTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["PaymentLinkAmountType"]> = ["fixed", "open"];
-export const paymentMethodTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["PaymentMethodType"]> = ["card", "bank_account", "googlepay"];
+export const paymentMethodTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["PaymentMethodType"]> = ["card", "bank_account", "googlepay", "applepay"];
 export const embedConfirmCardPaymentMethodInputTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["EmbedConfirmCardPaymentMethodInput"]["type"]> = ["card"];
 export const embedConfirmBankAccountPaymentMethodInputTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["EmbedConfirmBankAccountPaymentMethodInput"]["type"]> = ["bank_account"];
 export const embedConfirmGooglePayPaymentMethodInputTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["EmbedConfirmGooglePayPaymentMethodInput"]["type"]> = ["googlepay"];
@@ -5063,9 +5127,11 @@ export const embedConfirmApplePayPaymentMethodInputTypeValues: ReadonlyArray<Fla
 export const allowedCardPaymentMethodInputTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["AllowedCardPaymentMethodInput"]["type"]> = ["card"];
 export const allowedBankAccountPaymentMethodInputTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["AllowedBankAccountPaymentMethodInput"]["type"]> = ["bank_account"];
 export const allowedGooglePayPaymentMethodInputTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["AllowedGooglePayPaymentMethodInput"]["type"]> = ["googlepay"];
+export const allowedApplePayPaymentMethodInputTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["AllowedApplePayPaymentMethodInput"]["type"]> = ["applepay"];
 export const allowedCardPaymentMethodTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["AllowedCardPaymentMethod"]["type"]> = ["card"];
 export const allowedBankAccountPaymentMethodTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["AllowedBankAccountPaymentMethod"]["type"]> = ["bank_account"];
 export const allowedGooglePayPaymentMethodTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["AllowedGooglePayPaymentMethod"]["type"]> = ["googlepay"];
+export const allowedApplePayPaymentMethodTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["AllowedApplePayPaymentMethod"]["type"]> = ["applepay"];
 export const payoutDirectionTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["PayoutDirectionType"]> = ["credit", "debit"];
 export const payoutStateTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["PayoutStateType"]> = ["pending", "processing", "succeeded", "failed", "errored", "accepted", "rejected"];
 export const refundStateTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["RefundStateType"]> = ["pending", "processing", "requires_review", "succeeded", "cancelled", "failed"];
