@@ -1,5 +1,11 @@
 # @amos.com/node
 
+## 0.1.26
+
+### Patch Changes
+
+- Fix dependency vulnerabilities
+
 ## 0.1.25
 
 ### Patch Changes
