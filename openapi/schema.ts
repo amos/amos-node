@@ -487,23 +487,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/embed/payment_intents/{id}/confirm": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Confirm a payment intent */
-        post: operations["ConfirmEmbedPaymentIntent"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/embed/payment_intents/{id}/confirm_with_payment_method": {
         parameters: {
             query?: never;
@@ -862,23 +845,6 @@ export interface paths {
         get: operations["GetSetupIntent"];
         put?: never;
         post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/embed/setup_intents/{id}/confirm": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Confirm a setup intent */
-        post: operations["ConfirmSetupIntent"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1906,22 +1872,14 @@ export interface components {
         CreatePaymentIntentRequest: {
             payment_intent: components["schemas"]["CreatePaymentIntentInput"];
         };
-        ConfirmPaymentIntentInput: {
-            moto?: boolean;
+        ConfirmPaymentIntentWithPaymentMethodInput: {
             /** Format: uuid */
             payment_method_id?: string;
-            payment_method?: {
-                metadata?: components["schemas"]["Metadata"];
-                bank_account_profile_attributes?: components["schemas"]["BankAccountProfileInput"];
-                billing_address_attributes?: components["schemas"]["BillingAddressInput"];
-                card_profile_attributes?: components["schemas"]["CardProfileInput"];
-            };
-        };
-        ConfirmPaymentIntentRequest: {
-            payment_intent: components["schemas"]["ConfirmPaymentIntentInput"];
-        };
-        ConfirmPaymentIntentWithPaymentMethodInput: {
             payment_method: components["schemas"]["EmbedConfirmPaymentMethodInput"];
+        } | {
+            /** Format: uuid */
+            payment_method_id: string;
+            payment_method?: components["schemas"]["EmbedConfirmPaymentMethodInput"];
         };
         ConfirmPaymentIntentWithPaymentMethodRequest: {
             payment_intent: components["schemas"]["ConfirmPaymentIntentWithPaymentMethodInput"];
@@ -1964,6 +1922,7 @@ export interface components {
         };
         RecurringPayment: {
             network_transaction_id?: string;
+            transaction_link_id?: string;
         };
         CreatePaymentLinkInput: {
             slug?: string;
@@ -2101,6 +2060,7 @@ export interface components {
             processor_transaction_id?: string;
             processor_reference?: string;
             network_transaction_id?: string;
+            transaction_link_id?: string;
             /** @enum {string} */
             transaction_type?: "authorization" | "authorization_reversal" | "capture" | "credit" | "echeck_credit" | "echeck_sale" | "echeck_void" | "sale" | "void";
             /** Format: date-time */
@@ -2217,20 +2177,14 @@ export interface components {
         CreateSetupIntentRequest: {
             setup_intent: components["schemas"]["CreateSetupIntentInput"];
         };
-        ConfirmSetupIntentInput: {
-            moto?: boolean;
-            payment_method?: {
-                metadata?: components["schemas"]["Metadata"];
-                bank_account_profile_attributes?: components["schemas"]["BankAccountProfileInput"];
-                billing_address_attributes?: components["schemas"]["BillingAddressInput"];
-                card_profile_attributes?: components["schemas"]["CardProfileInput"];
-            };
-        };
-        ConfirmSetupIntentRequest: {
-            setup_intent: components["schemas"]["ConfirmSetupIntentInput"];
-        };
         ConfirmSetupIntentWithPaymentMethodInput: {
+            /** Format: uuid */
+            payment_method_id?: string;
             payment_method: components["schemas"]["EmbedConfirmPaymentMethodInput"];
+        } | {
+            /** Format: uuid */
+            payment_method_id: string;
+            payment_method?: components["schemas"]["EmbedConfirmPaymentMethodInput"];
         };
         ConfirmSetupIntentWithPaymentMethodRequest: {
             setup_intent: components["schemas"]["ConfirmSetupIntentWithPaymentMethodInput"];
@@ -3482,42 +3436,6 @@ export interface operations {
             };
         };
     };
-    ConfirmEmbedPaymentIntent: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The ID of the payment intent to confirm */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ConfirmPaymentIntentRequest"];
-            };
-        };
-        responses: {
-            /** @description Successful confirmation of payment intent */
-            202: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaymentIntent"];
-                };
-            };
-            /** @description Unprocessable entity */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
     ConfirmEmbedPaymentIntentWithPaymentMethod: {
         parameters: {
             query?: never;
@@ -4364,42 +4282,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SetupIntent"];
-                };
-            };
-        };
-    };
-    ConfirmSetupIntent: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The ID of the setup intent to confirm */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ConfirmSetupIntentRequest"];
-            };
-        };
-        responses: {
-            /** @description Successful confirmation of setup intent */
-            202: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SetupIntent"];
-                };
-            };
-            /** @description Unprocessable entity */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
                 };
             };
         };
