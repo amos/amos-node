@@ -1897,15 +1897,14 @@ export interface components {
         CreatePaymentIntentRequest: {
             payment_intent: components["schemas"]["CreatePaymentIntentInput"];
         };
-        ConfirmPaymentIntentWithPaymentMethodInput: {
-            /** Format: uuid */
-            payment_method_id?: string;
-            payment_method: components["schemas"]["EmbedConfirmPaymentMethodInput"];
-        } | {
+        ConfirmPaymentIntentWithPaymentMethodIdInput: {
             /** Format: uuid */
             payment_method_id: string;
-            payment_method?: components["schemas"]["EmbedConfirmPaymentMethodInput"];
         };
+        ConfirmPaymentIntentWithEmbeddedPaymentMethodInput: {
+            payment_method: components["schemas"]["EmbedConfirmPaymentMethodInput"];
+        };
+        ConfirmPaymentIntentWithPaymentMethodInput: components["schemas"]["ConfirmPaymentIntentWithPaymentMethodIdInput"] | components["schemas"]["ConfirmPaymentIntentWithEmbeddedPaymentMethodInput"];
         ConfirmPaymentIntentWithPaymentMethodRequest: {
             payment_intent: components["schemas"]["ConfirmPaymentIntentWithPaymentMethodInput"];
         };
@@ -2228,15 +2227,14 @@ export interface components {
         CreateSetupIntentRequest: {
             setup_intent: components["schemas"]["CreateSetupIntentInput"];
         };
-        ConfirmSetupIntentWithPaymentMethodInput: {
-            /** Format: uuid */
-            payment_method_id?: string;
-            payment_method: components["schemas"]["EmbedConfirmPaymentMethodInput"];
-        } | {
+        ConfirmSetupIntentWithPaymentMethodIdInput: {
             /** Format: uuid */
             payment_method_id: string;
-            payment_method?: components["schemas"]["EmbedConfirmPaymentMethodInput"];
         };
+        ConfirmSetupIntentWithEmbeddedPaymentMethodInput: {
+            payment_method: components["schemas"]["EmbedConfirmPaymentMethodInput"];
+        };
+        ConfirmSetupIntentWithPaymentMethodInput: components["schemas"]["ConfirmSetupIntentWithPaymentMethodIdInput"] | components["schemas"]["ConfirmSetupIntentWithEmbeddedPaymentMethodInput"];
         ConfirmSetupIntentWithPaymentMethodRequest: {
             setup_intent: components["schemas"]["ConfirmSetupIntentWithPaymentMethodInput"];
         };
