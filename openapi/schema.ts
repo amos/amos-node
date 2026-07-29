@@ -540,6 +540,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/payment_links/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieve a payment link by ID */
+        get: operations["GetPaymentLink"];
+        /** Update a payment link by ID */
+        put: operations["UpdatePaymentLink"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/payment_intents/{id}": {
         parameters: {
             query?: never;
@@ -1954,6 +1972,29 @@ export interface components {
         };
         CreatePaymentLinkRequest: {
             payment_link: components["schemas"]["CreatePaymentLinkInput"];
+        };
+        UpdatePaymentLinkInput: {
+            active?: boolean;
+            amount_type?: components["schemas"]["PaymentLinkAmountType"];
+            amount?: number;
+            /** Format: uri */
+            image_url?: string;
+            minimum_amount?: number;
+            maximum_amount?: number;
+            suggested_amounts?: number[];
+            currency?: string;
+            description?: string | null;
+            statement_descriptor?: string;
+            /** Format: uri */
+            success_url?: string;
+            title?: string;
+            /** Format: uri */
+            cancel_url?: string;
+            allowed_payment_methods?: components["schemas"]["AllowedPaymentMethodInput"][];
+            metadata?: components["schemas"]["Metadata"];
+        };
+        UpdatePaymentLinkRequest: {
+            payment_link: components["schemas"]["UpdatePaymentLinkInput"];
         };
         PaymentLink: {
             /** Format: uuid */
@@ -3604,6 +3645,83 @@ export interface operations {
                 };
             };
             /** @description Unprocessable entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    GetPaymentLink: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The ID of the payment link to retrieve */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Payment link retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaymentLink"];
+                };
+            };
+            /** @description Payment link not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    UpdatePaymentLink: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The ID of the payment link to update */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdatePaymentLinkRequest"];
+            };
+        };
+        responses: {
+            /** @description Payment link updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaymentLink"];
+                };
+            };
+            /** @description Payment link not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Error updating payment link */
             422: {
                 headers: {
                     [name: string]: unknown;
