@@ -2001,6 +2001,7 @@ export interface components {
             id?: string;
             /** Format: uuid */
             organization_id?: string;
+            organization_slug?: string;
             /** Format: uuid */
             account_id?: string;
             slug?: string;
