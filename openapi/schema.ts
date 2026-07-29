@@ -598,7 +598,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** List all payment methods */
+        /**
+         * List all payment methods
+         * @description Filter by exactly one of customer_id or payment_intent_id.
+         */
         get: operations["ListPaymentMethods"];
         put?: never;
         post?: never;
@@ -1194,6 +1197,8 @@ export interface components {
             account_holder_type?: string;
             account_type?: string;
             bank_name?: string;
+            /** @enum {string|null} */
+            failure_reason?: "activation_failed" | "processing_error" | "vault_failed" | null;
             fingerprint?: string | null;
             last4?: string;
             routing_number?: string;
@@ -1253,6 +1258,8 @@ export interface components {
             cvc_check_message?: string | null;
             exp_month?: number;
             exp_year?: number;
+            /** @enum {string|null} */
+            failure_reason?: "authorization_failed" | "avs_blocked" | "brand_not_allowed" | "brand_not_found" | "cvc_blocked" | "processing_error" | "vault_failed" | null;
             first6?: string;
             funding?: string | null;
             fingerprint?: string | null;
@@ -2030,6 +2037,8 @@ export interface components {
             currency?: string;
             direction?: components["schemas"]["PayoutDirectionType"];
             metadata?: components["schemas"]["Metadata"];
+            /** Format: uuid */
+            organization_id?: string;
             prefix?: string;
             public_id?: string;
             state?: components["schemas"]["PayoutStateType"];
@@ -2429,6 +2438,8 @@ export interface components {
         ParentTransactionIdQuery: string;
         /** @description The ID of the payment intent to filter by */
         PaymentIntentIdQuery: string;
+        /** @description The ID of the customer to filter by. Mutually exclusive with payment_intent_id. */
+        PaymentMethodCustomerIdQuery: string;
         /** @description The ID of the payment method to filter by */
         PaymentMethodIdQuery: string;
         /** @description The ID of the payment transaction to filter by */
@@ -3692,13 +3703,15 @@ export interface operations {
     };
     ListPaymentMethods: {
         parameters: {
-            query: {
+            query?: {
                 /** @description The page of results to retrieve. */
                 page?: components["parameters"]["PageQuery"];
                 /** @description Number of results per page. */
                 per_page?: components["parameters"]["PerPageQuery"];
-                /** @description The ID of the customer to filter by */
-                customer_id: components["parameters"]["CustomerIdQuery"];
+                /** @description The ID of the customer to filter by. Mutually exclusive with payment_intent_id. */
+                customer_id?: components["parameters"]["PaymentMethodCustomerIdQuery"];
+                /** @description The ID of the payment intent to filter by */
+                payment_intent_id?: components["parameters"]["PaymentIntentIdQuery"];
             };
             header?: never;
             path?: never;
@@ -4993,6 +5006,8 @@ type ReadonlyArray<T> = [
 ] extends [
     unknown[]
 ] ? Readonly<Exclude<T, undefined>> : Readonly<Exclude<T, undefined>[]>;
+export const bankAccountProfileFailure_reasonValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["BankAccountProfile"]["failure_reason"]> = ["activation_failed", "processing_error", "vault_failed"];
+export const cardProfileFailure_reasonValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["CardProfile"]["failure_reason"]> = ["authorization_failed", "avs_blocked", "brand_not_allowed", "brand_not_found", "cvc_blocked", "processing_error", "vault_failed"];
 export const chargeAllowed_reverse_actionValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["Charge"]["allowed_reverse_action"]> = ["void", "refund"];
 export const chargeStateValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["Charge"]["state"]> = ["cancelled", "errored", "failed", "processing", "requires_capture", "requires_confirmation", "requires_review", "settlement_failed", "succeeded"];
 export const externalAccountTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["ExternalAccount"]["type"]> = ["external_card", "external_bank_account"];
