@@ -1186,6 +1186,7 @@ export interface components {
         /** @description Decoded JWT payload for render token responses. */
         RenderTokenJwt: {
             allowed_payment_methods?: components["schemas"]["AllowedPaymentMethod"][];
+            billing_address_options?: components["schemas"]["BillingAddressOptions"];
             env?: string;
             origins?: string[];
             /** Format: uuid */
@@ -1559,6 +1560,31 @@ export interface components {
         PaymentLinkAmountType: "fixed" | "open";
         /** @enum {string} */
         PaymentMethodType: "card" | "bank_account" | "googlepay" | "applepay";
+        /**
+         * @description US state code (50 states; excludes DC and territories).
+         * @enum {string}
+         */
+        UsStateType: "AK" | "AL" | "AR" | "AZ" | "CA" | "CO" | "CT" | "DE" | "FL" | "GA" | "HI" | "IA" | "ID" | "IL" | "IN" | "KS" | "KY" | "LA" | "MA" | "MD" | "ME" | "MI" | "MN" | "MO" | "MS" | "MT" | "NC" | "ND" | "NE" | "NH" | "NJ" | "NM" | "NV" | "NY" | "OH" | "OK" | "OR" | "PA" | "RI" | "SC" | "SD" | "TN" | "TX" | "UT" | "VA" | "VT" | "WA" | "WI" | "WV" | "WY";
+        /** @description Restrict billing addresses to selected US states. */
+        UsOnlyBillingAddressOptions: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            mode: "us_only";
+            allowed_states: components["schemas"]["UsStateType"][];
+        };
+        /** @description Restrict billing addresses to selected countries. */
+        InternationalBillingAddressOptions: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            mode: "international";
+            allowed_countries: string[];
+        };
+        /** @description Billing address collection restrictions for a render template. */
+        BillingAddressOptions: components["schemas"]["UsOnlyBillingAddressOptions"] | components["schemas"]["InternationalBillingAddressOptions"];
         /** @description Payment method details used when confirming an embedded intent with a new payment method. */
         EmbedConfirmPaymentMethodInput: components["schemas"]["EmbedConfirmCardPaymentMethodInput"] | components["schemas"]["EmbedConfirmBankAccountPaymentMethodInput"] | components["schemas"]["EmbedConfirmGooglePayPaymentMethodInput"] | components["schemas"]["EmbedConfirmApplePayPaymentMethodInput"];
         EmbedConfirmCardPaymentMethodInput: {
@@ -2239,6 +2265,7 @@ export interface components {
         };
         CreateRenderTemplateInput: {
             allowed_payment_methods?: components["schemas"]["AllowedPaymentMethodInput"][];
+            billing_address_options: components["schemas"]["BillingAddressOptions"];
             currency?: string;
             origin_ids?: string[];
         };
@@ -2251,6 +2278,7 @@ export interface components {
             /** Format: uuid */
             organization_id?: string;
             allowed_payment_methods?: components["schemas"]["AllowedPaymentMethod"][];
+            billing_address_options: components["schemas"]["BillingAddressOptions"];
             currency?: string;
         };
         CreateSetupIntentInput: {
@@ -5191,6 +5219,9 @@ export const legalEntityDocumentTypeValues: ReadonlyArray<FlattenedDeepRequired<
 export const merchantBusinessCategoryTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["MerchantBusinessCategoryType"]> = ["business_association", "charity", "church", "county", "federal", "fraternal_org", "government", "higher_education", "k12", "labor_union", "local", "ministry", "pac", "parachurch", "party", "preschool", "social_club", "social_welfare", "state", "tribal", "vendor", "veterans_org"];
 export const paymentLinkAmountTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["PaymentLinkAmountType"]> = ["fixed", "open"];
 export const paymentMethodTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["PaymentMethodType"]> = ["card", "bank_account", "googlepay", "applepay"];
+export const usStateTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["UsStateType"]> = ["AK", "AL", "AR", "AZ", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "MD", "ME", "MI", "MN", "MO", "MS", "MT", "NC", "ND", "NE", "NH", "NJ", "NM", "NV", "NY", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VA", "VT", "WA", "WI", "WV", "WY"];
+export const usOnlyBillingAddressOptionsModeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["UsOnlyBillingAddressOptions"]["mode"]> = ["us_only"];
+export const internationalBillingAddressOptionsModeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["InternationalBillingAddressOptions"]["mode"]> = ["international"];
 export const embedConfirmCardPaymentMethodInputTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["EmbedConfirmCardPaymentMethodInput"]["type"]> = ["card"];
 export const embedConfirmBankAccountPaymentMethodInputTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["EmbedConfirmBankAccountPaymentMethodInput"]["type"]> = ["bank_account"];
 export const embedConfirmGooglePayPaymentMethodInputTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["EmbedConfirmGooglePayPaymentMethodInput"]["type"]> = ["googlepay"];
