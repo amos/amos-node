@@ -1261,10 +1261,20 @@ export interface components {
             exp_year?: number;
             moto?: boolean;
         };
+        /** @description Apple Pay card profile for embed confirm. Clients must send the raw PKPaymentToken as wallet_payload; Vault decrypts it and returns the cryptogram. Encrypted PAN and client-supplied cryptogram are not supported. */
+        ApplePayCardProfileInput: {
+            wallet_brand?: string;
+            /** @description Display last4 from the Apple Pay payment method. */
+            wallet_last4?: string;
+            /** @description The unmodified JSON-encoded PKPaymentToken. */
+            wallet_payload: string;
+            wallet_provider?: components["schemas"]["WalletProviderType"];
+        };
         GooglePayCardProfileInput: {
             wallet_brand?: string;
             wallet_last4?: string;
-            wallet_payload?: string;
+            /** @description The unmodified Google Pay payment token payload. */
+            wallet_payload: string;
             wallet_provider?: components["schemas"]["WalletProviderType"];
         };
         CardProfile: {
@@ -1591,7 +1601,7 @@ export interface components {
             type: "applepay";
             metadata?: components["schemas"]["Metadata"];
             billing_address_attributes?: components["schemas"]["BillingAddressInput"];
-            card_profile_attributes: components["schemas"]["CardProfileInput"];
+            card_profile_attributes: components["schemas"]["ApplePayCardProfileInput"];
         };
         /** @description One-time Plaid Link credentials used to source and verify a bank account when ACH verification is required. */
         PlaidCredentialsInput: {
@@ -1963,8 +1973,13 @@ export interface components {
             /** @description Short-lived Plaid Link token used to open Link in the embed client. */
             link_token: string;
         };
+        /** @description How this payment intent relates to a recurring series. Use `initial` for the first charge that establishes the series. Use `network_transaction_id` and/or `transaction_link_id` for subsequent merchant-initiated charges. Do not combine `initial` with network identifiers on the same request. */
         RecurringPayment: {
+            /** @description When true, marks the first payment in a recurring series so the processor can treat it as an initial recurring / credential-on-file setup transaction. */
+            initial?: boolean;
+            /** @description Network transaction id from the initial recurring charge, used for subsequent merchant-initiated payments. */
             network_transaction_id?: string;
+            /** @description Processor transaction link id for subsequent recurring payments where supported. */
             transaction_link_id?: string;
         };
         CreatePaymentLinkInput: {
@@ -2469,13 +2484,32 @@ export interface components {
             /** Format: date-time */
             updated_at?: string;
         };
+        /** @description Body POSTed to a webhook endpoint for an event delivery. */
+        WebhookEventPayload: {
+            /**
+             * Format: uuid
+             * @description Stable event id for this delivery. Identical across retries of the same event; use for idempotent handling.
+             */
+            id: string;
+            /**
+             * Format: uuid
+             * @description Id of the webhook endpoint that received this delivery.
+             */
+            webhook_id: string;
+            event: components["schemas"]["WebhookEventType"];
+            /** @description Event-specific payload keyed by resource descriptor. */
+            data: {
+                [key: string]: unknown;
+            };
+            metadata?: components["schemas"]["Metadata"];
+        };
         WebhookRequest: {
             id?: string;
             /** Format: uuid */
             webhook_endpoint_id?: string;
             /** Format: date-time */
             expires_at?: string;
-            request_body?: Record<string, never>;
+            request_body?: components["schemas"]["WebhookEventPayload"];
             /** Format: date-time */
             created_at?: string;
             /** Format: date-time */
