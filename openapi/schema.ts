@@ -1262,21 +1262,15 @@ export interface components {
             exp_year?: number;
             moto?: boolean;
         };
-        /** @description Apple Pay card profile for embed confirm. Clients must send the raw PKPaymentToken as wallet_payload; Vault decrypts it and returns the cryptogram. Encrypted PAN and client-supplied cryptogram are not supported. */
+        /** @description Apple Pay card profile for embed confirm. Clients only send wallet_payload (the raw JSON-encoded PKPaymentToken). Brand, last4, expiration, pan_type, wallet_provider, and cryptogram are set from the Vault response. Encrypted PAN and client-supplied cryptogram are not supported. */
         ApplePayCardProfileInput: {
-            wallet_brand?: string;
-            /** @description Display last4 from the Apple Pay payment method. */
-            wallet_last4?: string;
             /** @description The unmodified JSON-encoded PKPaymentToken. */
             wallet_payload: string;
-            wallet_provider?: components["schemas"]["WalletProviderType"];
         };
+        /** @description Google Pay card profile for embed confirm. Clients only send wallet_payload. Brand, last4, expiration, pan_type, wallet_provider, and cryptogram are set from the Vault response. Encrypted PAN is not supported. */
         GooglePayCardProfileInput: {
-            wallet_brand?: string;
-            wallet_last4?: string;
             /** @description The unmodified Google Pay payment token payload. */
             wallet_payload: string;
-            wallet_provider?: components["schemas"]["WalletProviderType"];
         };
         CardProfile: {
             avs_check?: string;
