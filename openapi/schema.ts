@@ -1556,6 +1556,14 @@ export interface components {
         LegalEntityDocumentType: "irs_cp_575";
         /** @enum {string} */
         MerchantBusinessCategoryType: "business_association" | "charity" | "church" | "county" | "federal" | "fraternal_org" | "government" | "higher_education" | "k12" | "labor_union" | "local" | "ministry" | "pac" | "parachurch" | "party" | "preschool" | "social_club" | "social_welfare" | "state" | "tribal" | "vendor" | "veterans_org";
+        /**
+         * @description How funds are captured after payment confirmation.
+         *     `automatic` performs a sale (authorize and capture together).
+         *     `automatic_async` authorizes then captures asynchronously.
+         *     `manual` authorizes only; capture must be requested separately.
+         * @enum {string}
+         */
+        PaymentIntentCaptureMethodType: "automatic" | "automatic_async" | "manual";
         /** @enum {string} */
         PaymentLinkAmountType: "fixed" | "open";
         /** @enum {string} */
@@ -1931,7 +1939,7 @@ export interface components {
         };
         CreatePaymentIntentInput: {
             amount: number;
-            capture_method?: string;
+            capture_method?: components["schemas"]["PaymentIntentCaptureMethodType"];
             /** Format: uuid */
             customer_id?: string;
             description?: string | null;
@@ -1969,7 +1977,7 @@ export interface components {
             /** Format: uuid */
             account_id?: string;
             amount?: number;
-            capture_method?: string;
+            capture_method?: components["schemas"]["PaymentIntentCaptureMethodType"];
             /** Format: uuid */
             charge_id?: string;
             currency?: string;
@@ -5217,6 +5225,7 @@ export const legalEntityEntityTypeValues: ReadonlyArray<FlattenedDeepRequired<co
 export const legalEntityOwnershipTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["LegalEntityOwnershipType"]> = ["public", "private"];
 export const legalEntityDocumentTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["LegalEntityDocumentType"]> = ["irs_cp_575"];
 export const merchantBusinessCategoryTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["MerchantBusinessCategoryType"]> = ["business_association", "charity", "church", "county", "federal", "fraternal_org", "government", "higher_education", "k12", "labor_union", "local", "ministry", "pac", "parachurch", "party", "preschool", "social_club", "social_welfare", "state", "tribal", "vendor", "veterans_org"];
+export const paymentIntentCaptureMethodTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["PaymentIntentCaptureMethodType"]> = ["automatic", "automatic_async", "manual"];
 export const paymentLinkAmountTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["PaymentLinkAmountType"]> = ["fixed", "open"];
 export const paymentMethodTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["PaymentMethodType"]> = ["card", "bank_account", "googlepay", "applepay"];
 export const usStateTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["UsStateType"]> = ["AK", "AL", "AR", "AZ", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "MD", "ME", "MI", "MN", "MO", "MS", "MT", "NC", "ND", "NE", "NH", "NJ", "NM", "NV", "NY", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VA", "VT", "WA", "WI", "WV", "WY"];
