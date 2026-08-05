@@ -20,6 +20,7 @@
   "scripts": {
     "biome": "biome check --write",
     "build": "tsup",
+    "watch": "tsup --watch",
     "typecheck": "tsc --noEmit",
     "generate": "git -C ../openapi pull && rm -rf openapi/schema.ts && openapi-typescript ../openapi/amos/openapi.public.yaml --output openapi/schema.ts --enum-values",
     "prepack": "npm run build",
