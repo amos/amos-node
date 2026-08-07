@@ -17,10 +17,9 @@ export const AMOS_API_VERSION = "1";
  * fully typed against the OpenAPI spec — paths, path/query/header params,
  * request bodies, and response bodies are all checked at compile time.
  *
- * Provide credentials and the required `X-Api-Version` header either as
- * default `headers` here or via `params.header` on each call. Use
- * `client.use(middleware)` to add per-request behavior such as fresh
- * idempotency keys.
+ * Provide credentials and the required `X-Api-Version` header as default
+ * `headers` here. Use `client.use(middleware)` to add per-request behavior
+ * such as fresh idempotency keys.
  *
  * @example
  * ```ts
@@ -39,7 +38,6 @@ export const AMOS_API_VERSION = "1";
  * });
  *
  * const { data, error } = await pay.POST("/customers", {
- *   params: { header: { "X-Api-Version": AMOS_API_VERSION } },
  *   body: { customer: { email: "alex@example.com" } },
  * });
  * ```

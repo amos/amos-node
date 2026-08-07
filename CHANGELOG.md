@@ -1,5 +1,11 @@
 # @amos.com/node
 
+## 0.1.39
+
+### Patch Changes
+
+- Cleanup
+
 ## 0.1.38
 
 ### Patch Changes
