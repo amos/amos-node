@@ -1,5 +1,11 @@
 # @amos.com/node
 
+## 0.1.37
+
+### Patch Changes
+
+- Migrate pay.amos.com to api.amos.com
+
 ## 0.1.36
 
 ### Patch Changes

@@ -15,15 +15,15 @@ npm install @amos.com/node
 ```ts
 import {
   createPayApiClient,
-  PAY_API_BASE_URL_PRODUCTION,
-  PAY_API_VERSION,
+  AMOS_API_BASE_URL_PRODUCTION,
+  AMOS_API_VERSION,
 } from "@amos.com/node";
 
 const pay = createPayApiClient({
-  baseUrl: PAY_API_BASE_URL_PRODUCTION,
+  baseUrl: AMOS_API_BASE_URL_PRODUCTION,
   headers: {
     "X-Api-Key": process.env.AMOS_API_KEY!,
-    "X-Api-Version": PAY_API_VERSION,
+    "X-Api-Version": AMOS_API_VERSION,
   },
 });
 
@@ -45,15 +45,15 @@ Swap the base URL constant:
 ```ts
 import {
   createPayApiClient,
-  PAY_API_BASE_URL_SANDBOX,
-  PAY_API_VERSION,
+  AMOS_API_BASE_URL_SANDBOX,
+  AMOS_API_VERSION,
 } from "@amos.com/node";
 
 const pay = createPayApiClient({
-  baseUrl: PAY_API_BASE_URL_SANDBOX,
+  baseUrl: AMOS_API_BASE_URL_SANDBOX,
   headers: {
     "X-Api-Key": process.env.AMOS_API_KEY!,
-    "X-Api-Version": PAY_API_VERSION,
+    "X-Api-Version": AMOS_API_VERSION,
   },
 });
 ```
@@ -68,7 +68,7 @@ const pay = createPayApiClient({
   fetch: customFetchImpl,
   headers: {
     "X-Api-Key": process.env.AMOS_API_KEY!,
-    "X-Api-Version": PAY_API_VERSION,
+    "X-Api-Version": AMOS_API_VERSION,
     "X-Trace-Id": "abc123",
   },
 });
@@ -96,16 +96,16 @@ pay.use(idempotencyKey);
 ```ts
 import {
   createPayApiClient,
-  PAY_API_BASE_URL_PRODUCTION,
-  PAY_API_BASE_URL_SANDBOX,
-  PAY_API_VERSION,
+  AMOS_API_BASE_URL_PRODUCTION,
+  AMOS_API_BASE_URL_SANDBOX,
+  AMOS_API_VERSION,
 } from "@amos.com/node";
 import type { PayApiClient, ClientOptions, Middleware } from "@amos.com/node";
 ```
 
 - `createPayApiClient(options)` — returns a typed [`openapi-fetch`](https://openapi-ts.dev/openapi-fetch) client. Exposes the full `openapi-fetch` interface: `GET`, `POST`, `PUT`, `DELETE`, `OPTIONS`, `HEAD`, `PATCH`, `TRACE`, `use`, `eject`.
-- `PAY_API_BASE_URL_PRODUCTION` / `PAY_API_BASE_URL_SANDBOX` — base URLs for the two environments.
-- `PAY_API_VERSION` — the wire-level `X-Api-Version` this build targets. Pass it as the `X-Api-Version` header on every request (most easily as a default in `headers`, as shown above).
+- `AMOS_API_BASE_URL_PRODUCTION` / `AMOS_API_BASE_URL_SANDBOX` — base URLs for the two environments.
+- `AMOS_API_VERSION` — the wire-level `X-Api-Version` this build targets. Pass it as the `X-Api-Version` header on every request (most easily as a default in `headers`, as shown above).
 - `PayApiClient` — the type returned by `createPayApiClient`.
 - `ClientOptions`, `Middleware` — re-exported from `openapi-fetch` for convenience.
 
@@ -128,7 +128,7 @@ We follow **SemVer** for the npm package, with one extra rule: **the major versi
 | `@amos.com/node@1.x` | `1`                        |
 | `@amos.com/node@2.x` | `2` (hypothetical)         |
 
-So bumping `PAY_API_VERSION` is always a major release, and consumers who pin to `@amos.com/node@^1` know they will never be transparently upgraded onto a new wire contract.
+So bumping `AMOS_API_VERSION` is always a major release, and consumers who pin to `@amos.com/node@^1` know they will never be transparently upgraded onto a new wire contract.
 
 The mental rule for bumps: _"would a program that typechecked against the previous `dist/index.d.ts` still typecheck against the new one?"_ If no, it's a major.
 

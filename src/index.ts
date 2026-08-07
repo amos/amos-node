@@ -6,9 +6,9 @@ import type { paths } from "../openapi/schema";
 
 export * from "../openapi/schema";
 
-export const PAY_API_BASE_URL_PRODUCTION = "https://pay.amos.com";
-export const PAY_API_BASE_URL_SANDBOX = "https://pay-sandbox.amos.com";
-export const PAY_API_VERSION = "1";
+export const AMOS_API_BASE_URL_PRODUCTION = "https://api.amos.com";
+export const AMOS_API_BASE_URL_SANDBOX = "https://api-sandbox.amos.com";
+export const AMOS_API_VERSION = "1";
 
 /**
  * Create a typed `openapi-fetch` client for the Amos Pay API.
@@ -26,20 +26,20 @@ export const PAY_API_VERSION = "1";
  * ```ts
  * import {
  *   createPayApiClient,
- *   PAY_API_BASE_URL_SANDBOX,
- *   PAY_API_VERSION,
+ *   AMOS_API_BASE_URL_SANDBOX,
+ *   AMOS_API_VERSION,
  * } from "@amos.com/node";
  *
  * const pay = createPayApiClient({
- *   baseUrl: PAY_API_BASE_URL_SANDBOX,
+ *   baseUrl: AMOS_API_BASE_URL_SANDBOX,
  *   headers: {
  *     "X-Api-Key": process.env.AMOS_API_KEY!,
- *     "X-Api-Version": PAY_API_VERSION,
+ *     "X-Api-Version": AMOS_API_VERSION,
  *   },
  * });
  *
  * const { data, error } = await pay.POST("/customers", {
- *   params: { header: { "X-Api-Version": PAY_API_VERSION } },
+ *   params: { header: { "X-Api-Version": AMOS_API_VERSION } },
  *   body: { customer: { email: "alex@example.com" } },
  * });
  * ```
