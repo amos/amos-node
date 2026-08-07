@@ -1,5 +1,11 @@
 # @amos.com/node
 
+## 0.1.38
+
+### Patch Changes
+
+- Support Node v22+
+
 ## 0.1.37
 
 ### Patch Changes
