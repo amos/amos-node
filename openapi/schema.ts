@@ -452,6 +452,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/organization": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieve the current organization */
+        get: operations["GetOrganization"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update the current organization */
+        patch: operations["UpdateOrganization"];
+        trace?: never;
+    };
     "/origins": {
         parameters: {
             query?: never;
@@ -1262,12 +1280,12 @@ export interface components {
             exp_year?: number;
             moto?: boolean;
         };
-        /** @description Apple Pay card profile for embed confirm. Clients only send wallet_payload (the raw JSON-encoded PKPaymentToken). Brand, last4, expiration, pan_type, wallet_provider, and cryptogram are set from the Vault response. Encrypted PAN and client-supplied cryptogram are not supported. */
+        /** @description Apple Pay card profile for embed confirm. Clients only send wallet_payload (the raw JSON-encoded PKPaymentToken). wallet_provider is derived from the payment method type. Brand, last4, expiration, pan_type, and cryptogram are set from the Vault response. Encrypted PAN and client-supplied cryptogram are not supported. */
         ApplePayCardProfileInput: {
             /** @description The unmodified JSON-encoded PKPaymentToken. */
             wallet_payload: string;
         };
-        /** @description Google Pay card profile for embed confirm. Clients only send wallet_payload. Brand, last4, expiration, pan_type, wallet_provider, and cryptogram are set from the Vault response. Encrypted PAN is not supported. */
+        /** @description Google Pay card profile for embed confirm. Clients only send wallet_payload. wallet_provider is derived from the payment method type. Brand, last4, expiration, pan_type, and cryptogram are set from the Vault response. Encrypted PAN is not supported. */
         GooglePayCardProfileInput: {
             /** @description The unmodified Google Pay payment token payload. */
             wallet_payload: string;
@@ -1915,6 +1933,25 @@ export interface components {
             created_at?: string;
             /** Format: date-time */
             updated_at?: string;
+        };
+        Organization: {
+            /** Format: uuid */
+            id?: string;
+            name?: string;
+            slug?: string;
+            /** @enum {string} */
+            kind?: "direct" | "payfac";
+            /** Format: date-time */
+            created_at?: string;
+            /** Format: date-time */
+            updated_at?: string;
+        };
+        UpdateOrganizationInput: {
+            /** @description Globally unique public slug used in payment link URLs. Changing this breaks existing `/payment_links/{organization_slug}/...` links. */
+            slug: string;
+        };
+        UpdateOrganizationRequest: {
+            organization: components["schemas"]["UpdateOrganizationInput"];
         };
         CreateOriginInput: {
             value?: string;
@@ -3482,6 +3519,59 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Merchant"];
+                };
+            };
+        };
+    };
+    GetOrganization: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The authenticated organization */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Organization"];
+                };
+            };
+        };
+    };
+    UpdateOrganization: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateOrganizationRequest"];
+            };
+        };
+        responses: {
+            /** @description Organization updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Organization"];
+                };
+            };
+            /** @description Unprocessable entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
                 };
             };
         };
@@ -5245,6 +5335,7 @@ export const subscriptionPlanTypeValues: ReadonlyArray<FlattenedDeepRequired<com
 export const transactionSourceTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["TransactionSourceType"]> = ["api", "dashboard", "iframe", "system", "subscription"];
 export const walletProviderTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["WalletProviderType"]> = ["googlepay", "applepay"];
 export const webhookEventTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["WebhookEventType"]> = ["charge.cancelled", "charge.created", "charge.errored", "charge.failed", "charge.processing", "charge.requires_capture", "charge.requires_confirmation", "charge.requires_review", "charge.settlement_failed", "charge.succeeded", "customer.created", "customer.updated", "legal_entity.created", "legal_entity.updated", "legal_entity_principal.created", "legal_entity_principal.updated", "legal_entity_application.approved", "legal_entity_application.denied", "legal_entity_application.needs_information", "legal_entity_application.pending", "legal_entity_application.submitted", "merchant.created", "merchant.updated", "payment_intent.cancelled", "payment_intent.created", "payment_intent.errored_authorization", "payment_intent.errored_capture", "payment_intent.errored_sale", "payment_intent.processing_authorization", "payment_intent.processing_capture", "payment_intent.processing_sale", "payment_intent.requires_capture", "payment_intent.requires_confirmation", "payment_intent.requires_payment_method", "payment_intent.requires_review", "payment_intent.succeeded", "processor_transaction.completed", "reconciliation.created", "refund.cancelled", "refund.created", "refund.failed", "refund.pending", "refund.processing", "refund.requires_review", "refund.succeeded", "void.created", "void.failed", "void.pending", "void.processing", "void.requires_review", "void.succeeded"];
+export const organizationKindValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["Organization"]["kind"]> = ["direct", "payfac"];
 export const paymentIntentStateValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["PaymentIntent"]["state"]> = ["requires_payment_method", "requires_confirmation", "requires_capture", "processing_authorization", "processing_capture", "processing_sale", "requires_review", "succeeded", "cancelled", "errored_authorization", "errored_capture", "errored_sale"];
 export const achVerificationTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["AchVerification"]["type"]> = ["plaid_auth"];
 export const processorTransactionPayment_transaction_typeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["ProcessorTransaction"]["payment_transaction_type"]> = ["charge", "refund", "void"];
