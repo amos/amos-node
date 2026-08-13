@@ -1401,6 +1401,8 @@ export interface components {
             metadata?: components["schemas"]["Metadata"];
             name?: string;
             /** Format: uuid */
+            organization_id?: string;
+            /** Format: uuid */
             payment_method_id?: string;
             phone?: string;
             type?: string;
