@@ -1744,7 +1744,7 @@ export interface components {
         /** @enum {string} */
         SubscriptionPlanType: "fixed" | "variable";
         /** @enum {string} */
-        TransactionSourceType: "api" | "dashboard" | "iframe" | "system" | "subscription";
+        TransactionSourceType: "api" | "dashboard" | "iframe" | "system" | "subscription" | "admin";
         /** @enum {string} */
         WalletProviderType: "googlepay" | "applepay";
         /** @enum {string} */
@@ -5332,7 +5332,7 @@ export const payoutStateTypeValues: ReadonlyArray<FlattenedDeepRequired<componen
 export const refundStateTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["RefundStateType"]> = ["pending", "processing", "requires_review", "succeeded", "cancelled", "failed"];
 export const subscriptionIntervalTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["SubscriptionIntervalType"]> = ["day", "week", "month", "year"];
 export const subscriptionPlanTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["SubscriptionPlanType"]> = ["fixed", "variable"];
-export const transactionSourceTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["TransactionSourceType"]> = ["api", "dashboard", "iframe", "system", "subscription"];
+export const transactionSourceTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["TransactionSourceType"]> = ["api", "dashboard", "iframe", "system", "subscription", "admin"];
 export const walletProviderTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["WalletProviderType"]> = ["googlepay", "applepay"];
 export const webhookEventTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["WebhookEventType"]> = ["charge.cancelled", "charge.created", "charge.errored", "charge.failed", "charge.processing", "charge.requires_capture", "charge.requires_confirmation", "charge.requires_review", "charge.settlement_failed", "charge.succeeded", "customer.created", "customer.updated", "legal_entity.created", "legal_entity.updated", "legal_entity_principal.created", "legal_entity_principal.updated", "legal_entity_application.approved", "legal_entity_application.denied", "legal_entity_application.needs_information", "legal_entity_application.pending", "legal_entity_application.submitted", "merchant.created", "merchant.updated", "payment_intent.cancelled", "payment_intent.created", "payment_intent.errored_authorization", "payment_intent.errored_capture", "payment_intent.errored_sale", "payment_intent.processing_authorization", "payment_intent.processing_capture", "payment_intent.processing_sale", "payment_intent.requires_capture", "payment_intent.requires_confirmation", "payment_intent.requires_payment_method", "payment_intent.requires_review", "payment_intent.succeeded", "processor_transaction.completed", "reconciliation.created", "refund.cancelled", "refund.created", "refund.failed", "refund.pending", "refund.processing", "refund.requires_review", "refund.succeeded", "void.created", "void.failed", "void.pending", "void.processing", "void.requires_review", "void.succeeded"];
 export const organizationKindValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["Organization"]["kind"]> = ["direct", "payfac"];
