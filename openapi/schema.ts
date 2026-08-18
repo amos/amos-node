@@ -1272,6 +1272,28 @@ export interface components {
             /** Format: date-time */
             updated_at?: string;
         };
+        MailingAddressInput: {
+            address_line1?: string;
+            address_line2?: string | null;
+            city?: string;
+            country?: string;
+            name?: string;
+            postal_code?: string;
+            state?: string;
+        };
+        MailingAddress: {
+            address_line1?: string;
+            address_line2?: string | null;
+            city?: string;
+            country?: string;
+            name?: string;
+            postal_code?: string;
+            state?: string;
+            /** Format: date-time */
+            created_at?: string;
+            /** Format: date-time */
+            updated_at?: string;
+        };
         CardProfileInput: {
             card_holder_name?: string;
             cvc?: string;
@@ -1376,6 +1398,7 @@ export interface components {
             name?: string;
             email?: string;
             phone?: string;
+            mailing_address_attributes?: components["schemas"]["MailingAddressInput"];
             metadata?: components["schemas"]["Metadata"];
         };
         CreateCustomerRequest: {
@@ -1387,6 +1410,7 @@ export interface components {
             /** Format: uuid */
             payment_method_id?: string;
             phone?: string;
+            mailing_address_attributes?: components["schemas"]["MailingAddressInput"];
             metadata?: components["schemas"]["Metadata"];
         };
         UpdateCustomerRequest: {
@@ -1406,6 +1430,7 @@ export interface components {
             payment_method_id?: string;
             phone?: string;
             type?: string;
+            mailing_address?: components["schemas"]["MailingAddress"];
             /** Format: date-time */
             created_at?: string;
             /** Format: date-time */
@@ -1897,6 +1922,8 @@ export interface components {
         Merchant: {
             /** Format: uuid */
             id?: string;
+            /** @description ACH verification threshold in cents. Amounts at or above this require Plaid verification. */
+            ach_threshold?: number;
             active?: boolean;
             /** Format: uuid */
             organization_id?: string;
@@ -1927,6 +1954,7 @@ export interface components {
             primary_contact_phone?: string;
             purchase_currency?: string;
             settlement_currency?: string;
+            state_province?: string;
             street_address1?: string;
             street_address2?: string;
             sub_merchant_id?: string;
@@ -2590,7 +2618,7 @@ export interface components {
         XIdempotencyHeader: string;
         /** @description The ID of the customer to filter by */
         CustomerIdQuery: string;
-        /** @description The email to filter by */
+        /** @description Exact email match (case-insensitive). For substring search, use `q`. */
         EmailQuery: string;
         /** @description The external account ID to filter by */
         ExternalAccountIdQuery: string;
@@ -2612,8 +2640,14 @@ export interface components {
         PayoutStateQuery: components["schemas"]["PayoutStateType"];
         /** @description Number of results per page. */
         PerPageQuery: number;
-        /** @description The phone to filter by */
+        /** @description Exact phone match (normalized to E.164 when possible). For substring search, use `q`. */
         PhoneQuery: string;
+        /** @description Exact name match (case-insensitive). For substring search, use `q`. */
+        NameQuery: string;
+        /** @description Exact customer type match (e.g. RegisteredCustomer, GuestCustomer). */
+        CustomerTypeQuery: string;
+        /** @description Substring search across name, email, and phone (case-insensitive). */
+        QQuery: string;
         /** @description The ID of the webhook request to filter by */
         WebhookRequestIdQuery: string;
     };
@@ -2785,11 +2819,16 @@ export interface operations {
                 page?: components["parameters"]["PageQuery"];
                 /** @description Number of results per page. */
                 per_page?: components["parameters"]["PerPageQuery"];
-                /** @description The email to filter by */
+                /** @description Exact email match (case-insensitive). For substring search, use `q`. */
                 email?: components["parameters"]["EmailQuery"];
-                /** @description The phone to filter by */
+                /** @description Exact phone match (normalized to E.164 when possible). For substring search, use `q`. */
                 phone?: components["parameters"]["PhoneQuery"];
-                account_id?: string;
+                /** @description Exact name match (case-insensitive). For substring search, use `q`. */
+                name?: components["parameters"]["NameQuery"];
+                /** @description Exact customer type match (e.g. RegisteredCustomer, GuestCustomer). */
+                type?: components["parameters"]["CustomerTypeQuery"];
+                /** @description Substring search across name, email, and phone (case-insensitive). */
+                q?: components["parameters"]["QQuery"];
             };
             header?: never;
             path?: never;
