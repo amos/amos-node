@@ -2053,20 +2053,10 @@ export interface components {
             /** @enum {string} */
             state?: "requires_payment_method" | "requires_confirmation" | "requires_capture" | "processing_authorization" | "processing_capture" | "processing_sale" | "requires_review" | "succeeded" | "cancelled" | "errored_authorization" | "errored_capture" | "errored_sale";
             statement_descriptor?: string;
-            /** @description True when the intent amount meets or exceeds the configured ACH verification threshold. */
-            requires_ach_verification?: boolean;
-            ach_verification?: components["schemas"]["AchVerification"];
             /** Format: date-time */
             created_at?: string;
             /** Format: date-time */
             updated_at?: string;
-        };
-        /** @description Instructions for the embed client to complete ACH verification via Plaid Link. */
-        AchVerification: {
-            /** @enum {string} */
-            type: "plaid_auth";
-            /** @description Short-lived Plaid Link token used to open Link in the embed client. */
-            link_token: string;
         };
         /** @description How this payment intent relates to a recurring series. Use `initial` for the first charge that establishes the series. Use `network_transaction_id` and/or `transaction_link_id` for subsequent merchant-initiated charges. Do not combine `initial` with network identifiers on the same request. */
         RecurringPayment: {
@@ -3680,10 +3670,7 @@ export interface operations {
     };
     GetEmbedPaymentIntent: {
         parameters: {
-            query?: {
-                /** @description When set to bank_account and ACH verification is required for the intent amount, the response includes ach_verification.link_token for Plaid Link. */
-                payment_method_type?: "bank_account";
-            };
+            query?: never;
             header?: never;
             path: {
                 /** @description The ID of the payment intent to retrieve */
@@ -5340,7 +5327,6 @@ type ReadonlyArray<T> = [
 ] extends [
     unknown[]
 ] ? Readonly<Exclude<T, undefined>> : Readonly<Exclude<T, undefined>[]>;
-export const pathsEmbedPayment_intentsIdGetParametersQueryPayment_method_typeValues: ReadonlyArray<FlattenedDeepRequired<paths>["/embed/payment_intents/{id}"]["get"]["parameters"]["query"]["payment_method_type"]> = ["bank_account"];
 export const bankAccountProfileFailure_reasonValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["BankAccountProfile"]["failure_reason"]> = ["activation_failed", "processing_error", "vault_failed", "insufficient_funds", "verification_failed"];
 export const cardProfileFailure_reasonValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["CardProfile"]["failure_reason"]> = ["authorization_failed", "avs_blocked", "brand_not_allowed", "brand_not_found", "cvc_blocked", "processing_error", "vault_failed"];
 export const chargeAllowed_reverse_actionValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["Charge"]["allowed_reverse_action"]> = ["void", "refund"];
@@ -5378,7 +5364,6 @@ export const walletProviderTypeValues: ReadonlyArray<FlattenedDeepRequired<compo
 export const webhookEventTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["WebhookEventType"]> = ["charge.cancelled", "charge.created", "charge.errored", "charge.failed", "charge.processing", "charge.requires_capture", "charge.requires_confirmation", "charge.requires_review", "charge.settlement_failed", "charge.succeeded", "customer.created", "customer.updated", "legal_entity.created", "legal_entity.updated", "legal_entity_principal.created", "legal_entity_principal.updated", "legal_entity_application.approved", "legal_entity_application.denied", "legal_entity_application.needs_information", "legal_entity_application.pending", "legal_entity_application.submitted", "merchant.created", "merchant.updated", "payment_intent.cancelled", "payment_intent.created", "payment_intent.errored_authorization", "payment_intent.errored_capture", "payment_intent.errored_sale", "payment_intent.processing_authorization", "payment_intent.processing_capture", "payment_intent.processing_sale", "payment_intent.requires_capture", "payment_intent.requires_confirmation", "payment_intent.requires_payment_method", "payment_intent.requires_review", "payment_intent.succeeded", "processor_transaction.completed", "reconciliation.created", "refund.cancelled", "refund.created", "refund.failed", "refund.pending", "refund.processing", "refund.requires_review", "refund.succeeded", "setup_intent.cancelled", "setup_intent.created", "setup_intent.errored", "setup_intent.failed", "setup_intent.requires_confirmation", "setup_intent.requires_payment_method", "setup_intent.requires_review", "setup_intent.succeeded", "setup_intent.verifying", "void.created", "void.failed", "void.pending", "void.processing", "void.requires_review", "void.succeeded"];
 export const organizationKindValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["Organization"]["kind"]> = ["direct", "payfac"];
 export const paymentIntentStateValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["PaymentIntent"]["state"]> = ["requires_payment_method", "requires_confirmation", "requires_capture", "processing_authorization", "processing_capture", "processing_sale", "requires_review", "succeeded", "cancelled", "errored_authorization", "errored_capture", "errored_sale"];
-export const achVerificationTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["AchVerification"]["type"]> = ["plaid_auth"];
 export const processorTransactionPayment_transaction_typeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["ProcessorTransaction"]["payment_transaction_type"]> = ["charge", "refund", "void"];
 export const processorTransactionTransaction_typeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["ProcessorTransaction"]["transaction_type"]> = ["authorization", "authorization_reversal", "capture", "credit", "echeck_credit", "echeck_sale", "echeck_void", "sale", "void"];
 export const refundAllowed_reverse_actionValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["Refund"]["allowed_reverse_action"]> = ["void"];
