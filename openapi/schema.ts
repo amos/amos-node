@@ -2339,6 +2339,9 @@ export interface components {
             allowed_payment_methods?: components["schemas"]["AllowedPaymentMethod"][];
             billing_address_options: components["schemas"]["BillingAddressOptions"];
             currency?: string;
+            /** Format: date-time */
+            last_used_at?: string | null;
+            origins: components["schemas"]["Origin"][];
         };
         CreateSetupIntentInput: {
             /** Format: uuid */
