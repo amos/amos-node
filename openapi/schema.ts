@@ -1644,7 +1644,7 @@ export interface components {
             billing_address_attributes?: components["schemas"]["BillingAddressInput"];
             card_profile_attributes: components["schemas"]["CardProfileInput"];
         };
-        /** @description Confirm an embedded intent with a bank account. When ACH verification is required for the intent amount, include plaid credentials; routing and account numbers are filled server-side from Plaid Auth. Otherwise provide encrypted_account_number and routing_number on bank_account_profile_attributes. */
+        /** @description Confirm an embedded intent with a bank account. When ACH verification is required for the intent amount, include plaid credentials and omit bank_account_profile_attributes; routing and account numbers are filled server-side from Plaid Auth. Otherwise provide encrypted_account_number and routing_number on bank_account_profile_attributes. */
         EmbedConfirmBankAccountPaymentMethodInput: {
             /**
              * @description discriminator enum property added by openapi-typescript
@@ -1653,7 +1653,7 @@ export interface components {
             type: "bank_account";
             metadata?: components["schemas"]["Metadata"];
             plaid?: components["schemas"]["PlaidCredentialsInput"];
-            bank_account_profile_attributes: components["schemas"]["BankAccountProfileInput"];
+            bank_account_profile_attributes?: components["schemas"]["BankAccountProfileInput"];
             billing_address_attributes?: components["schemas"]["BillingAddressInput"];
         };
         EmbedConfirmGooglePayPaymentMethodInput: {
