@@ -1352,6 +1352,8 @@ export interface components {
             /** Format: uuid */
             processor_id?: string;
             worldpay_mid?: string;
+            /** @description ACH verification threshold in cents for this account, taken from the merchant. When the organization sets ach_threshold, that value is used instead. Amounts at or above this require Plaid verification when the render template enables it. */
+            ach_threshold?: number;
             /** Format: date-time */
             created_at?: string;
             /** Format: date-time */
@@ -1688,7 +1690,7 @@ export interface components {
             moto?: boolean;
         };
         AllowedBankAccountPaymentMethodOptions: {
-            /** @description When true, this surface collects bank account verification (Plaid) for ACH at or above the merchant ACH threshold. Only supported on render templates. */
+            /** @description When true, this surface collects bank account verification (Plaid) for ACH at or above the merchant ACH threshold. When omitted or false, verification is off. Only supported on render templates. */
             verification?: boolean;
         };
         /** @description No configurable options for Google Pay payment methods. */
