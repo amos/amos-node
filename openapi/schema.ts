@@ -1688,11 +1688,8 @@ export interface components {
             moto?: boolean;
         };
         AllowedBankAccountPaymentMethodOptions: {
-            /**
-             * @description Bank account verification capability for this surface. Use `plaid` when the payer can complete Plaid Link in-browser. Use `none` (or omit) when this surface cannot collect verification, such as a virtual terminal. Only supported on render templates.
-             * @enum {string}
-             */
-            verification?: "none" | "plaid";
+            /** @description When true, this surface collects bank account verification (Plaid) for ACH at or above the merchant ACH threshold. Only supported on render templates. */
+            verification?: boolean;
         };
         /** @description No configurable options for Google Pay payment methods. */
         AllowedGooglePayPaymentMethodOptions: Record<string, never>;
@@ -5355,7 +5352,6 @@ export const embedConfirmCardPaymentMethodInputTypeValues: ReadonlyArray<Flatten
 export const embedConfirmBankAccountPaymentMethodInputTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["EmbedConfirmBankAccountPaymentMethodInput"]["type"]> = ["bank_account"];
 export const embedConfirmGooglePayPaymentMethodInputTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["EmbedConfirmGooglePayPaymentMethodInput"]["type"]> = ["googlepay"];
 export const embedConfirmApplePayPaymentMethodInputTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["EmbedConfirmApplePayPaymentMethodInput"]["type"]> = ["applepay"];
-export const allowedBankAccountPaymentMethodOptionsVerificationValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["AllowedBankAccountPaymentMethodOptions"]["verification"]> = ["none", "plaid"];
 export const allowedCardPaymentMethodInputTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["AllowedCardPaymentMethodInput"]["type"]> = ["card"];
 export const allowedBankAccountPaymentMethodInputTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["AllowedBankAccountPaymentMethodInput"]["type"]> = ["bank_account"];
 export const allowedGooglePayPaymentMethodInputTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["AllowedGooglePayPaymentMethodInput"]["type"]> = ["googlepay"];
