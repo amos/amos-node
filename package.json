@@ -1,6 +1,6 @@
 {
   "name": "@amos.com/node",
-  "version": "0.1.53",
+  "version": "0.1.54",
   "description": "Node.js client for the Amos Pay API.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -50,9 +50,9 @@
     "openapi-fetch": "0.17.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.7",
+    "@biomejs/biome": "2.5.10",
     "@changesets/cli": "2.31.1",
-    "@types/node": "26.1.2",
+    "@types/node": "26.3.0",
     "openapi-typescript": "7.13.0",
     "tsup": "8.5.1",
     "typescript": "5.9.3"

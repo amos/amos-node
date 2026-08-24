@@ -1398,7 +1398,7 @@ export interface components {
             /** Format: uuid */
             processor_id?: string;
             worldpay_mid?: string;
-            /** @description ACH verification threshold in cents for this account, taken from the merchant. When the organization sets ach_threshold, that value is used instead. Amounts at or above this require Plaid verification when the render template enables it. */
+            /** @description ACH verification threshold in cents for this account, taken from the organization. Amounts at or above this require Plaid verification when the render template enables it. Defaults to 20000 cents. */
             ach_threshold?: number;
             /** Format: date-time */
             created_at?: string;
@@ -1415,8 +1415,6 @@ export interface components {
             /** Format: uuid */
             customer_id?: string;
             description?: string | null;
-            failure_code?: string | null;
-            failure_reason?: string | null;
             /** @enum {string|null} */
             allowed_reverse_action?: "void" | "refund" | null;
             metadata?: components["schemas"]["Metadata"];
@@ -1973,8 +1971,6 @@ export interface components {
         Merchant: {
             /** Format: uuid */
             id?: string;
-            /** @description ACH verification threshold in cents. Amounts at or above this require Plaid verification. */
-            ach_threshold?: number;
             active?: boolean;
             /** Format: uuid */
             organization_id?: string;
@@ -2096,6 +2092,8 @@ export interface components {
             /** Format: uuid */
             customer_id?: string;
             description?: string;
+            /** @description Null after a successful authorization, sale, or capture. */
+            last_payment_error?: components["schemas"]["LastPaymentError"] | null;
             metadata?: components["schemas"]["Metadata"];
             recurring_payment?: components["schemas"]["RecurringPayment"];
             /** Format: uuid */
@@ -2108,6 +2106,15 @@ export interface components {
             created_at?: string;
             /** Format: date-time */
             updated_at?: string;
+        };
+        /** @description Canonical post-confirm payment failure. Present after a processor decline, processing exception, or missing vault credential. */
+        LastPaymentError: {
+            /** @enum {string} */
+            type: "card_error" | "processing_error";
+            /** @enum {string} */
+            code: "incorrect_number" | "incorrect_cvc" | "incorrect_postal_code" | "incorrect_pin" | "expired_card" | "insufficient_funds" | "card_declined" | "authentication_failure" | "processing_error" | "vault_token_not_found";
+            /** @description Localized, payer-facing explanation of the failure. */
+            message: string;
         };
         /** @description How this payment intent relates to a recurring series. Use `initial` for the first charge that establishes the series. Use `network_transaction_id` and/or `transaction_link_id` for subsequent merchant-initiated charges. Do not combine `initial` with network identifiers on the same request. */
         RecurringPayment: {
@@ -2349,8 +2356,6 @@ export interface components {
             /** Format: uuid */
             customer_id?: string;
             description?: string | null;
-            failure_code?: string | null;
-            failure_reason?: string | null;
             metadata?: components["schemas"]["Metadata"];
             /** Format: uuid */
             original_transaction_id?: string;
@@ -2567,8 +2572,6 @@ export interface components {
             /** Format: uuid */
             customer_id?: string;
             description?: string | null;
-            failure_code?: string | null;
-            failure_reason?: string | null;
             metadata?: components["schemas"]["Metadata"];
             /** Format: uuid */
             original_transaction_id?: string;
@@ -5526,6 +5529,8 @@ export const walletProviderTypeValues: ReadonlyArray<FlattenedDeepRequired<compo
 export const webhookEventTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["WebhookEventType"]> = ["charge.cancelled", "charge.created", "charge.errored", "charge.failed", "charge.processing", "charge.requires_capture", "charge.requires_confirmation", "charge.requires_review", "charge.settlement_failed", "charge.succeeded", "customer.created", "customer.updated", "legal_entity.created", "legal_entity.updated", "legal_entity_principal.created", "legal_entity_principal.updated", "legal_entity_application.approved", "legal_entity_application.denied", "legal_entity_application.needs_information", "legal_entity_application.pending", "legal_entity_application.submitted", "merchant.created", "merchant.updated", "payment_intent.cancelled", "payment_intent.created", "payment_intent.errored_authorization", "payment_intent.errored_capture", "payment_intent.errored_sale", "payment_intent.processing_authorization", "payment_intent.processing_capture", "payment_intent.processing_sale", "payment_intent.requires_capture", "payment_intent.requires_confirmation", "payment_intent.requires_payment_method", "payment_intent.requires_review", "payment_intent.succeeded", "processor_transaction.completed", "reconciliation.created", "refund.cancelled", "refund.created", "refund.failed", "refund.pending", "refund.processing", "refund.requires_review", "refund.succeeded", "setup_intent.cancelled", "setup_intent.created", "setup_intent.errored", "setup_intent.failed", "setup_intent.requires_confirmation", "setup_intent.requires_payment_method", "setup_intent.requires_review", "setup_intent.succeeded", "setup_intent.verifying", "void.created", "void.failed", "void.pending", "void.processing", "void.requires_review", "void.succeeded"];
 export const organizationKindValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["Organization"]["kind"]> = ["direct", "payfac"];
 export const paymentIntentStateValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["PaymentIntent"]["state"]> = ["requires_payment_method", "requires_confirmation", "requires_capture", "processing_authorization", "processing_capture", "processing_sale", "requires_review", "succeeded", "cancelled", "errored_authorization", "errored_capture", "errored_sale"];
+export const lastPaymentErrorTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["LastPaymentError"]["type"]> = ["card_error", "processing_error"];
+export const lastPaymentErrorCodeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["LastPaymentError"]["code"]> = ["incorrect_number", "incorrect_cvc", "incorrect_postal_code", "incorrect_pin", "expired_card", "insufficient_funds", "card_declined", "authentication_failure", "processing_error", "vault_token_not_found"];
 export const processorTransactionPayment_transaction_typeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["ProcessorTransaction"]["payment_transaction_type"]> = ["charge", "refund", "void"];
 export const processorTransactionTransaction_typeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["ProcessorTransaction"]["transaction_type"]> = ["authorization", "authorization_reversal", "capture", "credit", "echeck_credit", "echeck_sale", "echeck_void", "sale", "void"];
 export const refundAllowed_reverse_actionValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["Refund"]["allowed_reverse_action"]> = ["void"];
