@@ -505,6 +505,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/embed/payment_intents/{id}/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Confirm a payment intent and wait for processor authorization or sale
+         * @description Confirms the payment intent and blocks until the processor approves or declines the authorization or sale. Returns 200 with the post-processor state (for example succeeded, requires_payment_method, or requires_capture). Capture for automatic_async intents may still complete asynchronously after authorization.
+         */
+        post: operations["ConfirmEmbedPaymentIntent"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/embed/payment_intents/{id}/confirm_with_payment_method": {
         parameters: {
             query?: never;
@@ -514,7 +534,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Confirm a payment intent with a new payment method */
+        /**
+         * Confirm a payment intent with a new payment method (async)
+         * @description Legacy async confirmation for migration. Accepts a payment method, enqueues authorization or sale work, and returns 202 with processing_authorization or processing_sale. Prefer POST /embed/payment_intents/{id}/confirm for synchronous processor confirmation.
+         */
         post: operations["ConfirmEmbedPaymentIntentWithPaymentMethod"];
         delete?: never;
         options?: never;
@@ -3699,6 +3722,60 @@ export interface operations {
             };
         };
     };
+    ConfirmEmbedPaymentIntent: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The ID of the payment intent to confirm */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConfirmPaymentIntentWithPaymentMethodRequest"];
+            };
+        };
+        responses: {
+            /** @description Confirmation completed after the processor authorized, sold, or declined */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaymentIntent"];
+                };
+            };
+            /** @description Already-started confirmation returned without a new processor request */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaymentIntent"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unprocessable content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
     ConfirmEmbedPaymentIntentWithPaymentMethod: {
         parameters: {
             query?: never;
@@ -3715,7 +3792,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description Successful confirmation of payment intent */
+            /** @description Confirmation accepted; authorization or sale continues asynchronously */
             202: {
                 headers: {
                     [name: string]: unknown;
