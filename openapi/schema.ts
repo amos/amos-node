@@ -913,6 +913,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/embed/setup_intents/{id}/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Confirm a setup intent and wait for card verification
+         * @description Confirms the setup intent and, for cards, blocks until processor verification completes. Returns 200 with the post-verification state (for example succeeded, requires_payment_method, or requires_review). Bank account setups succeed without a processor authorization.
+         */
+        post: operations["ConfirmEmbedSetupIntent"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/embed/setup_intents/{id}/confirm_with_payment_method": {
         parameters: {
             query?: never;
@@ -922,7 +942,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Confirm a setup intent with a new payment method */
+        /**
+         * Confirm a setup intent with a new payment method (async)
+         * @description Legacy async confirmation for migration. Accepts a payment method and, for cards, enqueues verification. Returns 202 with verifying or succeeded. Prefer POST /embed/setup_intents/{id}/confirm for synchronous confirmation.
+         */
         post: operations["ConfirmSetupIntentWithPaymentMethod"];
         delete?: never;
         options?: never;
@@ -4705,6 +4728,60 @@ export interface operations {
             };
         };
     };
+    ConfirmEmbedSetupIntent: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The ID of the setup intent to confirm */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConfirmSetupIntentWithPaymentMethodRequest"];
+            };
+        };
+        responses: {
+            /** @description Confirmation completed after verification succeeded or failed */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SetupIntent"];
+                };
+            };
+            /** @description Already-started confirmation returned without a new processor request */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SetupIntent"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unprocessable content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
     ConfirmSetupIntentWithPaymentMethod: {
         parameters: {
             query?: never;
@@ -4721,7 +4798,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description Successful confirmation of setup intent */
+            /** @description Confirmation accepted; card verification continues asynchronously */
             202: {
                 headers: {
                     [name: string]: unknown;
