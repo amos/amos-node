@@ -2695,6 +2695,8 @@ export interface components {
         CustomerTypeQuery: string;
         /** @description Substring search across name, email, and phone (case-insensitive). */
         QQuery: string;
+        /** @description Substring search across origin value (case-insensitive). */
+        OriginQQuery: string;
         /** @description The ID of the webhook request to filter by */
         WebhookRequestIdQuery: string;
     };
@@ -3671,6 +3673,8 @@ export interface operations {
                 page?: components["parameters"]["PageQuery"];
                 /** @description Number of results per page. */
                 per_page?: components["parameters"]["PerPageQuery"];
+                /** @description Substring search across origin value (case-insensitive). */
+                q?: components["parameters"]["OriginQQuery"];
             };
             header?: never;
             path?: never;
@@ -3766,15 +3770,6 @@ export interface operations {
         responses: {
             /** @description Confirmation completed after the processor authorized, sold, or declined */
             200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaymentIntent"];
-                };
-            };
-            /** @description Already-started confirmation returned without a new processor request */
-            202: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -4749,15 +4744,6 @@ export interface operations {
         responses: {
             /** @description Confirmation completed after verification succeeded or failed */
             200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SetupIntent"];
-                };
-            };
-            /** @description Already-started confirmation returned without a new processor request */
-            202: {
                 headers: {
                     [name: string]: unknown;
                 };
