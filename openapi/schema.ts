@@ -1398,8 +1398,6 @@ export interface components {
             /** Format: uuid */
             processor_id?: string;
             worldpay_mid?: string;
-            /** @description ACH verification threshold in cents for this account, taken from the organization. Amounts at or above this require Plaid verification when the render template enables it. Defaults to 20000 cents. */
-            ach_threshold?: number;
             /** Format: date-time */
             created_at?: string;
             /** Format: date-time */
