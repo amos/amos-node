@@ -110,6 +110,25 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/dunning_configuration": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieve the current organization's dunning configuration */
+        get: operations["GetDunningConfiguration"];
+        put?: never;
+        /** Create the current organization's dunning configuration */
+        post: operations["CreateDunningConfiguration"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update the current organization's dunning configuration */
+        patch: operations["UpdateDunningConfiguration"];
+        trace?: never;
+    };
     "/external_accounts": {
         parameters: {
             query?: never;
@@ -1480,6 +1499,36 @@ export interface components {
             /** Format: date-time */
             updated_at?: string;
         };
+        /** @enum {string} */
+        DunningConfigurationExhaustedActionType: "cancel" | "pause" | "none";
+        CreateDunningConfigurationInput: {
+            /** @description Days after a failed collection to retry, in ascending order. */
+            retry_days: number[];
+            exhausted_action?: components["schemas"]["DunningConfigurationExhaustedActionType"];
+            enabled?: boolean;
+        };
+        CreateDunningConfigurationRequest: {
+            dunning_configuration: components["schemas"]["CreateDunningConfigurationInput"];
+        };
+        UpdateDunningConfigurationInput: {
+            retry_days?: number[];
+            exhausted_action?: components["schemas"]["DunningConfigurationExhaustedActionType"];
+            enabled?: boolean;
+        };
+        UpdateDunningConfigurationRequest: {
+            dunning_configuration: components["schemas"]["UpdateDunningConfigurationInput"];
+        };
+        DunningConfiguration: {
+            /** Format: uuid */
+            id?: string;
+            retry_days?: number[];
+            exhausted_action?: components["schemas"]["DunningConfigurationExhaustedActionType"];
+            enabled?: boolean;
+            /** Format: date-time */
+            created_at?: string;
+            /** Format: date-time */
+            updated_at?: string;
+        };
         CreateExternalAccountInput: {
             metadata?: components["schemas"]["Metadata"];
             external_billing_address_attributes?: components["schemas"]["BillingAddressInput"];
@@ -2090,8 +2139,6 @@ export interface components {
             /** Format: uuid */
             customer_id?: string;
             description?: string;
-            /** @description Null after a successful authorization, sale, or capture. */
-            last_payment_error?: components["schemas"]["LastPaymentError"] | null;
             metadata?: components["schemas"]["Metadata"];
             recurring_payment?: components["schemas"]["RecurringPayment"];
             /** Format: uuid */
@@ -2104,15 +2151,6 @@ export interface components {
             created_at?: string;
             /** Format: date-time */
             updated_at?: string;
-        };
-        /** @description Canonical post-confirm payment failure. Present after a processor decline, processing exception, or missing vault credential. */
-        LastPaymentError: {
-            /** @enum {string} */
-            type: "card_error" | "processing_error";
-            /** @enum {string} */
-            code: "incorrect_number" | "incorrect_cvc" | "incorrect_postal_code" | "incorrect_pin" | "expired_card" | "insufficient_funds" | "card_declined" | "authentication_failure" | "processing_error" | "vault_token_not_found";
-            /** @description Localized, payer-facing explanation of the failure. */
-            message: string;
         };
         /** @description How this payment intent relates to a recurring series. Use `initial` for the first charge that establishes the series. Use `network_transaction_id` and/or `transaction_link_id` for subsequent merchant-initiated charges. Do not combine `initial` with network identifiers on the same request. */
         RecurringPayment: {
@@ -2974,6 +3012,119 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Customer"];
+                };
+            };
+        };
+    };
+    GetDunningConfiguration: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The organization's dunning configuration */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DunningConfiguration"];
+                };
+            };
+            /** @description Dunning configuration not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    CreateDunningConfiguration: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateDunningConfigurationRequest"];
+            };
+        };
+        responses: {
+            /** @description Dunning configuration created successfully */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DunningConfiguration"];
+                };
+            };
+            /** @description Dunning configuration already exists */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unprocessable entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    UpdateDunningConfiguration: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateDunningConfigurationRequest"];
+            };
+        };
+        responses: {
+            /** @description Dunning configuration updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DunningConfiguration"];
+                };
+            };
+            /** @description Dunning configuration not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unprocessable entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
                 };
             };
         };
@@ -5480,6 +5631,7 @@ export const bankAccountProfileFailure_reasonValues: ReadonlyArray<FlattenedDeep
 export const cardProfileFailure_reasonValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["CardProfile"]["failure_reason"]> = ["authorization_failed", "avs_blocked", "brand_not_allowed", "brand_not_found", "cvc_blocked", "processing_error", "vault_failed"];
 export const chargeAllowed_reverse_actionValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["Charge"]["allowed_reverse_action"]> = ["void", "refund"];
 export const chargeStateValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["Charge"]["state"]> = ["cancelled", "errored", "failed", "processing", "requires_capture", "requires_confirmation", "requires_review", "settlement_failed", "succeeded"];
+export const dunningConfigurationExhaustedActionTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["DunningConfigurationExhaustedActionType"]> = ["cancel", "pause", "none"];
 export const externalAccountTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["ExternalAccount"]["type"]> = ["external_card", "external_bank_account"];
 export const legalEntityEntityTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["LegalEntityEntityType"]> = ["individual_sole_proprietorship", "corporation", "limited_liability_company", "partnership", "limited_partnership", "general_partnership", "tax_exempt_organization", "government_agency"];
 export const legalEntityOwnershipTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["LegalEntityOwnershipType"]> = ["public", "private"];
@@ -5513,8 +5665,6 @@ export const walletProviderTypeValues: ReadonlyArray<FlattenedDeepRequired<compo
 export const webhookEventTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["WebhookEventType"]> = ["charge.cancelled", "charge.created", "charge.errored", "charge.failed", "charge.processing", "charge.requires_capture", "charge.requires_confirmation", "charge.requires_review", "charge.settlement_failed", "charge.succeeded", "customer.created", "customer.updated", "legal_entity.created", "legal_entity.updated", "legal_entity_principal.created", "legal_entity_principal.updated", "legal_entity_application.approved", "legal_entity_application.denied", "legal_entity_application.needs_information", "legal_entity_application.pending", "legal_entity_application.submitted", "merchant.created", "merchant.updated", "payment_intent.cancelled", "payment_intent.created", "payment_intent.errored_authorization", "payment_intent.errored_capture", "payment_intent.errored_sale", "payment_intent.processing_authorization", "payment_intent.processing_capture", "payment_intent.processing_sale", "payment_intent.requires_capture", "payment_intent.requires_confirmation", "payment_intent.requires_payment_method", "payment_intent.requires_review", "payment_intent.succeeded", "processor_transaction.completed", "reconciliation.created", "refund.cancelled", "refund.created", "refund.failed", "refund.pending", "refund.processing", "refund.requires_review", "refund.succeeded", "setup_intent.cancelled", "setup_intent.created", "setup_intent.errored", "setup_intent.failed", "setup_intent.requires_confirmation", "setup_intent.requires_payment_method", "setup_intent.requires_review", "setup_intent.succeeded", "setup_intent.verifying", "void.created", "void.failed", "void.pending", "void.processing", "void.requires_review", "void.succeeded"];
 export const organizationKindValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["Organization"]["kind"]> = ["direct", "payfac"];
 export const paymentIntentStateValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["PaymentIntent"]["state"]> = ["requires_payment_method", "requires_confirmation", "requires_capture", "processing_authorization", "processing_capture", "processing_sale", "requires_review", "succeeded", "cancelled", "errored_authorization", "errored_capture", "errored_sale"];
-export const lastPaymentErrorTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["LastPaymentError"]["type"]> = ["card_error", "processing_error"];
-export const lastPaymentErrorCodeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["LastPaymentError"]["code"]> = ["incorrect_number", "incorrect_cvc", "incorrect_postal_code", "incorrect_pin", "expired_card", "insufficient_funds", "card_declined", "authentication_failure", "processing_error", "vault_token_not_found"];
 export const processorTransactionPayment_transaction_typeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["ProcessorTransaction"]["payment_transaction_type"]> = ["charge", "refund", "void"];
 export const processorTransactionTransaction_typeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["ProcessorTransaction"]["transaction_type"]> = ["authorization", "authorization_reversal", "capture", "credit", "echeck_credit", "echeck_sale", "echeck_void", "sale", "void"];
 export const refundAllowed_reverse_actionValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["Refund"]["allowed_reverse_action"]> = ["void"];
