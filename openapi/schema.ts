@@ -507,6 +507,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/origins/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Delete an origin by ID
+         * @description Unregisters the origin host with Apple Pay when it is registered, then deletes the origin. Returns 409 if a render template still uses it. Does not delete the origin if Apple Pay unregistration fails.
+         */
+        delete: operations["DeleteOrigin"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/embed/payment_intents/{id}": {
         parameters: {
             query?: never;
@@ -2083,10 +2103,21 @@ export interface components {
         CreateOriginRequest: {
             origin: components["schemas"]["CreateOriginInput"];
         };
+        /** @enum {string} */
+        OriginApplepayRegistrationStateType: "pending" | "skipped" | "registered" | "failed";
         Origin: {
             /** Format: uuid */
             id?: string;
             value?: string;
+            /** @description Apple Pay merchant-domain registration status for this origin host. Null until registration is enabled. */
+            applepay_registration_state?: components["schemas"]["OriginApplepayRegistrationStateType"] | null;
+            /** @description Last Apple Pay registration or unregistration error, if any */
+            applepay_registration_error?: string | null;
+            /**
+             * Format: date-time
+             * @description When this origin host was last registered with Apple Pay
+             */
+            applepay_registered_at?: string | null;
             /** Format: date-time */
             created_at?: string;
             /** Format: date-time */
@@ -3868,6 +3899,54 @@ export interface operations {
                 };
             };
             /** @description Unprocessable entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    DeleteOrigin: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The ID of the origin to delete */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Origin deleted successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Origin not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Origin is in use by a render template */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Apple Pay unregister failed; the origin was not deleted */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -5664,6 +5743,7 @@ export const transactionSourceTypeValues: ReadonlyArray<FlattenedDeepRequired<co
 export const walletProviderTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["WalletProviderType"]> = ["googlepay", "applepay"];
 export const webhookEventTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["WebhookEventType"]> = ["charge.cancelled", "charge.created", "charge.errored", "charge.failed", "charge.processing", "charge.requires_capture", "charge.requires_confirmation", "charge.requires_review", "charge.settlement_failed", "charge.succeeded", "customer.created", "customer.updated", "legal_entity.created", "legal_entity.updated", "legal_entity_principal.created", "legal_entity_principal.updated", "legal_entity_application.approved", "legal_entity_application.denied", "legal_entity_application.needs_information", "legal_entity_application.pending", "legal_entity_application.submitted", "merchant.created", "merchant.updated", "payment_intent.cancelled", "payment_intent.created", "payment_intent.errored_authorization", "payment_intent.errored_capture", "payment_intent.errored_sale", "payment_intent.processing_authorization", "payment_intent.processing_capture", "payment_intent.processing_sale", "payment_intent.requires_capture", "payment_intent.requires_confirmation", "payment_intent.requires_payment_method", "payment_intent.requires_review", "payment_intent.succeeded", "processor_transaction.completed", "reconciliation.created", "refund.cancelled", "refund.created", "refund.failed", "refund.pending", "refund.processing", "refund.requires_review", "refund.succeeded", "setup_intent.cancelled", "setup_intent.created", "setup_intent.errored", "setup_intent.failed", "setup_intent.requires_confirmation", "setup_intent.requires_payment_method", "setup_intent.requires_review", "setup_intent.succeeded", "setup_intent.verifying", "void.created", "void.failed", "void.pending", "void.processing", "void.requires_review", "void.succeeded"];
 export const organizationKindValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["Organization"]["kind"]> = ["direct", "payfac"];
+export const originApplepayRegistrationStateTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["OriginApplepayRegistrationStateType"]> = ["pending", "skipped", "registered", "failed"];
 export const paymentIntentStateValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["PaymentIntent"]["state"]> = ["requires_payment_method", "requires_confirmation", "requires_capture", "processing_authorization", "processing_capture", "processing_sale", "requires_review", "succeeded", "cancelled", "errored_authorization", "errored_capture", "errored_sale"];
 export const processorTransactionPayment_transaction_typeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["ProcessorTransaction"]["payment_transaction_type"]> = ["charge", "refund", "void"];
 export const processorTransactionTransaction_typeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["ProcessorTransaction"]["transaction_type"]> = ["authorization", "authorization_reversal", "capture", "credit", "echeck_credit", "echeck_sale", "echeck_void", "sale", "void"];
