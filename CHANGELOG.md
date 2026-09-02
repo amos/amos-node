@@ -1,5 +1,11 @@
 # @amos.com/node
 
+## 0.1.59
+
+### Patch Changes
+
+- Distinguish timeout from decline
+
 ## 0.1.58
 
 ### Patch Changes
