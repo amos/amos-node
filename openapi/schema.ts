@@ -84,7 +84,13 @@ export interface paths {
         /** List all customers */
         get: operations["ListCustomers"];
         put?: never;
-        /** Create a new customer */
+        /**
+         * Create or reuse a customer
+         * @description Creates a registered customer, or returns the existing customer when
+         *     `email` or `phone` already belongs to one in the organization.
+         *     Reuse does not update the existing record; use PUT to change it.
+         *     Returns 200 for reuse and 201 for create.
+         */
         post: operations["CreateCustomer"];
         delete?: never;
         options?: never;
@@ -564,26 +570,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/embed/payment_intents/{id}/confirm_with_payment_method": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Confirm a payment intent with a new payment method (async)
-         * @description Legacy async confirmation for migration. Accepts a payment method, enqueues authorization or sale work, and returns 202 with processing_authorization or processing_sale. Prefer POST /embed/payment_intents/{id}/confirm for synchronous processor confirmation.
-         */
-        post: operations["ConfirmEmbedPaymentIntentWithPaymentMethod"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/payment_intents": {
         parameters: {
             query?: never;
@@ -910,7 +896,11 @@ export interface paths {
         };
         /** Retrieve a render template by ID */
         get: operations["GetRenderTemplate"];
-        put?: never;
+        /**
+         * Update a render template by ID
+         * @description Replaces the template's origin allowlist. Currency, allowed payment methods, and billing address options cannot be changed.
+         */
+        put: operations["UpdateRenderTemplate"];
         post?: never;
         delete?: never;
         options?: never;
@@ -966,26 +956,6 @@ export interface paths {
          * @description Confirms the setup intent and, for cards, blocks until processor verification completes. Returns 200 with the post-verification state (for example succeeded, requires_payment_method, or requires_review). Bank account setups succeed without a processor authorization.
          */
         post: operations["ConfirmEmbedSetupIntent"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/embed/setup_intents/{id}/confirm_with_payment_method": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Confirm a setup intent with a new payment method (async)
-         * @description Legacy async confirmation for migration. Accepts a payment method and, for cards, enqueues verification. Returns 202 with verifying or succeeded. Prefer POST /embed/setup_intents/{id}/confirm for synchronous confirmation.
-         */
-        post: operations["ConfirmSetupIntentWithPaymentMethod"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1326,6 +1296,8 @@ export interface components {
             routing_number?: string;
             state?: string;
             token?: string;
+            /** @description True when the bank account was verified via Plaid Auth. */
+            verified?: boolean;
             /** Format: date-time */
             created_at?: string;
             /** Format: date-time */
@@ -2454,6 +2426,14 @@ export interface components {
         CreateRenderTemplateRequest: {
             render_template: components["schemas"]["CreateRenderTemplateInput"];
         };
+        /** @description Replaces the origin allowlist on an existing render template. Currency, allowed payment methods, and billing address options are not updatable. */
+        UpdateRenderTemplateInput: {
+            /** @description Origin IDs in the current organization. Replaces the current list. At least one origin is required. */
+            origin_ids: string[];
+        };
+        UpdateRenderTemplateRequest: {
+            render_template: components["schemas"]["UpdateRenderTemplateInput"];
+        };
         RenderTemplate: {
             /** Format: uuid */
             id?: string;
@@ -2979,6 +2959,15 @@ export interface operations {
             };
         };
         responses: {
+            /** @description Existing customer returned */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Customer"];
+                };
+            };
             /** @description Customer created successfully */
             201: {
                 headers: {
@@ -2986,6 +2975,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Customer"];
+                };
+            };
+            /** @description Email and phone match different customers */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
                 };
             };
             /** @description Unprocessable entity */
@@ -4025,51 +4023,6 @@ export interface operations {
             };
         };
     };
-    ConfirmEmbedPaymentIntentWithPaymentMethod: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The ID of the payment intent to confirm */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ConfirmPaymentIntentWithPaymentMethodRequest"];
-            };
-        };
-        responses: {
-            /** @description Confirmation accepted; authorization or sale continues asynchronously */
-            202: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaymentIntent"];
-                };
-            };
-            /** @description Forbidden */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description Unprocessable content */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
     ListPaymentIntents: {
         parameters: {
             query?: {
@@ -4900,6 +4853,51 @@ export interface operations {
             };
         };
     };
+    UpdateRenderTemplate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The ID of the render template to update */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateRenderTemplateRequest"];
+            };
+        };
+        responses: {
+            /** @description Render template updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RenderTemplate"];
+                };
+            };
+            /** @description Render template not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unprocessable entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
     CreateRenderToken: {
         parameters: {
             query?: never;
@@ -4972,51 +4970,6 @@ export interface operations {
         responses: {
             /** @description Confirmation completed after verification succeeded or failed */
             200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SetupIntent"];
-                };
-            };
-            /** @description Forbidden */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description Unprocessable content */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    ConfirmSetupIntentWithPaymentMethod: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The ID of the setup intent to confirm */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ConfirmSetupIntentWithPaymentMethodRequest"];
-            };
-        };
-        responses: {
-            /** @description Confirmation accepted; card verification continues asynchronously */
-            202: {
                 headers: {
                     [name: string]: unknown;
                 };
