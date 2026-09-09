@@ -88,6 +88,8 @@ export interface paths {
          * Create or reuse a customer
          * @description Creates a registered customer, or returns the existing customer when
          *     `email` or `phone` already belongs to one in the organization.
+         *     When `email` is sent, reuse is by email only; a phone match is not used
+         *     as a fallback, so a mistyped email cannot attach to another customer.
          *     Reuse does not update the existing record; use PUT to change it.
          *     Returns 200 for reuse and 201 for create.
          */
@@ -971,7 +973,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Create a new setup intent */
+        /**
+         * Create a new setup intent
+         * @description Creates an organization-scoped setup intent. X-Account-Id is ignored if sent. The customer must belong to the authenticated organization. Returns an embed token whose JWT payload includes organization_id and setup_intent_id.
+         */
         post: operations["CreateSetupIntent"];
         delete?: never;
         options?: never;
@@ -1247,13 +1252,33 @@ export interface components {
                 [key: string]: string[];
             };
         };
-        /** @description Decoded JWT payload for embed token responses. */
+        /**
+         * @description Decoded JWT payload for embed token responses.
+         *
+         *     Payment intent tokens include `account_id` and `payment_intent_id`.
+         *     Setup intent tokens include `organization_id` and `setup_intent_id`
+         *     and do not use `account_id`. Unused fields are null.
+         */
         EmbedTokenJwt: {
-            /** Format: uuid */
-            account_id?: string;
-            /** Format: uuid */
+            /**
+             * Format: uuid
+             * @description Present for payment intent embed tokens. Null for setup intents.
+             */
+            account_id?: string | null;
+            /**
+             * Format: uuid
+             * @description Present for setup intent embed tokens. Null for payment intents.
+             */
+            organization_id?: string | null;
+            /**
+             * Format: uuid
+             * @description Present for payment intent embed tokens. Null for setup intents.
+             */
             payment_intent_id?: string | null;
-            /** Format: uuid */
+            /**
+             * Format: uuid
+             * @description Present for setup intent embed tokens. Null for payment intents.
+             */
             setup_intent_id?: string | null;
         };
         /** @description Decoded JWT payload for render token responses. */
@@ -1266,7 +1291,13 @@ export interface components {
             render_template_id?: string;
         };
         EmbedToken: {
-            /** @description JWT string used for embedded payment and setup intent flows. When decoded, the JWT payload matches the EmbedTokenJwt schema. */
+            /**
+             * @description JWT string used for embedded payment and setup intent flows.
+             *     When decoded, the JWT payload matches the EmbedTokenJwt schema.
+             *     Setup intent tokens are organization-scoped (`organization_id` +
+             *     `setup_intent_id`). Payment intent tokens remain account-scoped
+             *     (`account_id` + `payment_intent_id`).
+             */
             token?: string;
             ttl?: number;
         };
@@ -1491,12 +1522,9 @@ export interface components {
             /** Format: date-time */
             updated_at?: string;
         };
-        /** @enum {string} */
-        DunningConfigurationExhaustedActionType: "cancel" | "pause" | "none";
         CreateDunningConfigurationInput: {
             /** @description Days after a failed collection to retry, in ascending order. */
             retry_days: number[];
-            exhausted_action?: components["schemas"]["DunningConfigurationExhaustedActionType"];
             enabled?: boolean;
         };
         CreateDunningConfigurationRequest: {
@@ -1504,7 +1532,6 @@ export interface components {
         };
         UpdateDunningConfigurationInput: {
             retry_days?: number[];
-            exhausted_action?: components["schemas"]["DunningConfigurationExhaustedActionType"];
             enabled?: boolean;
         };
         UpdateDunningConfigurationRequest: {
@@ -1514,7 +1541,6 @@ export interface components {
             /** Format: uuid */
             id?: string;
             retry_days?: number[];
-            exhausted_action?: components["schemas"]["DunningConfigurationExhaustedActionType"];
             enabled?: boolean;
             /** Format: date-time */
             created_at?: string;
@@ -2447,7 +2473,10 @@ export interface components {
             origins: components["schemas"]["Origin"][];
         };
         CreateSetupIntentInput: {
-            /** Format: uuid */
+            /**
+             * Format: uuid
+             * @description Customer on the authenticated organization.
+             */
             customer_id?: string;
             metadata?: components["schemas"]["Metadata"];
         };
@@ -2468,8 +2497,16 @@ export interface components {
         SetupIntent: {
             /** Format: uuid */
             id?: string;
-            /** Format: uuid */
-            account_id?: string;
+            /**
+             * Format: uuid
+             * @description Legacy account association. Null for organization-scoped setup intents.
+             */
+            account_id?: string | null;
+            /**
+             * Format: uuid
+             * @description Organization that owns the setup intent.
+             */
+            organization_id?: string;
             /** Format: uuid */
             customer_id?: string;
             metadata?: components["schemas"]["Metadata"];
@@ -2977,7 +3014,10 @@ export interface operations {
                     "application/json": components["schemas"]["Customer"];
                 };
             };
-            /** @description Email and phone match different customers */
+            /**
+             * @description Email and phone match different customers, or the email is new and
+             *     the phone already belongs to another customer.
+             */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -5663,7 +5703,6 @@ export const bankAccountProfileFailure_reasonValues: ReadonlyArray<FlattenedDeep
 export const cardProfileFailure_reasonValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["CardProfile"]["failure_reason"]> = ["authorization_failed", "avs_blocked", "brand_not_allowed", "brand_not_found", "cvc_blocked", "processing_error", "vault_failed"];
 export const chargeAllowed_reverse_actionValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["Charge"]["allowed_reverse_action"]> = ["void", "refund"];
 export const chargeStateValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["Charge"]["state"]> = ["cancelled", "errored", "failed", "processing", "requires_capture", "requires_confirmation", "requires_review", "settlement_failed", "succeeded"];
-export const dunningConfigurationExhaustedActionTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["DunningConfigurationExhaustedActionType"]> = ["cancel", "pause", "none"];
 export const externalAccountTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["ExternalAccount"]["type"]> = ["external_card", "external_bank_account"];
 export const legalEntityEntityTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["LegalEntityEntityType"]> = ["individual_sole_proprietorship", "corporation", "limited_liability_company", "partnership", "limited_partnership", "general_partnership", "tax_exempt_organization", "government_agency"];
 export const legalEntityOwnershipTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["LegalEntityOwnershipType"]> = ["public", "private"];
