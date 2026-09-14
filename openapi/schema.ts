@@ -2647,11 +2647,6 @@ export interface components {
             id?: string;
             /**
              * Format: uuid
-             * @description Legacy account association. Null for organization-scoped setup intents.
-             */
-            account_id?: string | null;
-            /**
-             * Format: uuid
              * @description Organization that owns the setup intent.
              */
             organization_id?: string;
