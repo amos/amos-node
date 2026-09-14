@@ -301,7 +301,8 @@ export interface paths {
         };
         /** Retrieve a legal entity application by ID */
         get: operations["GetLegalEntityApplication"];
-        put?: never;
+        /** Update a pending legal entity application */
+        put: operations["UpdateLegalEntityApplication"];
         post?: never;
         delete?: never;
         options?: never;
@@ -369,7 +370,8 @@ export interface paths {
         };
         /** Retrieve a legal entity application principal by ID */
         get: operations["GetLegalEntityApplicationPrincipal"];
-        put?: never;
+        /** Update a legal entity application principal */
+        put: operations["UpdateLegalEntityApplicationPrincipal"];
         post?: never;
         delete?: never;
         options?: never;
@@ -437,7 +439,8 @@ export interface paths {
         };
         /** Retrieve a merchant application by ID */
         get: operations["GetMerchantApplication"];
-        put?: never;
+        /** Update a pending merchant application */
+        put: operations["UpdateMerchantApplication"];
         post?: never;
         delete?: never;
         options?: never;
@@ -476,7 +479,8 @@ export interface paths {
         delete?: never;
         options?: never;
         head?: never;
-        patch?: never;
+        /** Update a merchant by ID */
+        patch: operations["UpdateMerchant"];
         trace?: never;
     };
     "/organization": {
@@ -690,7 +694,8 @@ export interface paths {
          */
         get: operations["ListPaymentMethods"];
         put?: never;
-        post?: never;
+        /** Create a payment method */
+        post: operations["CreatePaymentMethod"];
         delete?: never;
         options?: never;
         head?: never;
@@ -862,9 +867,9 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
+        put?: never;
         /** Cancel a refund */
-        put: operations["CancelRefund"];
-        post?: never;
+        post: operations["CancelRefund"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1434,7 +1439,6 @@ export interface components {
             /** Format: uuid */
             id?: string;
             name?: string;
-            active?: boolean;
             /** Format: uuid */
             merchant_id?: string;
             /** Format: uuid */
@@ -1505,8 +1509,6 @@ export interface components {
         Customer: {
             /** Format: uuid */
             id?: string;
-            /** Format: uuid */
-            account_id?: string;
             email?: string;
             metadata?: components["schemas"]["Metadata"];
             name?: string;
@@ -1588,6 +1590,10 @@ export interface components {
             purpose: string;
             state: string;
             download: components["schemas"]["FileDownloadConfiguration"];
+            /** Format: date-time */
+            created_at?: string;
+            /** Format: date-time */
+            updated_at?: string;
         };
         FileDownloadConfiguration: {
             /** Format: uri */
@@ -1604,6 +1610,10 @@ export interface components {
             purpose: string;
             state: string;
             upload: components["schemas"]["FileUploadConfiguration"];
+            /** Format: date-time */
+            created_at?: string;
+            /** Format: date-time */
+            updated_at?: string;
         };
         FileUploadConfiguration: {
             /** Format: uri */
@@ -1637,6 +1647,8 @@ export interface components {
             byte_size?: number;
             /** Format: date-time */
             created_at?: string;
+            /** Format: date-time */
+            updated_at?: string;
         };
         CreateLegalEntityApplicationPrincipalInput: {
             /** Format: uuid */
@@ -1678,6 +1690,10 @@ export interface components {
             contact_phone?: string;
             tax_id_last4?: string;
             title?: string;
+            /** Format: date-time */
+            created_at?: string;
+            /** Format: date-time */
+            updated_at?: string;
         };
         LegalEntityPrincipal: {
             /** Format: uuid */
@@ -1697,6 +1713,10 @@ export interface components {
             postal_code?: string;
             contact_phone?: string;
             tax_id_last4?: string;
+            /** Format: date-time */
+            created_at?: string;
+            /** Format: date-time */
+            updated_at?: string;
         };
         /** @enum {string} */
         LegalEntityEntityType: "individual_sole_proprietorship" | "corporation" | "limited_liability_company" | "partnership" | "limited_partnership" | "general_partnership" | "tax_exempt_organization" | "government_agency";
@@ -1918,6 +1938,10 @@ export interface components {
             satisfied_at?: string | null;
             /** Format: date-time */
             waived_at?: string | null;
+            /** Format: date-time */
+            created_at?: string;
+            /** Format: date-time */
+            updated_at?: string;
         };
         LegalEntity: {
             /** Format: uuid */
@@ -1940,6 +1964,8 @@ export interface components {
             tax_id_last4?: string;
             /** Format: date-time */
             created_at?: string;
+            /** Format: date-time */
+            updated_at?: string;
         };
         LegalEntityApplication: {
             /** Format: uuid */
@@ -2003,7 +2029,6 @@ export interface components {
             /** Format: uuid */
             id?: string;
             annual_credit_card_sales_volume?: number;
-            allowed_payment_methods?: components["schemas"]["AllowedPaymentMethod"][];
             business_category?: components["schemas"]["MerchantBusinessCategoryType"];
             business_description?: string;
             city?: string;
@@ -2017,8 +2042,11 @@ export interface components {
             has_accepted_credit_cards?: boolean;
             /** Format: uuid */
             legal_entity_application_id?: string;
-            /** Format: uuid */
-            legal_entity_id?: string;
+            max_daily_credits_amount?: number;
+            max_daily_debits_amount?: number;
+            max_monthly_credits_amount?: number;
+            max_monthly_debits_amount?: number;
+            max_single_debit_amount?: number;
             max_transaction_amount?: string;
             mcc?: string;
             postal_code?: string;
@@ -2028,10 +2056,15 @@ export interface components {
             primary_contact_phone?: string;
             purchase_currency?: string;
             settlement_currency?: string;
+            settlement_days?: number;
             state_province?: string;
             street_address1?: string;
             street_address2?: string;
             website_url?: string;
+            /** Format: date-time */
+            created_at?: string;
+            /** Format: date-time */
+            updated_at?: string;
         };
         Merchant: {
             /** Format: uuid */
@@ -2172,7 +2205,6 @@ export interface components {
             recurring_payment?: components["schemas"]["RecurringPayment"];
             /** Format: uuid */
             payment_method_id?: string;
-            source?: components["schemas"]["TransactionSourceType"];
             /** @enum {string} */
             state?: "requires_payment_method" | "requires_confirmation" | "requires_capture" | "processing_authorization" | "processing_capture" | "processing_sale" | "requires_review" | "succeeded" | "cancelled" | "errored_authorization" | "errored_capture" | "errored_sale";
             statement_descriptor?: string;
@@ -2264,6 +2296,113 @@ export interface components {
             cancel_url?: string;
             allowed_payment_methods?: components["schemas"]["AllowedPaymentMethod"][];
             metadata?: components["schemas"]["Metadata"];
+            /** Format: date-time */
+            created_at?: string;
+            /** Format: date-time */
+            updated_at?: string;
+        };
+        CreatePaymentMethodInput: {
+            /** Format: uuid */
+            customer_id?: string;
+            metadata?: components["schemas"]["Metadata"];
+            billing_address_attributes?: components["schemas"]["BillingAddressInput"];
+            card_profile_attributes?: {
+                brand?: string;
+                card_holder_name?: string;
+                cvc?: string;
+                encrypted_card_number?: string;
+                exp_month?: number;
+                exp_year?: number;
+                first6?: string;
+                last4?: string;
+                pan_type?: string;
+                token?: string;
+                wallet_payload?: string;
+                wallet_provider?: components["schemas"]["WalletProviderType"];
+            };
+            bank_account_profile_attributes?: {
+                last4?: string;
+                account_holder_name?: string;
+                account_holder_type?: string;
+                account_type?: string;
+                bank_name?: string;
+                currency?: string;
+                encrypted_account_number?: string;
+                token?: string;
+                routing_number?: string;
+            };
+        };
+        CreatePaymentMethodRequest: {
+            payment_method: components["schemas"]["CreatePaymentMethodInput"];
+        };
+        UpdateMerchantInput: {
+            active?: boolean;
+            business_category?: components["schemas"]["MerchantBusinessCategoryType"];
+            dba_name?: string;
+            allowed_payment_methods?: components["schemas"]["AllowedPaymentMethodInput"][];
+        };
+        UpdateMerchantRequest: {
+            merchant: components["schemas"]["UpdateMerchantInput"];
+        };
+        UpdateLegalEntityApplicationInput: {
+            legal_name?: string;
+            entity_type?: components["schemas"]["LegalEntityEntityType"];
+            ownership_type?: components["schemas"]["LegalEntityOwnershipType"];
+            tax_id?: string;
+            contact_email?: string;
+            contact_phone?: string;
+            business_address_line1?: string;
+            business_address_line2?: string;
+            business_city?: string;
+            business_state?: string;
+            business_postal_code?: string;
+            business_country?: string;
+        };
+        UpdateLegalEntityApplicationRequest: {
+            legal_entity_application: components["schemas"]["UpdateLegalEntityApplicationInput"];
+        };
+        UpdateLegalEntityApplicationPrincipalInput: {
+            title?: string;
+            first_name?: string;
+            last_name?: string;
+            email?: string;
+            tax_id?: string;
+            date_of_birth?: string;
+            address_line1?: string;
+            address_line2?: string;
+            city?: string;
+            state?: string;
+            country?: string;
+            postal_code?: string;
+            stake_percent?: number;
+            contact_phone?: string;
+        };
+        UpdateLegalEntityApplicationPrincipalRequest: {
+            legal_entity_application_principal: components["schemas"]["UpdateLegalEntityApplicationPrincipalInput"];
+        };
+        UpdateMerchantApplicationInput: {
+            annual_credit_card_sales_volume?: number;
+            bank_account_number?: string;
+            bank_routing_number?: string;
+            business_category?: components["schemas"]["MerchantBusinessCategoryType"];
+            business_description?: string;
+            city?: string;
+            country_code?: string;
+            customer_service_number?: string;
+            dba_name?: string;
+            max_transaction_amount?: number;
+            postal_code?: string;
+            primary_contact_email_address?: string;
+            primary_contact_first_name?: string;
+            primary_contact_last_name?: string;
+            primary_contact_phone?: string;
+            state_province?: string;
+            street_address1?: string;
+            street_address2?: string;
+            website_url?: string;
+        };
+        UpdateMerchantApplicationRequest: {
+            merchant_application: components["schemas"]["UpdateMerchantApplicationInput"];
         };
         PaymentMethod: {
             /** Format: uuid */
@@ -2333,8 +2472,16 @@ export interface components {
         ProcessorTransaction: {
             /** Format: uuid */
             id?: string;
-            /** Format: uuid */
-            account_id?: string;
+            /**
+             * Format: uuid
+             * @description Account the transaction was processed under. Null for setup intent verifications, which are scoped to the organization.
+             */
+            account_id?: string | null;
+            /**
+             * Format: uuid
+             * @description Organization the transaction belongs to.
+             */
+            organization_id?: string | null;
             approved?: boolean;
             avs_check?: string;
             avs_check_message?: string;
@@ -2348,8 +2495,6 @@ export interface components {
             payment_transaction_id?: string;
             /** @enum {string} */
             payment_transaction_type?: "charge" | "refund" | "void";
-            /** Format: uuid */
-            processor_transaction_id?: string;
             processor_reference?: string;
             network_transaction_id?: string;
             transaction_link_id?: string;
@@ -2386,7 +2531,6 @@ export interface components {
             name?: string;
             description?: string;
             active?: boolean;
-            metadata?: components["schemas"]["Metadata"];
             /** Format: date-time */
             created_at?: string;
             /** Format: date-time */
@@ -2471,6 +2615,10 @@ export interface components {
             /** Format: date-time */
             last_used_at?: string | null;
             origins: components["schemas"]["Origin"][];
+            /** Format: date-time */
+            created_at?: string;
+            /** Format: date-time */
+            updated_at?: string;
         };
         CreateSetupIntentInput: {
             /**
@@ -2551,9 +2699,12 @@ export interface components {
         Subscription: {
             /** Format: uuid */
             id?: string;
-            /** Format: uuid */
-            account_id?: string;
             amount?: number;
+            /** Format: date-time */
+            cancel_at?: string | null;
+            cancel_at_period_end?: boolean;
+            /** Format: date-time */
+            cancelled_at?: string | null;
             currency?: string;
             cycles?: number;
             /** Format: uuid */
@@ -2564,6 +2715,9 @@ export interface components {
             payment_method_id?: string;
             interval?: components["schemas"]["SubscriptionIntervalType"];
             interval_count?: number;
+            metadata?: components["schemas"]["Metadata"];
+            /** Format: date-time */
+            start_at?: string | null;
             /** @enum {string} */
             state?: "active" | "paused" | "past_due" | "cancelled";
             cycles_completed?: number;
@@ -2573,8 +2727,6 @@ export interface components {
             current_billing_period_start?: string;
             /** Format: date-time */
             current_billing_period_end?: string;
-            /** Format: date-time */
-            trial_ends_at?: string | null;
             /** Format: date-time */
             created_at?: string;
             /** Format: date-time */
@@ -2734,6 +2886,11 @@ export interface components {
         WebhookRequest: {
             id?: string;
             /** Format: uuid */
+            eventable_id?: string;
+            eventable_type?: string;
+            /** Format: uuid */
+            organization_id?: string;
+            /** Format: uuid */
             webhook_endpoint_id?: string;
             /** Format: date-time */
             expires_at?: string;
@@ -2747,6 +2904,8 @@ export interface components {
     responses: never;
     parameters: {
         XIdempotencyHeader: string;
+        /** @description Render template JWT required to create a payment or setup intent. */
+        XRenderTokenHeader: string;
         /** @description The ID of the customer to filter by */
         CustomerIdQuery: string;
         /** @description Exact email match (case-insensitive). For substring search, use `q`. */
@@ -2783,6 +2942,22 @@ export interface components {
         OriginQQuery: string;
         /** @description The ID of the webhook request to filter by */
         WebhookRequestIdQuery: string;
+        /** @description The customer ID to filter by */
+        OptionalCustomerIdQuery: string;
+        DbaNameQuery: string;
+        LegalEntityIdQuery: string;
+        LegalNameQuery: string;
+        /** @description Filter payment intents by id */
+        PaymentIntentRecordIdQuery: string;
+        ProcessorReferenceQuery: string;
+        OriginalTransactionIdQuery: string;
+        SubscriptionStateQuery: string;
+        ExternalReferenceQuery: string;
+        PaymentSnapshotStateQuery: string;
+        WebhookEndpointIdQuery: string;
+        WebhookEventQuery: string;
+        EventableIdQuery: string;
+        WebhookSuccessQuery: boolean;
     };
     requestBodies: never;
     headers: never;
@@ -2876,6 +3051,8 @@ export interface operations {
                 per_page?: components["parameters"]["PerPageQuery"];
                 /** @description The ID of the payment intent to filter by */
                 payment_intent_id?: components["parameters"]["PaymentIntentIdQuery"];
+                /** @description The customer ID to filter by */
+                customer_id?: components["parameters"]["OptionalCustomerIdQuery"];
             };
             header?: never;
             path?: never;
@@ -3540,6 +3717,41 @@ export interface operations {
             };
         };
     };
+    UpdateLegalEntityApplication: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateLegalEntityApplicationRequest"];
+            };
+        };
+        responses: {
+            /** @description Legal entity application updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalEntityApplication"];
+                };
+            };
+            /** @description Unprocessable entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
     SubmitLegalEntityApplication: {
         parameters: {
             query?: never;
@@ -3664,6 +3876,41 @@ export interface operations {
             };
         };
     };
+    UpdateLegalEntityApplicationPrincipal: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateLegalEntityApplicationPrincipalRequest"];
+            };
+        };
+        responses: {
+            /** @description Legal entity application principal updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalEntityApplicationPrincipal"];
+                };
+            };
+            /** @description Unprocessable entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
     ListLegalEntityPrincipals: {
         parameters: {
             query: {
@@ -3780,6 +4027,42 @@ export interface operations {
             };
         };
     };
+    UpdateMerchantApplication: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The ID of the merchant application to update */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateMerchantApplicationRequest"];
+            };
+        };
+        responses: {
+            /** @description Merchant application updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MerchantApplication"];
+                };
+            };
+            /** @description Unprocessable entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
     ListMerchants: {
         parameters: {
             query?: {
@@ -3787,6 +4070,9 @@ export interface operations {
                 page?: components["parameters"]["PageQuery"];
                 /** @description Number of results per page. */
                 per_page?: components["parameters"]["PerPageQuery"];
+                dba_name?: components["parameters"]["DbaNameQuery"];
+                legal_entity_id?: components["parameters"]["LegalEntityIdQuery"];
+                legal_name?: components["parameters"]["LegalNameQuery"];
             };
             header?: never;
             path?: never;
@@ -3827,6 +4113,42 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Merchant"];
+                };
+            };
+        };
+    };
+    UpdateMerchant: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The ID of the merchant to update */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateMerchantRequest"];
+            };
+        };
+        responses: {
+            /** @description Merchant updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Merchant"];
+                };
+            };
+            /** @description Unprocessable entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
                 };
             };
         };
@@ -4070,6 +4392,9 @@ export interface operations {
                 page?: components["parameters"]["PageQuery"];
                 /** @description Number of results per page. */
                 per_page?: components["parameters"]["PerPageQuery"];
+                /** @description Filter payment intents by id */
+                id?: components["parameters"]["PaymentIntentRecordIdQuery"];
+                processor_reference?: components["parameters"]["ProcessorReferenceQuery"];
             };
             header?: never;
             path?: never;
@@ -4094,7 +4419,10 @@ export interface operations {
     CreatePaymentIntent: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Render template JWT required to create a payment or setup intent. */
+                "X-Render-Token": components["parameters"]["XRenderTokenHeader"];
+            };
             path?: never;
             cookie?: never;
         };
@@ -4113,7 +4441,7 @@ export interface operations {
                     "application/json": components["schemas"]["EmbedToken"];
                 };
             };
-            /** @description Unprocessable entity */
+            /** @description Unprocessable entity, including a missing X-Render-Token header. */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -4381,6 +4709,39 @@ export interface operations {
             };
         };
     };
+    CreatePaymentMethod: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreatePaymentMethodRequest"];
+            };
+        };
+        responses: {
+            /** @description Payment method created successfully */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaymentMethod"];
+                };
+            };
+            /** @description Unprocessable entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
     GetPaymentMethod: {
         parameters: {
             query?: never;
@@ -4551,6 +4912,7 @@ export interface operations {
                 payment_method_id?: components["parameters"]["PaymentMethodIdQuery"];
                 /** @description The ID of the payment transaction to filter by */
                 payment_transaction_id?: components["parameters"]["PaymentTransactionIdQuery"];
+                original_transaction_id?: components["parameters"]["OriginalTransactionIdQuery"];
             };
             header?: never;
             path?: never;
@@ -5040,7 +5402,10 @@ export interface operations {
     CreateSetupIntent: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Render template JWT required to create a payment or setup intent. */
+                "X-Render-Token": components["parameters"]["XRenderTokenHeader"];
+            };
             path?: never;
             cookie?: never;
         };
@@ -5059,7 +5424,7 @@ export interface operations {
                     "application/json": components["schemas"]["EmbedToken"];
                 };
             };
-            /** @description Unprocessable entity */
+            /** @description Unprocessable entity, including a missing X-Render-Token header. */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -5077,6 +5442,8 @@ export interface operations {
                 page?: components["parameters"]["PageQuery"];
                 /** @description Number of results per page. */
                 per_page?: components["parameters"]["PerPageQuery"];
+                /** @description Exact name match (case-insensitive). For substring search, use `q`. */
+                name?: components["parameters"]["NameQuery"];
             };
             header?: never;
             path?: never;
@@ -5161,6 +5528,7 @@ export interface operations {
                 page?: components["parameters"]["PageQuery"];
                 /** @description Number of results per page. */
                 per_page?: components["parameters"]["PerPageQuery"];
+                state?: components["parameters"]["SubscriptionStateQuery"];
             };
             header?: never;
             path?: never;
@@ -5616,6 +5984,10 @@ export interface operations {
                 page?: components["parameters"]["PageQuery"];
                 /** @description Number of results per page. */
                 per_page?: components["parameters"]["PerPageQuery"];
+                webhook_endpoint_id?: components["parameters"]["WebhookEndpointIdQuery"];
+                success?: components["parameters"]["WebhookSuccessQuery"];
+                event?: components["parameters"]["WebhookEventQuery"];
+                eventable_id?: components["parameters"]["EventableIdQuery"];
             };
             header?: never;
             path?: never;
