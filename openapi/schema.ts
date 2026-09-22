@@ -144,10 +144,16 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** List all external accounts */
+        /**
+         * List all external accounts
+         * @description Lists organization-scoped external accounts. X-Account-Id is ignored if sent.
+         */
         get: operations["ListExternalAccounts"];
         put?: never;
-        /** Create an external account */
+        /**
+         * Create an external account
+         * @description Creates an organization-scoped external account. X-Account-Id is ignored if sent.
+         */
         post: operations["CreateExternalAccount"];
         delete?: never;
         options?: never;
@@ -162,7 +168,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Retrieve an external account by ID */
+        /**
+         * Retrieve an external account by ID
+         * @description Retrieves an organization-scoped external account. X-Account-Id is ignored if sent.
+         */
         get: operations["GetExternalAccount"];
         put?: never;
         post?: never;
@@ -1312,15 +1321,19 @@ export interface components {
             ttl?: number;
         };
         BankAccountProfileInput: {
+            /** @description Account holder name. Letters, spaces, hyphens, apostrophes, and periods only. */
             account_holder_name?: string;
             account_holder_type?: string;
             account_type?: string;
             bank_name?: string;
             currency?: string;
+            /** @description Plaintext bank account number. Stored encrypted at rest. Not returned in API responses. */
+            account_number?: string;
             encrypted_account_number?: string;
             routing_number?: string;
         };
         BankAccountProfile: {
+            /** @description Account holder name. Letters, spaces, hyphens, apostrophes, and periods only. */
             account_holder_name?: string;
             account_holder_type?: string;
             account_type?: string;
@@ -1388,6 +1401,7 @@ export interface components {
             updated_at?: string;
         };
         CardProfileInput: {
+            /** @description Cardholder name. Letters, spaces, hyphens, apostrophes, and periods only. */
             card_holder_name?: string;
             cvc?: string;
             encrypted_card_number?: string;
@@ -1409,6 +1423,7 @@ export interface components {
             avs_check?: string;
             avs_check_message?: string | null;
             brand?: string;
+            /** @description Cardholder name. Letters, spaces, hyphens, apostrophes, and periods only. */
             card_holder_name?: string;
             cvc_check?: string;
             cvc_check_message?: string | null;
@@ -1562,7 +1577,7 @@ export interface components {
             /** Format: uuid */
             id?: string;
             /** Format: uuid */
-            account_id?: string;
+            organization_id?: string;
             metadata?: components["schemas"]["Metadata"];
             /** @enum {string} */
             type?: "external_card" | "external_bank_account";
@@ -2308,6 +2323,7 @@ export interface components {
             billing_address_attributes?: components["schemas"]["BillingAddressInput"];
             card_profile_attributes?: {
                 brand?: string;
+                /** @description Cardholder name. Letters, spaces, hyphens, apostrophes, and periods only. */
                 card_holder_name?: string;
                 cvc?: string;
                 encrypted_card_number?: string;
@@ -2322,11 +2338,13 @@ export interface components {
             };
             bank_account_profile_attributes?: {
                 last4?: string;
+                /** @description Account holder name. Letters, spaces, hyphens, apostrophes, and periods only. */
                 account_holder_name?: string;
                 account_holder_type?: string;
                 account_type?: string;
                 bank_name?: string;
                 currency?: string;
+                account_number?: string;
                 encrypted_account_number?: string;
                 token?: string;
                 routing_number?: string;
@@ -2901,6 +2919,8 @@ export interface components {
         XIdempotencyHeader: string;
         /** @description Render template JWT required to create a payment or setup intent. */
         XRenderTokenHeader: string;
+        /** @description The ID of the account to filter by */
+        AccountIdQuery: string;
         /** @description The ID of the customer to filter by */
         CustomerIdQuery: string;
         /** @description Exact email match (case-insensitive). For substring search, use `q`. */

@@ -1,5 +1,11 @@
 # @amos.com/node
 
+## 0.1.65
+
+### Patch Changes
+
+- Handle updated openapi spec
+
 ## 0.1.64
 
 ### Patch Changes
