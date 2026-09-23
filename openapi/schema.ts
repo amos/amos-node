@@ -152,7 +152,7 @@ export interface paths {
         put?: never;
         /**
          * Create an external account
-         * @description Creates an organization-scoped external account. X-Account-Id is ignored if sent.
+         * @description Creates an organization-scoped external account. X-Account-Id is ignored if sent. For bank accounts, send account_number to store the number locally and skip Vault; otherwise send encrypted_account_number to tokenize in Vault.
          */
         post: operations["CreateExternalAccount"];
         delete?: never;
@@ -1327,8 +1327,9 @@ export interface components {
             account_type?: string;
             bank_name?: string;
             currency?: string;
-            /** @description Plaintext bank account number. Stored encrypted at rest. Not returned in API responses. */
+            /** @description Plaintext bank account number. Stored encrypted at rest and not returned in API responses. When present, Vault tokenization is skipped (payment methods and external bank accounts). */
             account_number?: string;
+            /** @description Vault-encrypted account number. Required on create when account_number is omitted; ignored for tokenization when account_number is present. */
             encrypted_account_number?: string;
             routing_number?: string;
         };
@@ -1790,7 +1791,7 @@ export interface components {
             billing_address_attributes?: components["schemas"]["BillingAddressInput"];
             card_profile_attributes: components["schemas"]["CardProfileInput"];
         };
-        /** @description Confirm an embedded intent with a bank account. When ACH verification is required for the intent amount, include plaid credentials and omit bank_account_profile_attributes; routing and account numbers are filled server-side from Plaid Auth. Otherwise provide encrypted_account_number and routing_number on bank_account_profile_attributes. */
+        /** @description Confirm an embedded intent with a bank account. When ACH verification is required for the intent amount, include plaid credentials and omit bank_account_profile_attributes; routing and account numbers are filled server-side from Plaid Auth. Otherwise provide routing_number and either account_number (stored locally, skips Vault) or encrypted_account_number on bank_account_profile_attributes. */
         EmbedConfirmBankAccountPaymentMethodInput: {
             /**
              * @description discriminator enum property added by openapi-typescript
@@ -2344,7 +2345,9 @@ export interface components {
                 account_type?: string;
                 bank_name?: string;
                 currency?: string;
+                /** @description Plaintext bank account number. Stored encrypted at rest and not returned in API responses. When present, Vault tokenization is skipped. */
                 account_number?: string;
+                /** @description Vault-encrypted account number. Required on create when account_number is omitted; ignored for tokenization when account_number is present. */
                 encrypted_account_number?: string;
                 token?: string;
                 routing_number?: string;
