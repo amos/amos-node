@@ -2484,6 +2484,8 @@ export interface components {
             organization_id?: string;
             prefix?: string;
             public_id?: string;
+            /** Format: uuid */
+            payout_batch_id?: string | null;
             state?: components["schemas"]["PayoutStateType"];
             /** Format: date-time */
             created_at?: string;
