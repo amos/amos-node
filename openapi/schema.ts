@@ -346,16 +346,17 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Start review or complete approval of a legal entity application
+         * Start review or approve a legal entity application
          * @description Call this twice.
          *
-         *     When the application is `submitted`, this creates a `pending` legal entity
-         *     and principal and moves the application to `under_review`. Identity
-         *     verification can then be run against that principal.
+         *     When the application is `submitted`, this moves it to `under_review`.
+         *     No legal entity is created. Run identity verification for each
+         *     application principal while the application is `under_review`.
          *
-         *     When the application is `under_review`, this activates the legal entity
-         *     and moves the application to `approved` only if the principal has a
-         *     successful identity verification.
+         *     When the application is `under_review`, this creates the legal entity,
+         *     merchants, accounts, and principals and moves the application to
+         *     `approved`, only if every application principal has a successful
+         *     identity verification.
          */
         post: operations["ApproveLegalEntityApplication"];
         delete?: never;
@@ -1746,8 +1747,6 @@ export interface components {
             updated_at?: string;
         };
         /** @enum {string} */
-        LegalEntityStateType: "pending" | "active";
-        /** @enum {string} */
         LegalEntityApplicationStateType: "pending" | "submitted" | "needs_information" | "under_review" | "approved" | "denied";
         /** @enum {string} */
         LegalEntityEntityType: "individual_sole_proprietorship" | "corporation" | "limited_liability_company" | "partnership" | "limited_partnership" | "general_partnership" | "tax_exempt_organization" | "government_agency";
@@ -1993,7 +1992,6 @@ export interface components {
             business_postal_code?: string;
             business_country?: string;
             tax_id_last4?: string;
-            state?: components["schemas"]["LegalEntityStateType"];
             /** Format: date-time */
             created_at?: string;
             /** Format: date-time */
@@ -2003,8 +2001,11 @@ export interface components {
             /** Format: uuid */
             id?: string;
             legal_name?: string;
-            /** Format: uuid */
-            legal_entity_id?: string;
+            /**
+             * Format: uuid
+             * @description Set when the application is approved and the legal entity is created.
+             */
+            legal_entity_id?: string | null;
             entity_type?: components["schemas"]["LegalEntityEntityType"];
             ownership_type?: components["schemas"]["LegalEntityOwnershipType"];
             contact_email?: string;
@@ -6112,7 +6113,6 @@ export const cardProfileFailure_reasonValues: ReadonlyArray<FlattenedDeepRequire
 export const chargeAllowed_reverse_actionValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["Charge"]["allowed_reverse_action"]> = ["void", "refund"];
 export const chargeStateValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["Charge"]["state"]> = ["cancelled", "errored", "failed", "processing", "requires_capture", "requires_confirmation", "requires_review", "settlement_failed", "succeeded"];
 export const externalAccountTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["ExternalAccount"]["type"]> = ["external_card", "external_bank_account"];
-export const legalEntityStateTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["LegalEntityStateType"]> = ["pending", "active"];
 export const legalEntityApplicationStateTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["LegalEntityApplicationStateType"]> = ["pending", "submitted", "needs_information", "under_review", "approved", "denied"];
 export const legalEntityEntityTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["LegalEntityEntityType"]> = ["individual_sole_proprietorship", "corporation", "limited_liability_company", "partnership", "limited_partnership", "general_partnership", "tax_exempt_organization", "government_agency"];
 export const legalEntityOwnershipTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["LegalEntityOwnershipType"]> = ["public", "private"];
