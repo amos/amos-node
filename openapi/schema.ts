@@ -152,7 +152,7 @@ export interface paths {
         put?: never;
         /**
          * Create an external account
-         * @description Creates an organization-scoped external account. X-Account-Id is ignored if sent. For bank accounts, send account_number to store the number locally and skip Vault; otherwise send encrypted_account_number to tokenize in Vault.
+         * @description Creates an organization-scoped external account. X-Account-Id is ignored if sent.
          */
         post: operations["CreateExternalAccount"];
         delete?: never;
@@ -799,8 +799,31 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** List all processor transactions */
+        /**
+         * List all processor transactions
+         * @description Lists organization-scoped processor transactions across all accounts in the organization. X-Account-Id is ignored if sent; use the account_id query parameter to filter to a single account.
+         */
         get: operations["ListProcessorTransactions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/processor_transactions/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Retrieve a processor transaction by ID
+         * @description Retrieves an organization-scoped processor transaction. X-Account-Id is ignored if sent. Returns 404 if the transaction belongs to another organization.
+         */
+        get: operations["GetProcessorTransaction"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1339,10 +1362,8 @@ export interface components {
             account_type?: string;
             bank_name?: string;
             currency?: string;
-            /** @description Plaintext bank account number. Stored encrypted at rest and not returned in API responses. When present, Vault tokenization is skipped (payment methods and external bank accounts). */
+            /** @description Bank account number. Stored encrypted at rest and not returned in API responses. */
             account_number?: string;
-            /** @description Vault-encrypted account number. Required on create when account_number is omitted; ignored for tokenization when account_number is present. */
-            encrypted_account_number?: string;
             routing_number?: string;
         };
         BankAccountProfile: {
@@ -1805,7 +1826,7 @@ export interface components {
             billing_address_attributes?: components["schemas"]["BillingAddressInput"];
             card_profile_attributes: components["schemas"]["CardProfileInput"];
         };
-        /** @description Confirm an embedded intent with a bank account. When ACH verification is required for the intent amount, include plaid credentials and omit bank_account_profile_attributes; routing and account numbers are filled server-side from Plaid Auth. Otherwise provide routing_number and either account_number (stored locally, skips Vault) or encrypted_account_number on bank_account_profile_attributes. */
+        /** @description Confirm an embedded intent with a bank account. When ACH verification is required for the intent amount, include plaid credentials and omit bank_account_profile_attributes; routing and account numbers are filled server-side from Plaid Auth. Otherwise provide routing_number and account_number on bank_account_profile_attributes. */
         EmbedConfirmBankAccountPaymentMethodInput: {
             /**
              * @description discriminator enum property added by openapi-typescript
@@ -2001,6 +2022,8 @@ export interface components {
             /** Format: uuid */
             id?: string;
             legal_name?: string;
+            /** Format: uuid */
+            organization_id?: string;
             /**
              * Format: uuid
              * @description Set when the application is approved and the legal entity is created.
@@ -2362,10 +2385,8 @@ export interface components {
                 account_type?: string;
                 bank_name?: string;
                 currency?: string;
-                /** @description Plaintext bank account number. Stored encrypted at rest and not returned in API responses. When present, Vault tokenization is skipped. */
+                /** @description Bank account number. Stored encrypted at rest and not returned in API responses. */
                 account_number?: string;
-                /** @description Vault-encrypted account number. Required on create when account_number is omitted; ignored for tokenization when account_number is present. */
-                encrypted_account_number?: string;
                 token?: string;
                 routing_number?: string;
             };
@@ -4943,6 +4964,8 @@ export interface operations {
                 page?: components["parameters"]["PageQuery"];
                 /** @description Number of results per page. */
                 per_page?: components["parameters"]["PerPageQuery"];
+                /** @description The ID of the account to filter by */
+                account_id?: components["parameters"]["AccountIdQuery"];
                 /** @description The ID of the payment intent to filter by */
                 payment_intent_id?: components["parameters"]["PaymentIntentIdQuery"];
                 /** @description The ID of the payment method to filter by */
@@ -4967,6 +4990,37 @@ export interface operations {
                         data: components["schemas"]["ProcessorTransaction"][];
                         meta: components["schemas"]["Meta"];
                     };
+                };
+            };
+        };
+    };
+    GetProcessorTransaction: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A single processor transaction */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProcessorTransaction"];
+                };
+            };
+            /** @description Processor transaction not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
                 };
             };
         };
