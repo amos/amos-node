@@ -1364,6 +1364,7 @@ export interface components {
             currency?: string;
             /** @description Bank account number. Stored encrypted at rest and not returned in API responses. */
             account_number?: string;
+            /** @description ABA routing number. A nine-digit value must pass the ABA checksum. */
             routing_number?: string;
         };
         BankAccountProfile: {
@@ -1376,6 +1377,7 @@ export interface components {
             failure_reason?: "activation_failed" | "processing_error" | "vault_failed" | "insufficient_funds" | "verification_failed" | null;
             fingerprint?: string | null;
             last4?: string;
+            /** @description ABA routing number. A nine-digit value must pass the ABA checksum. */
             routing_number?: string;
             state?: string;
             token?: string;
@@ -2263,6 +2265,8 @@ export interface components {
             payment_method_id?: string;
             /** @enum {string} */
             state?: "requires_payment_method" | "requires_confirmation" | "requires_capture" | "processing_authorization" | "processing_capture" | "processing_sale" | "requires_review" | "succeeded" | "cancelled" | "errored_authorization" | "errored_capture" | "errored_sale";
+            /** @description True when this payment intent can be retried. Use this value instead of inferring retryability from `state`. */
+            retryable?: boolean;
             statement_descriptor?: string;
             /** Format: date-time */
             created_at?: string;
@@ -2388,6 +2392,7 @@ export interface components {
                 /** @description Bank account number. Stored encrypted at rest and not returned in API responses. */
                 account_number?: string;
                 token?: string;
+                /** @description ABA routing number. A nine-digit value must pass the ABA checksum. */
                 routing_number?: string;
             };
         };
