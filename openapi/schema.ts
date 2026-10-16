@@ -1380,7 +1380,6 @@ export interface components {
             /** @description ABA routing number. A nine-digit value must pass the ABA checksum. */
             routing_number?: string;
             state?: string;
-            token?: string;
             /** @description True when the bank account was verified via Plaid Auth. */
             verified?: boolean;
             /** Format: date-time */
@@ -1396,6 +1395,7 @@ export interface components {
             email?: string;
             name?: string;
             phone?: string;
+            /** @description Required when country is CA, PR, GB, or US. Optional for every other country. */
             postal_code?: string;
             state?: string;
         };
@@ -1437,7 +1437,7 @@ export interface components {
             updated_at?: string;
         };
         CardProfileInput: {
-            /** @description Cardholder name. Letters, spaces, hyphens, apostrophes, and periods only. */
+            /** @description Cardholder name as stored on the card. 2-26 characters. Letters, numbers, spaces, periods, commas, apostrophes, hyphens, slashes, and ampersands. */
             card_holder_name?: string;
             cvc?: string;
             encrypted_card_number?: string;
@@ -1459,7 +1459,7 @@ export interface components {
             avs_check?: string;
             avs_check_message?: string | null;
             brand?: string;
-            /** @description Cardholder name. Letters, spaces, hyphens, apostrophes, and periods only. */
+            /** @description Cardholder name as stored on the card. 2-26 characters. Letters, numbers, spaces, periods, commas, apostrophes, hyphens, slashes, and ampersands. */
             card_holder_name?: string;
             cvc_check?: string;
             cvc_check_message?: string | null;
@@ -1475,6 +1475,8 @@ export interface components {
             three_d_secure_supported?: boolean | null;
             token?: string;
             wallet_provider?: components["schemas"]["WalletProviderType"];
+            /** Format: date-time */
+            card_updated_at?: string;
             /** Format: date-time */
             created_at?: string;
             /** Format: date-time */
@@ -1950,7 +1952,7 @@ export interface components {
         /** @enum {string} */
         PayoutDirectionType: "credit" | "debit";
         /** @enum {string} */
-        PayoutStateType: "pending" | "processing" | "succeeded" | "failed" | "errored" | "accepted" | "rejected" | "returned";
+        PayoutStateType: "pending" | "processing" | "succeeded" | "failed" | "returned";
         /** @enum {string} */
         RefundStateType: "pending" | "processing" | "requires_review" | "succeeded" | "cancelled" | "failed";
         /** @enum {string} */
@@ -1962,7 +1964,7 @@ export interface components {
         /** @enum {string} */
         WalletProviderType: "googlepay" | "applepay";
         /** @enum {string} */
-        WebhookEventType: "charge.cancelled" | "charge.created" | "charge.errored" | "charge.failed" | "charge.processing" | "charge.requires_capture" | "charge.requires_confirmation" | "charge.requires_review" | "charge.settlement_failed" | "charge.succeeded" | "customer.created" | "customer.updated" | "legal_entity.active" | "legal_entity.created" | "legal_entity.updated" | "legal_entity_principal.created" | "legal_entity_principal.updated" | "legal_entity_application.approved" | "legal_entity_application.denied" | "legal_entity_application.needs_information" | "legal_entity_application.pending" | "legal_entity_application.submitted" | "legal_entity_application.under_review" | "merchant.created" | "merchant.updated" | "payment_intent.cancelled" | "payment_intent.created" | "payment_intent.errored_authorization" | "payment_intent.errored_capture" | "payment_intent.errored_sale" | "payment_intent.processing_authorization" | "payment_intent.processing_capture" | "payment_intent.processing_sale" | "payment_intent.requires_capture" | "payment_intent.requires_confirmation" | "payment_intent.requires_payment_method" | "payment_intent.requires_review" | "payment_intent.succeeded" | "payment_method.updated" | "payout.accepted" | "payout.errored" | "payout.failed" | "payout.notification_of_change" | "payout.pending" | "payout.processing" | "payout.rejected" | "payout.returned" | "payout.succeeded" | "processor_transaction.completed" | "reconciliation.created" | "refund.cancelled" | "refund.created" | "refund.failed" | "refund.pending" | "refund.processing" | "refund.requires_review" | "refund.succeeded" | "setup_intent.cancelled" | "setup_intent.created" | "setup_intent.errored" | "setup_intent.failed" | "setup_intent.requires_confirmation" | "setup_intent.requires_payment_method" | "setup_intent.requires_review" | "setup_intent.succeeded" | "setup_intent.verifying" | "void.created" | "void.failed" | "void.pending" | "void.processing" | "void.requires_review" | "void.succeeded";
+        WebhookEventType: "charge.cancelled" | "charge.created" | "charge.errored" | "charge.failed" | "charge.processing" | "charge.requires_capture" | "charge.requires_confirmation" | "charge.requires_review" | "charge.settlement_failed" | "charge.succeeded" | "customer.created" | "customer.updated" | "legal_entity.active" | "legal_entity.created" | "legal_entity.updated" | "legal_entity_principal.created" | "legal_entity_principal.updated" | "legal_entity_application.approved" | "legal_entity_application.denied" | "legal_entity_application.needs_information" | "legal_entity_application.pending" | "legal_entity_application.submitted" | "legal_entity_application.under_review" | "merchant.created" | "merchant.updated" | "payment_intent.cancelled" | "payment_intent.created" | "payment_intent.errored_authorization" | "payment_intent.errored_capture" | "payment_intent.errored_sale" | "payment_intent.processing_authorization" | "payment_intent.processing_capture" | "payment_intent.processing_sale" | "payment_intent.requires_capture" | "payment_intent.requires_confirmation" | "payment_intent.requires_payment_method" | "payment_intent.requires_review" | "payment_intent.succeeded" | "payment_method.updated" | "payout.failed" | "payout.notification_of_change" | "payout.pending" | "payout.processing" | "payout.returned" | "payout.same_day_missed" | "payout.succeeded" | "processor_transaction.completed" | "reconciliation.created" | "refund.cancelled" | "refund.created" | "refund.failed" | "refund.pending" | "refund.processing" | "refund.requires_review" | "refund.succeeded" | "setup_intent.cancelled" | "setup_intent.created" | "setup_intent.errored" | "setup_intent.failed" | "setup_intent.requires_confirmation" | "setup_intent.requires_payment_method" | "setup_intent.requires_review" | "setup_intent.succeeded" | "setup_intent.verifying" | "void.created" | "void.failed" | "void.pending" | "void.processing" | "void.requires_review" | "void.succeeded";
         CreateLegalEntityApplicationInput: {
             legal_name?: string;
             entity_type?: components["schemas"]["LegalEntityEntityType"];
@@ -2368,7 +2370,7 @@ export interface components {
             billing_address_attributes?: components["schemas"]["BillingAddressInput"];
             card_profile_attributes?: {
                 brand?: string;
-                /** @description Cardholder name. Letters, spaces, hyphens, apostrophes, and periods only. */
+                /** @description Cardholder name as stored on the card. 2-26 characters. Letters, numbers, spaces, periods, commas, apostrophes, hyphens, slashes, and ampersands. */
                 card_holder_name?: string;
                 cvc?: string;
                 encrypted_card_number?: string;
@@ -2491,6 +2493,8 @@ export interface components {
             direction: components["schemas"]["PayoutDirectionType"];
             prefix?: string;
             addenda?: string | null;
+            /** @description Request same-day ACH settlement. Allowed before 2:00 PM Central on a Federal Reserve banking day. Defaults to false. */
+            same_day?: boolean;
             metadata?: components["schemas"]["Metadata"];
         };
         CreatePayoutRequest: {
@@ -2506,6 +2510,8 @@ export interface components {
             direction: components["schemas"]["PayoutDirectionType"];
             prefix?: string;
             addenda?: string | null;
+            /** @description Request same-day ACH settlement. Allowed before 2:00 PM Central on a Federal Reserve banking day. Defaults to false. */
+            same_day?: boolean;
             metadata?: components["schemas"]["Metadata"];
         };
         CreateBulkPayoutsRequest: {
@@ -2531,6 +2537,8 @@ export interface components {
             payout_batch_id?: string | null;
             /** @description ACH return reason code, such as R13, once the payout is returned. */
             return_reason_code?: string | null;
+            /** @description True when the payout is still requested for same-day settlement. Set to false when a missed same-day payout is included in a next-day batch. */
+            same_day?: boolean;
             state?: components["schemas"]["PayoutStateType"];
             /** Format: date-time */
             created_at?: string;
@@ -6198,13 +6206,13 @@ export const allowedBankAccountPaymentMethodTypeValues: ReadonlyArray<FlattenedD
 export const allowedGooglePayPaymentMethodTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["AllowedGooglePayPaymentMethod"]["type"]> = ["googlepay"];
 export const allowedApplePayPaymentMethodTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["AllowedApplePayPaymentMethod"]["type"]> = ["applepay"];
 export const payoutDirectionTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["PayoutDirectionType"]> = ["credit", "debit"];
-export const payoutStateTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["PayoutStateType"]> = ["pending", "processing", "succeeded", "failed", "errored", "accepted", "rejected", "returned"];
+export const payoutStateTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["PayoutStateType"]> = ["pending", "processing", "succeeded", "failed", "returned"];
 export const refundStateTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["RefundStateType"]> = ["pending", "processing", "requires_review", "succeeded", "cancelled", "failed"];
 export const subscriptionIntervalTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["SubscriptionIntervalType"]> = ["day", "week", "month", "year"];
 export const subscriptionPlanTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["SubscriptionPlanType"]> = ["fixed", "variable"];
 export const transactionSourceTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["TransactionSourceType"]> = ["api", "dashboard", "iframe", "system", "subscription", "admin"];
 export const walletProviderTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["WalletProviderType"]> = ["googlepay", "applepay"];
-export const webhookEventTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["WebhookEventType"]> = ["charge.cancelled", "charge.created", "charge.errored", "charge.failed", "charge.processing", "charge.requires_capture", "charge.requires_confirmation", "charge.requires_review", "charge.settlement_failed", "charge.succeeded", "customer.created", "customer.updated", "legal_entity.active", "legal_entity.created", "legal_entity.updated", "legal_entity_principal.created", "legal_entity_principal.updated", "legal_entity_application.approved", "legal_entity_application.denied", "legal_entity_application.needs_information", "legal_entity_application.pending", "legal_entity_application.submitted", "legal_entity_application.under_review", "merchant.created", "merchant.updated", "payment_intent.cancelled", "payment_intent.created", "payment_intent.errored_authorization", "payment_intent.errored_capture", "payment_intent.errored_sale", "payment_intent.processing_authorization", "payment_intent.processing_capture", "payment_intent.processing_sale", "payment_intent.requires_capture", "payment_intent.requires_confirmation", "payment_intent.requires_payment_method", "payment_intent.requires_review", "payment_intent.succeeded", "payment_method.updated", "payout.accepted", "payout.errored", "payout.failed", "payout.notification_of_change", "payout.pending", "payout.processing", "payout.rejected", "payout.returned", "payout.succeeded", "processor_transaction.completed", "reconciliation.created", "refund.cancelled", "refund.created", "refund.failed", "refund.pending", "refund.processing", "refund.requires_review", "refund.succeeded", "setup_intent.cancelled", "setup_intent.created", "setup_intent.errored", "setup_intent.failed", "setup_intent.requires_confirmation", "setup_intent.requires_payment_method", "setup_intent.requires_review", "setup_intent.succeeded", "setup_intent.verifying", "void.created", "void.failed", "void.pending", "void.processing", "void.requires_review", "void.succeeded"];
+export const webhookEventTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["WebhookEventType"]> = ["charge.cancelled", "charge.created", "charge.errored", "charge.failed", "charge.processing", "charge.requires_capture", "charge.requires_confirmation", "charge.requires_review", "charge.settlement_failed", "charge.succeeded", "customer.created", "customer.updated", "legal_entity.active", "legal_entity.created", "legal_entity.updated", "legal_entity_principal.created", "legal_entity_principal.updated", "legal_entity_application.approved", "legal_entity_application.denied", "legal_entity_application.needs_information", "legal_entity_application.pending", "legal_entity_application.submitted", "legal_entity_application.under_review", "merchant.created", "merchant.updated", "payment_intent.cancelled", "payment_intent.created", "payment_intent.errored_authorization", "payment_intent.errored_capture", "payment_intent.errored_sale", "payment_intent.processing_authorization", "payment_intent.processing_capture", "payment_intent.processing_sale", "payment_intent.requires_capture", "payment_intent.requires_confirmation", "payment_intent.requires_payment_method", "payment_intent.requires_review", "payment_intent.succeeded", "payment_method.updated", "payout.failed", "payout.notification_of_change", "payout.pending", "payout.processing", "payout.returned", "payout.same_day_missed", "payout.succeeded", "processor_transaction.completed", "reconciliation.created", "refund.cancelled", "refund.created", "refund.failed", "refund.pending", "refund.processing", "refund.requires_review", "refund.succeeded", "setup_intent.cancelled", "setup_intent.created", "setup_intent.errored", "setup_intent.failed", "setup_intent.requires_confirmation", "setup_intent.requires_payment_method", "setup_intent.requires_review", "setup_intent.succeeded", "setup_intent.verifying", "void.created", "void.failed", "void.pending", "void.processing", "void.requires_review", "void.succeeded"];
 export const organizationKindValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["Organization"]["kind"]> = ["direct", "payfac"];
 export const originApplepayRegistrationStateTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["OriginApplepayRegistrationStateType"]> = ["pending", "skipped", "registered", "failed"];
 export const paymentIntentStateValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["PaymentIntent"]["state"]> = ["requires_payment_method", "requires_confirmation", "requires_capture", "processing_authorization", "processing_capture", "processing_sale", "requires_review", "succeeded", "cancelled", "errored_authorization", "errored_capture", "errored_sale"];
