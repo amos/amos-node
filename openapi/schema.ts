@@ -1473,7 +1473,11 @@ export interface components {
             last4?: string;
             state?: string;
             three_d_secure_supported?: boolean | null;
-            token?: string;
+            /**
+             * Format: uuid
+             * @description Vault UUID for this card. Used for charges and Vault callbacks.
+             */
+            vault_token?: string;
             wallet_provider?: components["schemas"]["WalletProviderType"];
             /** Format: date-time */
             card_updated_at?: string;
