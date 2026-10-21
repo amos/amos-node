@@ -715,8 +715,7 @@ export interface paths {
          */
         get: operations["ListPaymentMethods"];
         put?: never;
-        /** Create a payment method */
-        post: operations["CreatePaymentMethod"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1373,8 +1372,6 @@ export interface components {
             account_holder_type?: string;
             account_type?: string;
             bank_name?: string;
-            /** @enum {string|null} */
-            failure_reason?: "activation_failed" | "processing_error" | "vault_failed" | "insufficient_funds" | "verification_failed" | null;
             fingerprint?: string | null;
             last4?: string;
             /** @description ABA routing number. A nine-digit value must pass the ABA checksum. */
@@ -1437,8 +1434,8 @@ export interface components {
             updated_at?: string;
         };
         CardProfileInput: {
-            /** @description Cardholder name as stored on the card. 2-26 characters. Letters, numbers, spaces, periods, commas, apostrophes, hyphens, slashes, and ampersands. */
-            card_holder_name?: string;
+            /** @description Cardholder name as stored on the card. 2-26 characters when present. Letters, numbers, spaces, periods, commas, apostrophes, hyphens, slashes, and ampersands. */
+            card_holder_name?: string | null;
             cvc?: string;
             encrypted_card_number?: string;
             exp_month?: number;
@@ -1459,20 +1456,20 @@ export interface components {
             avs_check?: string;
             avs_check_message?: string | null;
             brand?: string;
-            /** @description Cardholder name as stored on the card. 2-26 characters. Letters, numbers, spaces, periods, commas, apostrophes, hyphens, slashes, and ampersands. */
-            card_holder_name?: string;
+            /** @description Cardholder name as stored on the card. 2-26 characters when present. Letters, numbers, spaces, periods, commas, apostrophes, hyphens, slashes, and ampersands. */
+            card_holder_name?: string | null;
             cvc_check?: string;
             cvc_check_message?: string | null;
             exp_month?: number;
             exp_year?: number;
-            /** @enum {string|null} */
-            failure_reason?: "authorization_failed" | "avs_blocked" | "brand_not_allowed" | "brand_not_found" | "cvc_blocked" | "processing_error" | "vault_failed" | null;
             first6?: string;
             funding?: string | null;
             fingerprint?: string | null;
             last4?: string;
             state?: string;
             three_d_secure_supported?: boolean | null;
+            /** @description Legacy card token. Prefer vault_token for new integrations. */
+            token?: string;
             /**
              * Format: uuid
              * @description Vault UUID for this card. Used for charges and Vault callbacks.
@@ -2366,44 +2363,6 @@ export interface components {
             created_at?: string;
             /** Format: date-time */
             updated_at?: string;
-        };
-        CreatePaymentMethodInput: {
-            /** Format: uuid */
-            customer_id?: string;
-            metadata?: components["schemas"]["Metadata"];
-            billing_address_attributes?: components["schemas"]["BillingAddressInput"];
-            card_profile_attributes?: {
-                brand?: string;
-                /** @description Cardholder name as stored on the card. 2-26 characters. Letters, numbers, spaces, periods, commas, apostrophes, hyphens, slashes, and ampersands. */
-                card_holder_name?: string;
-                cvc?: string;
-                encrypted_card_number?: string;
-                exp_month?: number;
-                exp_year?: number;
-                first6?: string;
-                last4?: string;
-                pan_type?: string;
-                token?: string;
-                wallet_payload?: string;
-                wallet_provider?: components["schemas"]["WalletProviderType"];
-            };
-            bank_account_profile_attributes?: {
-                last4?: string;
-                /** @description Account holder name. Letters, spaces, hyphens, apostrophes, and periods only. */
-                account_holder_name?: string;
-                account_holder_type?: string;
-                account_type?: string;
-                bank_name?: string;
-                currency?: string;
-                /** @description Bank account number. Stored encrypted at rest and not returned in API responses. */
-                account_number?: string;
-                token?: string;
-                /** @description ABA routing number. A nine-digit value must pass the ABA checksum. */
-                routing_number?: string;
-            };
-        };
-        CreatePaymentMethodRequest: {
-            payment_method: components["schemas"]["CreatePaymentMethodInput"];
         };
         UpdateMerchantInput: {
             active?: boolean;
@@ -4786,39 +4745,6 @@ export interface operations {
             };
         };
     };
-    CreatePaymentMethod: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreatePaymentMethodRequest"];
-            };
-        };
-        responses: {
-            /** @description Payment method created successfully */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaymentMethod"];
-                };
-            };
-            /** @description Unprocessable entity */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
     GetPaymentMethod: {
         parameters: {
             query?: never;
@@ -6181,8 +6107,6 @@ type ReadonlyArray<T> = [
 ] extends [
     unknown[]
 ] ? Readonly<Exclude<T, undefined>> : Readonly<Exclude<T, undefined>[]>;
-export const bankAccountProfileFailure_reasonValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["BankAccountProfile"]["failure_reason"]> = ["activation_failed", "processing_error", "vault_failed", "insufficient_funds", "verification_failed"];
-export const cardProfileFailure_reasonValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["CardProfile"]["failure_reason"]> = ["authorization_failed", "avs_blocked", "brand_not_allowed", "brand_not_found", "cvc_blocked", "processing_error", "vault_failed"];
 export const chargeAllowed_reverse_actionValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["Charge"]["allowed_reverse_action"]> = ["void", "refund"];
 export const chargeStateValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["Charge"]["state"]> = ["cancelled", "errored", "failed", "processing", "requires_capture", "requires_confirmation", "requires_review", "settlement_failed", "succeeded"];
 export const externalAccountTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["ExternalAccount"]["type"]> = ["external_card", "external_bank_account"];
