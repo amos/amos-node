@@ -1468,8 +1468,6 @@ export interface components {
             last4?: string;
             state?: string;
             three_d_secure_supported?: boolean | null;
-            /** @description Legacy card token. Prefer vault_token for new integrations. */
-            token?: string;
             /**
              * Format: uuid
              * @description Vault UUID for this card. Used for charges and Vault callbacks.
@@ -1513,6 +1511,7 @@ export interface components {
             /** Format: uuid */
             customer_id?: string;
             description?: string | null;
+            failure?: components["schemas"]["PaymentFailure"] | null;
             /** @enum {string|null} */
             allowed_reverse_action?: "void" | "refund" | null;
             metadata?: components["schemas"]["Metadata"];
@@ -1960,6 +1959,16 @@ export interface components {
         SubscriptionIntervalType: "day" | "week" | "month" | "year";
         /** @enum {string} */
         SubscriptionPlanType: "fixed" | "variable";
+        /** @description Why a transaction failed, in terms that are the same for every processor. */
+        PaymentFailure: {
+            /** @description Stable failure code, for example insufficient_funds, issuer_declined or incorrect_cvc. New codes may be added over time, so treat unknown values as generic_decline. */
+            code: string;
+            type: components["schemas"]["PaymentFailureType"];
+            /** @description Human readable explanation. Safe to show to the merchant. */
+            message: string;
+        };
+        /** @enum {string} */
+        PaymentFailureType: "payment_method_error" | "processing_error";
         /** @enum {string} */
         TransactionSourceType: "api" | "dashboard" | "iframe" | "system" | "subscription" | "admin";
         /** @enum {string} */
@@ -2604,6 +2613,7 @@ export interface components {
             /** Format: uuid */
             customer_id?: string;
             description?: string | null;
+            failure?: components["schemas"]["PaymentFailure"] | null;
             metadata?: components["schemas"]["Metadata"];
             /** Format: uuid */
             original_transaction_id?: string;
@@ -2842,6 +2852,7 @@ export interface components {
             /** Format: uuid */
             customer_id?: string;
             description?: string | null;
+            failure?: components["schemas"]["PaymentFailure"] | null;
             metadata?: components["schemas"]["Metadata"];
             /** Format: uuid */
             original_transaction_id?: string;
@@ -6138,6 +6149,7 @@ export const payoutStateTypeValues: ReadonlyArray<FlattenedDeepRequired<componen
 export const refundStateTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["RefundStateType"]> = ["pending", "processing", "requires_review", "succeeded", "cancelled", "failed"];
 export const subscriptionIntervalTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["SubscriptionIntervalType"]> = ["day", "week", "month", "year"];
 export const subscriptionPlanTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["SubscriptionPlanType"]> = ["fixed", "variable"];
+export const paymentFailureTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["PaymentFailureType"]> = ["payment_method_error", "processing_error"];
 export const transactionSourceTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["TransactionSourceType"]> = ["api", "dashboard", "iframe", "system", "subscription", "admin"];
 export const walletProviderTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["WalletProviderType"]> = ["googlepay", "applepay"];
 export const webhookEventTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["WebhookEventType"]> = ["charge.cancelled", "charge.created", "charge.errored", "charge.failed", "charge.processing", "charge.requires_capture", "charge.requires_confirmation", "charge.requires_review", "charge.settlement_failed", "charge.succeeded", "customer.created", "customer.updated", "legal_entity.active", "legal_entity.created", "legal_entity.updated", "legal_entity_principal.created", "legal_entity_principal.updated", "legal_entity_application.approved", "legal_entity_application.denied", "legal_entity_application.needs_information", "legal_entity_application.pending", "legal_entity_application.submitted", "legal_entity_application.under_review", "merchant.created", "merchant.updated", "payment_intent.cancelled", "payment_intent.created", "payment_intent.errored_authorization", "payment_intent.errored_capture", "payment_intent.errored_sale", "payment_intent.processing_authorization", "payment_intent.processing_capture", "payment_intent.processing_sale", "payment_intent.requires_capture", "payment_intent.requires_confirmation", "payment_intent.requires_payment_method", "payment_intent.requires_review", "payment_intent.succeeded", "payment_method.updated", "payout.failed", "payout.notification_of_change", "payout.pending", "payout.processing", "payout.returned", "payout.same_day_missed", "payout.succeeded", "processor_transaction.completed", "reconciliation.created", "refund.cancelled", "refund.created", "refund.failed", "refund.pending", "refund.processing", "refund.requires_review", "refund.succeeded", "setup_intent.cancelled", "setup_intent.created", "setup_intent.errored", "setup_intent.failed", "setup_intent.requires_confirmation", "setup_intent.requires_payment_method", "setup_intent.requires_review", "setup_intent.succeeded", "setup_intent.verifying", "void.created", "void.failed", "void.pending", "void.processing", "void.requires_review", "void.succeeded"];
