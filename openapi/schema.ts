@@ -1528,6 +1528,8 @@ export interface components {
             /** @enum {string} */
             state?: "cancelled" | "errored" | "failed" | "processing" | "requires_capture" | "requires_confirmation" | "requires_review" | "settlement_failed" | "succeeded";
             statement_descriptor?: string;
+            /** Format: uuid */
+            subscription_id?: string | null;
             /** Format: date-time */
             succeeded_at?: string;
             /** Format: date-time */
@@ -1550,8 +1552,6 @@ export interface components {
         UpdateCustomerInput: {
             email?: string;
             name?: string;
-            /** Format: uuid */
-            payment_method_id?: string;
             phone?: string;
             mailing_address_attributes?: components["schemas"]["MailingAddressInput"];
             metadata?: components["schemas"]["Metadata"];
@@ -1567,8 +1567,6 @@ export interface components {
             name?: string;
             /** Format: uuid */
             organization_id?: string;
-            /** Format: uuid */
-            payment_method_id?: string;
             phone?: string;
             type?: string;
             mailing_address?: components["schemas"]["MailingAddress"];
@@ -1631,6 +1629,8 @@ export interface components {
             content_type: string;
             file_name: string;
             purpose: string;
+            /** @description SHA-256 hex digest of the file contents. Completion rejects the upload when the stored object checksum does not match. */
+            checksum?: string;
         };
         CreateFileUploadRequest: {
             file: components["schemas"]["CreateFileUploadInput"];
@@ -1688,6 +1688,15 @@ export interface components {
         CreateLegalEntityApplicationDocumentRequest: {
             legal_entity_application_document: components["schemas"]["CreateLegalEntityApplicationDocumentInput"];
         };
+        /** @enum {string} */
+        LegalEntityApplicationDocumentStatus: "unreviewed" | "verified" | "rejected";
+        LegalEntityApplicationDocumentReviewer: {
+            /** Format: uuid */
+            id?: string;
+            email?: string | null;
+            first_name?: string | null;
+            last_name?: string | null;
+        };
         LegalEntityApplicationDocument: {
             /** Format: uuid */
             id?: string;
@@ -1698,6 +1707,10 @@ export interface components {
             file_upload_id?: string;
             file_name?: string;
             byte_size?: number;
+            status?: components["schemas"]["LegalEntityApplicationDocumentStatus"];
+            /** Format: date-time */
+            reviewed_at?: string | null;
+            reviewed_by?: components["schemas"]["LegalEntityApplicationDocumentReviewer"] | null;
             /** Format: date-time */
             created_at?: string;
             /** Format: date-time */
@@ -1881,6 +1894,8 @@ export interface components {
         AllowedGooglePayPaymentMethodOptions: Record<string, never>;
         /** @description No configurable options for Apple Pay payment methods. */
         AllowedApplePayPaymentMethodOptions: Record<string, never>;
+        /** @description No configurable options for bitcoin payment methods. */
+        AllowedBitcoinPaymentMethodOptions: Record<string, never>;
         AllowedCardPaymentMethodInput: {
             /**
              * @description discriminator enum property added by openapi-typescript
@@ -1913,8 +1928,16 @@ export interface components {
             type: "applepay";
             options?: components["schemas"]["AllowedApplePayPaymentMethodOptions"];
         };
+        AllowedBitcoinPaymentMethodInput: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "bitcoin";
+            options?: components["schemas"]["AllowedBitcoinPaymentMethodOptions"];
+        };
         /** @description Payment method allowed on a render template, payment link, or merchant application. */
-        AllowedPaymentMethodInput: components["schemas"]["AllowedCardPaymentMethodInput"] | components["schemas"]["AllowedBankAccountPaymentMethodInput"] | components["schemas"]["AllowedGooglePayPaymentMethodInput"] | components["schemas"]["AllowedApplePayPaymentMethodInput"];
+        AllowedPaymentMethodInput: components["schemas"]["AllowedCardPaymentMethodInput"] | components["schemas"]["AllowedBankAccountPaymentMethodInput"] | components["schemas"]["AllowedGooglePayPaymentMethodInput"] | components["schemas"]["AllowedApplePayPaymentMethodInput"] | components["schemas"]["AllowedBitcoinPaymentMethodInput"];
         AllowedCardPaymentMethod: {
             /**
              * @description discriminator enum property added by openapi-typescript
@@ -1947,8 +1970,16 @@ export interface components {
             type: "applepay";
             options: components["schemas"]["AllowedApplePayPaymentMethodOptions"];
         };
+        AllowedBitcoinPaymentMethod: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "bitcoin";
+            options: components["schemas"]["AllowedBitcoinPaymentMethodOptions"];
+        };
         /** @description Allowed payment method returned in API responses and render token JWT payloads. */
-        AllowedPaymentMethod: components["schemas"]["AllowedCardPaymentMethod"] | components["schemas"]["AllowedBankAccountPaymentMethod"] | components["schemas"]["AllowedGooglePayPaymentMethod"] | components["schemas"]["AllowedApplePayPaymentMethod"];
+        AllowedPaymentMethod: components["schemas"]["AllowedCardPaymentMethod"] | components["schemas"]["AllowedBankAccountPaymentMethod"] | components["schemas"]["AllowedGooglePayPaymentMethod"] | components["schemas"]["AllowedApplePayPaymentMethod"] | components["schemas"]["AllowedBitcoinPaymentMethod"];
         /** @enum {string} */
         PayoutDirectionType: "credit" | "debit";
         /** @enum {string} */
@@ -1974,7 +2005,7 @@ export interface components {
         /** @enum {string} */
         WalletProviderType: "googlepay" | "applepay";
         /** @enum {string} */
-        WebhookEventType: "charge.cancelled" | "charge.created" | "charge.errored" | "charge.failed" | "charge.processing" | "charge.requires_capture" | "charge.requires_confirmation" | "charge.requires_review" | "charge.settlement_failed" | "charge.succeeded" | "customer.created" | "customer.updated" | "legal_entity.active" | "legal_entity.created" | "legal_entity.updated" | "legal_entity_principal.created" | "legal_entity_principal.updated" | "legal_entity_application.approved" | "legal_entity_application.denied" | "legal_entity_application.needs_information" | "legal_entity_application.pending" | "legal_entity_application.submitted" | "legal_entity_application.under_review" | "merchant.created" | "merchant.updated" | "payment_intent.cancelled" | "payment_intent.created" | "payment_intent.errored_authorization" | "payment_intent.errored_capture" | "payment_intent.errored_sale" | "payment_intent.processing_authorization" | "payment_intent.processing_capture" | "payment_intent.processing_sale" | "payment_intent.requires_capture" | "payment_intent.requires_confirmation" | "payment_intent.requires_payment_method" | "payment_intent.requires_review" | "payment_intent.succeeded" | "payment_method.updated" | "payout.failed" | "payout.notification_of_change" | "payout.pending" | "payout.processing" | "payout.returned" | "payout.same_day_missed" | "payout.succeeded" | "processor_transaction.completed" | "reconciliation.created" | "refund.cancelled" | "refund.created" | "refund.failed" | "refund.pending" | "refund.processing" | "refund.requires_review" | "refund.succeeded" | "setup_intent.cancelled" | "setup_intent.created" | "setup_intent.errored" | "setup_intent.failed" | "setup_intent.requires_confirmation" | "setup_intent.requires_payment_method" | "setup_intent.requires_review" | "setup_intent.succeeded" | "setup_intent.verifying" | "void.created" | "void.failed" | "void.pending" | "void.processing" | "void.requires_review" | "void.succeeded";
+        WebhookEventType: "charge.cancelled" | "charge.created" | "charge.errored" | "charge.failed" | "charge.processing" | "charge.requires_capture" | "charge.requires_confirmation" | "charge.requires_review" | "charge.settlement_failed" | "charge.succeeded" | "customer.created" | "customer.updated" | "external_bank_account.created" | "legal_entity.active" | "legal_entity.created" | "legal_entity.updated" | "legal_entity_principal.created" | "legal_entity_principal.updated" | "legal_entity_application.approved" | "legal_entity_application.denied" | "legal_entity_application.needs_information" | "legal_entity_application.pending" | "legal_entity_application.submitted" | "legal_entity_application.under_review" | "merchant.created" | "merchant.updated" | "payment_intent.cancelled" | "payment_intent.created" | "payment_intent.errored_authorization" | "payment_intent.errored_capture" | "payment_intent.errored_sale" | "payment_intent.processing_authorization" | "payment_intent.processing_capture" | "payment_intent.processing_sale" | "payment_intent.requires_capture" | "payment_intent.requires_confirmation" | "payment_intent.requires_payment_method" | "payment_intent.requires_review" | "payment_intent.succeeded" | "payment_method.updated" | "payout.failed" | "payout.notification_of_change" | "payout.pending" | "payout.processing" | "payout.returned" | "payout.same_day_missed" | "payout.succeeded" | "processor_transaction.completed" | "reconciliation.created" | "refund.cancelled" | "refund.created" | "refund.failed" | "refund.pending" | "refund.processing" | "refund.requires_review" | "refund.succeeded" | "setup_intent.cancelled" | "setup_intent.created" | "setup_intent.errored" | "setup_intent.failed" | "setup_intent.requires_confirmation" | "setup_intent.requires_payment_method" | "setup_intent.requires_review" | "setup_intent.succeeded" | "setup_intent.verifying" | "void.created" | "void.failed" | "void.pending" | "void.processing" | "void.requires_review" | "void.succeeded";
         CreateLegalEntityApplicationInput: {
             legal_name?: string;
             entity_type?: components["schemas"]["LegalEntityEntityType"];
@@ -2280,12 +2311,14 @@ export interface components {
             /** @description True when this payment intent can be retried. Use this value instead of inferring retryability from `state`. */
             retryable?: boolean;
             statement_descriptor?: string;
+            /** Format: uuid */
+            subscription_id?: string | null;
             /** Format: date-time */
             created_at?: string;
             /** Format: date-time */
             updated_at?: string;
         };
-        /** @description How this payment intent relates to a recurring series. Use `initial` for the first charge that establishes the series. Use `network_transaction_id` and/or `transaction_link_id` for subsequent merchant-initiated charges. Do not combine `initial` with network identifiers on the same request. */
+        /** @description How this payment intent relates to a recurring series. Use `initial` for the first charge that establishes the series. Use `network_transaction_id` and/or `transaction_link_id`, with `original_amount`, for subsequent merchant-initiated charges. Do not combine `initial` with network identifiers on the same request. */
         RecurringPayment: {
             /** @description When true, marks the first payment in a recurring series so the processor can treat it as an initial recurring / credential-on-file setup transaction. */
             initial?: boolean;
@@ -2293,6 +2326,8 @@ export interface components {
             network_transaction_id?: string;
             /** @description Processor transaction link id for subsequent recurring payments where supported. */
             transaction_link_id?: string;
+            /** @description Amount of the initial recurring charge, in the smallest currency unit. Send this with the network identifiers on subsequent merchant-initiated charges. */
+            original_amount?: number;
         };
         CreatePaymentLinkInput: {
             slug?: string;
@@ -2627,6 +2662,8 @@ export interface components {
             source?: components["schemas"]["TransactionSourceType"];
             state?: components["schemas"]["RefundStateType"];
             statement_descriptor?: string;
+            /** Format: uuid */
+            subscription_id?: string | null;
             /** Format: date-time */
             succeeded_at?: string;
             /** Format: date-time */
@@ -2720,6 +2757,11 @@ export interface components {
             cycles?: number;
             interval?: components["schemas"]["SubscriptionIntervalType"];
             interval_count?: number;
+            /**
+             * Format: uuid
+             * @description Active payment method that belongs to the customer.
+             */
+            payment_method_id?: string;
             /** Format: uuid */
             subscription_plan_id?: string;
         };
@@ -2866,6 +2908,8 @@ export interface components {
             source?: components["schemas"]["TransactionSourceType"];
             state?: components["schemas"]["RefundStateType"];
             statement_descriptor?: string;
+            /** Format: uuid */
+            subscription_id?: string | null;
             /** Format: date-time */
             succeeded_at?: string;
             /** Format: date-time */
@@ -6121,6 +6165,7 @@ type ReadonlyArray<T> = [
 export const chargeAllowed_reverse_actionValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["Charge"]["allowed_reverse_action"]> = ["void", "refund"];
 export const chargeStateValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["Charge"]["state"]> = ["cancelled", "errored", "failed", "processing", "requires_capture", "requires_confirmation", "requires_review", "settlement_failed", "succeeded"];
 export const externalAccountTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["ExternalAccount"]["type"]> = ["external_card", "external_bank_account"];
+export const legalEntityApplicationDocumentStatusValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["LegalEntityApplicationDocumentStatus"]> = ["unreviewed", "verified", "rejected"];
 export const legalEntityApplicationStateTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["LegalEntityApplicationStateType"]> = ["pending", "submitted", "needs_information", "under_review", "approved", "denied"];
 export const legalEntityEntityTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["LegalEntityEntityType"]> = ["individual_sole_proprietorship", "corporation", "limited_liability_company", "partnership", "limited_partnership", "general_partnership", "tax_exempt_organization", "government_agency"];
 export const legalEntityOwnershipTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["LegalEntityOwnershipType"]> = ["public", "private"];
@@ -6140,10 +6185,12 @@ export const allowedCardPaymentMethodInputTypeValues: ReadonlyArray<FlattenedDee
 export const allowedBankAccountPaymentMethodInputTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["AllowedBankAccountPaymentMethodInput"]["type"]> = ["bank_account"];
 export const allowedGooglePayPaymentMethodInputTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["AllowedGooglePayPaymentMethodInput"]["type"]> = ["googlepay"];
 export const allowedApplePayPaymentMethodInputTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["AllowedApplePayPaymentMethodInput"]["type"]> = ["applepay"];
+export const allowedBitcoinPaymentMethodInputTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["AllowedBitcoinPaymentMethodInput"]["type"]> = ["bitcoin"];
 export const allowedCardPaymentMethodTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["AllowedCardPaymentMethod"]["type"]> = ["card"];
 export const allowedBankAccountPaymentMethodTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["AllowedBankAccountPaymentMethod"]["type"]> = ["bank_account"];
 export const allowedGooglePayPaymentMethodTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["AllowedGooglePayPaymentMethod"]["type"]> = ["googlepay"];
 export const allowedApplePayPaymentMethodTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["AllowedApplePayPaymentMethod"]["type"]> = ["applepay"];
+export const allowedBitcoinPaymentMethodTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["AllowedBitcoinPaymentMethod"]["type"]> = ["bitcoin"];
 export const payoutDirectionTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["PayoutDirectionType"]> = ["credit", "debit"];
 export const payoutStateTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["PayoutStateType"]> = ["pending", "processing", "succeeded", "failed", "returned"];
 export const refundStateTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["RefundStateType"]> = ["pending", "processing", "requires_review", "succeeded", "cancelled", "failed"];
@@ -6152,7 +6199,7 @@ export const subscriptionPlanTypeValues: ReadonlyArray<FlattenedDeepRequired<com
 export const paymentFailureTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["PaymentFailureType"]> = ["payment_method_error", "processing_error"];
 export const transactionSourceTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["TransactionSourceType"]> = ["api", "dashboard", "iframe", "system", "subscription", "admin"];
 export const walletProviderTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["WalletProviderType"]> = ["googlepay", "applepay"];
-export const webhookEventTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["WebhookEventType"]> = ["charge.cancelled", "charge.created", "charge.errored", "charge.failed", "charge.processing", "charge.requires_capture", "charge.requires_confirmation", "charge.requires_review", "charge.settlement_failed", "charge.succeeded", "customer.created", "customer.updated", "legal_entity.active", "legal_entity.created", "legal_entity.updated", "legal_entity_principal.created", "legal_entity_principal.updated", "legal_entity_application.approved", "legal_entity_application.denied", "legal_entity_application.needs_information", "legal_entity_application.pending", "legal_entity_application.submitted", "legal_entity_application.under_review", "merchant.created", "merchant.updated", "payment_intent.cancelled", "payment_intent.created", "payment_intent.errored_authorization", "payment_intent.errored_capture", "payment_intent.errored_sale", "payment_intent.processing_authorization", "payment_intent.processing_capture", "payment_intent.processing_sale", "payment_intent.requires_capture", "payment_intent.requires_confirmation", "payment_intent.requires_payment_method", "payment_intent.requires_review", "payment_intent.succeeded", "payment_method.updated", "payout.failed", "payout.notification_of_change", "payout.pending", "payout.processing", "payout.returned", "payout.same_day_missed", "payout.succeeded", "processor_transaction.completed", "reconciliation.created", "refund.cancelled", "refund.created", "refund.failed", "refund.pending", "refund.processing", "refund.requires_review", "refund.succeeded", "setup_intent.cancelled", "setup_intent.created", "setup_intent.errored", "setup_intent.failed", "setup_intent.requires_confirmation", "setup_intent.requires_payment_method", "setup_intent.requires_review", "setup_intent.succeeded", "setup_intent.verifying", "void.created", "void.failed", "void.pending", "void.processing", "void.requires_review", "void.succeeded"];
+export const webhookEventTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["WebhookEventType"]> = ["charge.cancelled", "charge.created", "charge.errored", "charge.failed", "charge.processing", "charge.requires_capture", "charge.requires_confirmation", "charge.requires_review", "charge.settlement_failed", "charge.succeeded", "customer.created", "customer.updated", "external_bank_account.created", "legal_entity.active", "legal_entity.created", "legal_entity.updated", "legal_entity_principal.created", "legal_entity_principal.updated", "legal_entity_application.approved", "legal_entity_application.denied", "legal_entity_application.needs_information", "legal_entity_application.pending", "legal_entity_application.submitted", "legal_entity_application.under_review", "merchant.created", "merchant.updated", "payment_intent.cancelled", "payment_intent.created", "payment_intent.errored_authorization", "payment_intent.errored_capture", "payment_intent.errored_sale", "payment_intent.processing_authorization", "payment_intent.processing_capture", "payment_intent.processing_sale", "payment_intent.requires_capture", "payment_intent.requires_confirmation", "payment_intent.requires_payment_method", "payment_intent.requires_review", "payment_intent.succeeded", "payment_method.updated", "payout.failed", "payout.notification_of_change", "payout.pending", "payout.processing", "payout.returned", "payout.same_day_missed", "payout.succeeded", "processor_transaction.completed", "reconciliation.created", "refund.cancelled", "refund.created", "refund.failed", "refund.pending", "refund.processing", "refund.requires_review", "refund.succeeded", "setup_intent.cancelled", "setup_intent.created", "setup_intent.errored", "setup_intent.failed", "setup_intent.requires_confirmation", "setup_intent.requires_payment_method", "setup_intent.requires_review", "setup_intent.succeeded", "setup_intent.verifying", "void.created", "void.failed", "void.pending", "void.processing", "void.requires_review", "void.succeeded"];
 export const organizationKindValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["Organization"]["kind"]> = ["direct", "payfac"];
 export const originApplepayRegistrationStateTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["OriginApplepayRegistrationStateType"]> = ["pending", "skipped", "registered", "failed"];
 export const paymentIntentStateValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["PaymentIntent"]["state"]> = ["requires_payment_method", "requires_confirmation", "requires_capture", "processing_authorization", "processing_capture", "processing_sale", "requires_review", "succeeded", "cancelled", "errored_authorization", "errored_capture", "errored_sale"];
