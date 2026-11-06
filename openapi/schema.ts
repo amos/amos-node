@@ -1805,7 +1805,7 @@ export interface components {
         /** @enum {string} */
         PaymentLinkAmountType: "fixed" | "open";
         /** @enum {string} */
-        PaymentMethodType: "card" | "bank_account" | "googlepay" | "applepay";
+        PaymentMethodType: "card" | "bank_account" | "googlepay" | "applepay" | "bitcoin";
         /**
          * @description US state code (50 states; excludes DC and territories).
          * @enum {string}
@@ -1832,7 +1832,7 @@ export interface components {
         /** @description Billing address collection restrictions for a render template. */
         BillingAddressOptions: components["schemas"]["UsOnlyBillingAddressOptions"] | components["schemas"]["InternationalBillingAddressOptions"];
         /** @description Payment method details used when confirming an embedded intent with a new payment method. */
-        EmbedConfirmPaymentMethodInput: components["schemas"]["EmbedConfirmCardPaymentMethodInput"] | components["schemas"]["EmbedConfirmBankAccountPaymentMethodInput"] | components["schemas"]["EmbedConfirmGooglePayPaymentMethodInput"] | components["schemas"]["EmbedConfirmApplePayPaymentMethodInput"];
+        EmbedConfirmPaymentMethodInput: components["schemas"]["EmbedConfirmCardPaymentMethodInput"] | components["schemas"]["EmbedConfirmBankAccountPaymentMethodInput"] | components["schemas"]["EmbedConfirmGooglePayPaymentMethodInput"] | components["schemas"]["EmbedConfirmApplePayPaymentMethodInput"] | components["schemas"]["EmbedConfirmBitcoinPaymentMethodInput"];
         EmbedConfirmCardPaymentMethodInput: {
             /**
              * @description discriminator enum property added by openapi-typescript
@@ -1874,6 +1874,14 @@ export interface components {
             metadata?: components["schemas"]["Metadata"];
             billing_address_attributes?: components["schemas"]["BillingAddressInput"];
             card_profile_attributes: components["schemas"]["ApplePayCardProfileInput"];
+        };
+        /** @description Confirm an embedded payment intent with bitcoin. No payment instrument is collected. The server creates a USD OpenNode charge for the payment intent amount and returns a BIP21 URI for the checkout QR code. The saved payment method cannot be charged again. */
+        EmbedConfirmBitcoinPaymentMethodInput: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "bitcoin";
         };
         /** @description One-time Plaid Link credentials used to source and verify a bank account when ACH verification is required. */
         PlaidCredentialsInput: {
@@ -2313,10 +2321,21 @@ export interface components {
             statement_descriptor?: string;
             /** Format: uuid */
             subscription_id?: string | null;
+            /** @description Present after a bitcoin confirm. The payment intent amount stays in USD cents. uri is the BIP21 and BOLT11 payload for the payer QR code. */
+            bitcoin_checkout?: components["schemas"]["BitcoinCheckout"];
             /** Format: date-time */
             created_at?: string;
             /** Format: date-time */
             updated_at?: string;
+        };
+        /** @description Payment instructions for a one-time USD bitcoin payment. */
+        BitcoinCheckout: {
+            /** @description OpenNode charge id. */
+            charge_id: string;
+            /** @description BIP21 URI containing the on-chain address, bitcoin amount, and BOLT11 invoice. Use this value as the checkout QR code. */
+            uri: string;
+            /** Format: date-time */
+            expires_at: string;
         };
         /** @description How this payment intent relates to a recurring series. Use `initial` for the first charge that establishes the series. Use `network_transaction_id` and/or `transaction_link_id`, with `original_amount`, for subsequent merchant-initiated charges. Do not combine `initial` with network identifiers on the same request. */
         RecurringPayment: {
@@ -6173,7 +6192,7 @@ export const legalEntityDocumentTypeValues: ReadonlyArray<FlattenedDeepRequired<
 export const merchantBusinessCategoryTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["MerchantBusinessCategoryType"]> = ["business_association", "charity", "church", "county", "federal", "fraternal_org", "government", "higher_education", "k12", "labor_union", "local", "ministry", "pac", "parachurch", "party", "preschool", "social_club", "social_welfare", "state", "tribal", "vendor", "veterans_org"];
 export const paymentIntentCaptureMethodTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["PaymentIntentCaptureMethodType"]> = ["automatic", "automatic_async", "manual"];
 export const paymentLinkAmountTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["PaymentLinkAmountType"]> = ["fixed", "open"];
-export const paymentMethodTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["PaymentMethodType"]> = ["card", "bank_account", "googlepay", "applepay"];
+export const paymentMethodTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["PaymentMethodType"]> = ["card", "bank_account", "googlepay", "applepay", "bitcoin"];
 export const usStateTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["UsStateType"]> = ["AK", "AL", "AR", "AZ", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "MD", "ME", "MI", "MN", "MO", "MS", "MT", "NC", "ND", "NE", "NH", "NJ", "NM", "NV", "NY", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VA", "VT", "WA", "WI", "WV", "WY"];
 export const usOnlyBillingAddressOptionsModeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["UsOnlyBillingAddressOptions"]["mode"]> = ["us_only"];
 export const internationalBillingAddressOptionsModeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["InternationalBillingAddressOptions"]["mode"]> = ["international"];
@@ -6181,6 +6200,7 @@ export const embedConfirmCardPaymentMethodInputTypeValues: ReadonlyArray<Flatten
 export const embedConfirmBankAccountPaymentMethodInputTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["EmbedConfirmBankAccountPaymentMethodInput"]["type"]> = ["bank_account"];
 export const embedConfirmGooglePayPaymentMethodInputTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["EmbedConfirmGooglePayPaymentMethodInput"]["type"]> = ["googlepay"];
 export const embedConfirmApplePayPaymentMethodInputTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["EmbedConfirmApplePayPaymentMethodInput"]["type"]> = ["applepay"];
+export const embedConfirmBitcoinPaymentMethodInputTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["EmbedConfirmBitcoinPaymentMethodInput"]["type"]> = ["bitcoin"];
 export const allowedCardPaymentMethodInputTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["AllowedCardPaymentMethodInput"]["type"]> = ["card"];
 export const allowedBankAccountPaymentMethodInputTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["AllowedBankAccountPaymentMethodInput"]["type"]> = ["bank_account"];
 export const allowedGooglePayPaymentMethodInputTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["AllowedGooglePayPaymentMethodInput"]["type"]> = ["googlepay"];
