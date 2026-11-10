@@ -365,6 +365,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/legal_entity_applications/{id}/embed_token": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Mint an embed token for a legal entity application
+         * @description Mints an embed token scoped to this application. Create the application with the API key first. The iframe then uses only this token on the embed routes to read and update the application, add principals, merchant applications, and documents, and submit. No request body. Embed tokens are short-lived, so call this again for each iframe request, including when an application that needs information is resumed.
+         */
+        post: operations["CreateLegalEntityApplicationEmbedToken"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/legal_entity_application_principals": {
         parameters: {
             query?: never;
@@ -1012,6 +1032,194 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/embed/legal_entity_applications/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieve the legal entity application for an embed token */
+        get: operations["GetEmbedLegalEntityApplication"];
+        /** Update a pending or needs-information legal entity application */
+        put: operations["UpdateEmbedLegalEntityApplication"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/embed/legal_entity_applications/{id}/submit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Submit a legal entity application from the onboarding iframe
+         * @description Submits an application in `pending` or `needs_information` once every requirement is satisfied. Responds 403 when the token belongs to a different application.
+         */
+        post: operations["SubmitEmbedLegalEntityApplication"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/embed/legal_entity_applications/{legal_entity_application_id}/principals": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List principals for the embedded application */
+        get: operations["ListEmbedLegalEntityApplicationPrincipals"];
+        put?: never;
+        /** Create a principal for the embedded application */
+        post: operations["CreateEmbedLegalEntityApplicationPrincipal"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/embed/legal_entity_applications/{legal_entity_application_id}/principals/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieve a principal for the embedded application */
+        get: operations["GetEmbedLegalEntityApplicationPrincipal"];
+        /** Update a principal for the embedded application */
+        put: operations["UpdateEmbedLegalEntityApplicationPrincipal"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/embed/legal_entity_applications/{legal_entity_application_id}/documents": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List documents for the embedded application */
+        get: operations["ListEmbedLegalEntityApplicationDocuments"];
+        put?: never;
+        /**
+         * Create a document for the embedded application
+         * @description Attaches an available file upload with purpose `identity` or `business` to the application. Dispute evidence cannot be attached with an onboarding token.
+         */
+        post: operations["CreateEmbedLegalEntityApplicationDocument"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/embed/legal_entity_applications/{legal_entity_application_id}/merchant_applications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List merchant applications for the embedded application */
+        get: operations["ListEmbedMerchantApplications"];
+        put?: never;
+        /**
+         * Create a merchant application for the embedded application
+         * @description Creates the merchant profile on the application in the embed token. Does not open an additional merchant on an already approved legal entity.
+         */
+        post: operations["CreateEmbedMerchantApplication"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/embed/legal_entity_applications/{legal_entity_application_id}/merchant_applications/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieve a merchant application for the embedded application */
+        get: operations["GetEmbedMerchantApplication"];
+        /** Update a merchant application for the embedded application */
+        put: operations["UpdateEmbedMerchantApplication"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/embed/legal_entity_applications/{legal_entity_application_id}/file_uploads": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create a file upload for the embedded application
+         * @description Purpose must be `identity` or `business`. Returns upload instructions for the iframe to PUT the file.
+         */
+        post: operations["CreateEmbedFileUpload"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/embed/legal_entity_applications/{legal_entity_application_id}/file_uploads/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieve an onboarding file upload */
+        get: operations["GetEmbedFileUpload"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/embed/legal_entity_applications/{legal_entity_application_id}/file_uploads/{id}/complete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Complete an onboarding file upload */
+        post: operations["CompleteEmbedFileUpload"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/setup_intents": {
         parameters: {
             query?: never;
@@ -1305,7 +1513,9 @@ export interface components {
          *
          *     Payment intent tokens include `account_id` and `payment_intent_id`.
          *     Setup intent tokens include `organization_id` and `setup_intent_id`
-         *     and do not use `account_id`. Unused fields are null.
+         *     and do not use `account_id`. Legal entity application tokens include
+         *     `organization_id` and `legal_entity_application_id`. Unused fields
+         *     are null.
          */
         EmbedTokenJwt: {
             /**
@@ -1315,7 +1525,7 @@ export interface components {
             account_id?: string | null;
             /**
              * Format: uuid
-             * @description Present for setup intent embed tokens. Null for payment intents.
+             * @description Present for organization-scoped embed tokens, including setup intents and legal entity applications. Null for payment intents.
              */
             organization_id?: string | null;
             /**
@@ -1328,6 +1538,11 @@ export interface components {
              * @description Present for setup intent embed tokens. Null for payment intents.
              */
             setup_intent_id?: string | null;
+            /**
+             * Format: uuid
+             * @description Present for legal entity application embed tokens. Null for other embed tokens.
+             */
+            legal_entity_application_id?: string | null;
         };
         /** @description Decoded JWT payload for render token responses. */
         RenderTokenJwt: {
@@ -1340,11 +1555,12 @@ export interface components {
         };
         EmbedToken: {
             /**
-             * @description JWT string used for embedded payment and setup intent flows.
-             *     When decoded, the JWT payload matches the EmbedTokenJwt schema.
+             * @description JWT string used for embedded payment, setup intent, and onboarding
+             *     flows. When decoded, the JWT payload matches the EmbedTokenJwt schema.
              *     Setup intent tokens are organization-scoped (`organization_id` +
              *     `setup_intent_id`). Payment intent tokens remain account-scoped
-             *     (`account_id` + `payment_intent_id`).
+             *     (`account_id` + `payment_intent_id`). Legal entity application
+             *     tokens are organization-scoped and add `legal_entity_application_id`.
              */
             token?: string;
             ttl?: number;
@@ -2013,7 +2229,7 @@ export interface components {
         /** @enum {string} */
         WalletProviderType: "googlepay" | "applepay";
         /** @enum {string} */
-        WebhookEventType: "charge.cancelled" | "charge.created" | "charge.errored" | "charge.failed" | "charge.processing" | "charge.requires_capture" | "charge.requires_confirmation" | "charge.requires_review" | "charge.settlement_failed" | "charge.succeeded" | "customer.created" | "customer.updated" | "external_bank_account.created" | "legal_entity.active" | "legal_entity.created" | "legal_entity.updated" | "legal_entity_principal.created" | "legal_entity_principal.updated" | "legal_entity_application.approved" | "legal_entity_application.denied" | "legal_entity_application.needs_information" | "legal_entity_application.pending" | "legal_entity_application.submitted" | "legal_entity_application.under_review" | "merchant.created" | "merchant.updated" | "payment_intent.cancelled" | "payment_intent.created" | "payment_intent.errored_authorization" | "payment_intent.errored_capture" | "payment_intent.errored_sale" | "payment_intent.processing_authorization" | "payment_intent.processing_capture" | "payment_intent.processing_sale" | "payment_intent.requires_capture" | "payment_intent.requires_confirmation" | "payment_intent.requires_payment_method" | "payment_intent.requires_review" | "payment_intent.succeeded" | "payment_method.updated" | "payout.failed" | "payout.notification_of_change" | "payout.pending" | "payout.processing" | "payout.returned" | "payout.same_day_missed" | "payout.succeeded" | "processor_transaction.completed" | "reconciliation.created" | "refund.cancelled" | "refund.created" | "refund.failed" | "refund.pending" | "refund.processing" | "refund.requires_review" | "refund.succeeded" | "setup_intent.cancelled" | "setup_intent.created" | "setup_intent.errored" | "setup_intent.failed" | "setup_intent.requires_confirmation" | "setup_intent.requires_payment_method" | "setup_intent.requires_review" | "setup_intent.succeeded" | "setup_intent.verifying" | "void.created" | "void.failed" | "void.pending" | "void.processing" | "void.requires_review" | "void.succeeded";
+        WebhookEventType: "charge.cancelled" | "charge.created" | "charge.errored" | "charge.failed" | "charge.processing" | "charge.requires_capture" | "charge.requires_confirmation" | "charge.requires_review" | "charge.settlement_failed" | "charge.succeeded" | "customer.created" | "customer.updated" | "external_bank_account.created" | "legal_entity.active" | "legal_entity.created" | "legal_entity.updated" | "legal_entity_principal.created" | "legal_entity_principal.updated" | "legal_entity_application.approved" | "legal_entity_application.denied" | "legal_entity_application.needs_information" | "legal_entity_application.pending" | "legal_entity_application.requirements_updated" | "legal_entity_application.submitted" | "legal_entity_application.under_review" | "merchant.created" | "merchant.updated" | "payment_intent.cancelled" | "payment_intent.created" | "payment_intent.errored_authorization" | "payment_intent.errored_capture" | "payment_intent.errored_sale" | "payment_intent.processing_authorization" | "payment_intent.processing_capture" | "payment_intent.processing_sale" | "payment_intent.requires_capture" | "payment_intent.requires_confirmation" | "payment_intent.requires_payment_method" | "payment_intent.requires_review" | "payment_intent.succeeded" | "payment_method.updated" | "payout.failed" | "payout.notification_of_change" | "payout.pending" | "payout.processing" | "payout.returned" | "payout.same_day_missed" | "payout.succeeded" | "processor_transaction.completed" | "reconciliation.created" | "refund.cancelled" | "refund.created" | "refund.failed" | "refund.pending" | "refund.processing" | "refund.requires_review" | "refund.succeeded" | "setup_intent.cancelled" | "setup_intent.created" | "setup_intent.errored" | "setup_intent.failed" | "setup_intent.requires_confirmation" | "setup_intent.requires_payment_method" | "setup_intent.requires_review" | "setup_intent.succeeded" | "setup_intent.verifying" | "void.created" | "void.failed" | "void.pending" | "void.processing" | "void.requires_review" | "void.succeeded";
         CreateLegalEntityApplicationInput: {
             legal_name?: string;
             entity_type?: components["schemas"]["LegalEntityEntityType"];
@@ -3924,6 +4140,37 @@ export interface operations {
             };
         };
     };
+    CreateLegalEntityApplicationEmbedToken: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Embed token for the application */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EmbedToken"];
+                };
+            };
+            /** @description Legal entity application not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
     CreateLegalEntityApplicationPrincipal: {
         parameters: {
             query?: never;
@@ -5509,6 +5756,648 @@ export interface operations {
             };
         };
     };
+    GetEmbedLegalEntityApplication: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Legal entity application retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalEntityApplication"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    UpdateEmbedLegalEntityApplication: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateLegalEntityApplicationRequest"];
+            };
+        };
+        responses: {
+            /** @description Legal entity application updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalEntityApplication"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unprocessable entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    SubmitEmbedLegalEntityApplication: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Legal entity application submitted successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalEntityApplication"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Legal entity application could not be submitted */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    ListEmbedLegalEntityApplicationPrincipals: {
+        parameters: {
+            query?: {
+                /** @description The page of results to retrieve. */
+                page?: components["parameters"]["PageQuery"];
+                /** @description Number of results per page. */
+                per_page?: components["parameters"]["PerPageQuery"];
+            };
+            header?: never;
+            path: {
+                legal_entity_application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A list of legal entity application principals */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["LegalEntityApplicationPrincipal"][];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    CreateEmbedLegalEntityApplicationPrincipal: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                legal_entity_application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateLegalEntityApplicationPrincipalRequest"];
+            };
+        };
+        responses: {
+            /** @description Legal entity application principal created successfully */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalEntityApplicationPrincipal"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Error creating legal entity application principal */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    GetEmbedLegalEntityApplicationPrincipal: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                legal_entity_application_id: string;
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Legal entity application principal retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalEntityApplicationPrincipal"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    UpdateEmbedLegalEntityApplicationPrincipal: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                legal_entity_application_id: string;
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateLegalEntityApplicationPrincipalRequest"];
+            };
+        };
+        responses: {
+            /** @description Legal entity application principal updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalEntityApplicationPrincipal"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unprocessable entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    ListEmbedLegalEntityApplicationDocuments: {
+        parameters: {
+            query?: {
+                /** @description The page of results to retrieve. */
+                page?: components["parameters"]["PageQuery"];
+                /** @description Number of results per page. */
+                per_page?: components["parameters"]["PerPageQuery"];
+            };
+            header?: never;
+            path: {
+                legal_entity_application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A list of legal entity application documents */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["LegalEntityApplicationDocument"][];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    CreateEmbedLegalEntityApplicationDocument: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                legal_entity_application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateLegalEntityApplicationDocumentRequest"];
+            };
+        };
+        responses: {
+            /** @description Legal entity application document created successfully */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalEntityApplicationDocument"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description File upload not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Error creating legal entity application document */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    ListEmbedMerchantApplications: {
+        parameters: {
+            query?: {
+                /** @description The page of results to retrieve. */
+                page?: components["parameters"]["PageQuery"];
+                /** @description Number of results per page. */
+                per_page?: components["parameters"]["PerPageQuery"];
+            };
+            header?: never;
+            path: {
+                legal_entity_application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A list of merchant applications */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["MerchantApplication"][];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    CreateEmbedMerchantApplication: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                legal_entity_application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateMerchantApplicationRequest"];
+            };
+        };
+        responses: {
+            /** @description Merchant application created successfully */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MerchantApplication"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Error creating merchant application */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    GetEmbedMerchantApplication: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                legal_entity_application_id: string;
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Merchant application retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MerchantApplication"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    UpdateEmbedMerchantApplication: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                legal_entity_application_id: string;
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateMerchantApplicationRequest"];
+            };
+        };
+        responses: {
+            /** @description Merchant application updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MerchantApplication"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unprocessable entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    CreateEmbedFileUpload: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                legal_entity_application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateFileUploadRequest"];
+            };
+        };
+        responses: {
+            /** @description File upload created successfully */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FileUpload"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unprocessable entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    GetEmbedFileUpload: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                legal_entity_application_id: string;
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description File upload retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FileDownload"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    CompleteEmbedFileUpload: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                legal_entity_application_id: string;
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description File upload completed successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FileDownload"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unprocessable entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
     CreateSetupIntent: {
         parameters: {
             query?: never;
@@ -5663,7 +6552,9 @@ export interface operations {
     CreateSubscription: {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                "X-Idempotency-Key"?: components["parameters"]["XIdempotencyHeader"];
+            };
             path?: never;
             cookie?: never;
         };
@@ -6219,7 +7110,7 @@ export const subscriptionPlanTypeValues: ReadonlyArray<FlattenedDeepRequired<com
 export const paymentFailureTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["PaymentFailureType"]> = ["payment_method_error", "processing_error"];
 export const transactionSourceTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["TransactionSourceType"]> = ["api", "dashboard", "iframe", "system", "subscription", "admin"];
 export const walletProviderTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["WalletProviderType"]> = ["googlepay", "applepay"];
-export const webhookEventTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["WebhookEventType"]> = ["charge.cancelled", "charge.created", "charge.errored", "charge.failed", "charge.processing", "charge.requires_capture", "charge.requires_confirmation", "charge.requires_review", "charge.settlement_failed", "charge.succeeded", "customer.created", "customer.updated", "external_bank_account.created", "legal_entity.active", "legal_entity.created", "legal_entity.updated", "legal_entity_principal.created", "legal_entity_principal.updated", "legal_entity_application.approved", "legal_entity_application.denied", "legal_entity_application.needs_information", "legal_entity_application.pending", "legal_entity_application.submitted", "legal_entity_application.under_review", "merchant.created", "merchant.updated", "payment_intent.cancelled", "payment_intent.created", "payment_intent.errored_authorization", "payment_intent.errored_capture", "payment_intent.errored_sale", "payment_intent.processing_authorization", "payment_intent.processing_capture", "payment_intent.processing_sale", "payment_intent.requires_capture", "payment_intent.requires_confirmation", "payment_intent.requires_payment_method", "payment_intent.requires_review", "payment_intent.succeeded", "payment_method.updated", "payout.failed", "payout.notification_of_change", "payout.pending", "payout.processing", "payout.returned", "payout.same_day_missed", "payout.succeeded", "processor_transaction.completed", "reconciliation.created", "refund.cancelled", "refund.created", "refund.failed", "refund.pending", "refund.processing", "refund.requires_review", "refund.succeeded", "setup_intent.cancelled", "setup_intent.created", "setup_intent.errored", "setup_intent.failed", "setup_intent.requires_confirmation", "setup_intent.requires_payment_method", "setup_intent.requires_review", "setup_intent.succeeded", "setup_intent.verifying", "void.created", "void.failed", "void.pending", "void.processing", "void.requires_review", "void.succeeded"];
+export const webhookEventTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["WebhookEventType"]> = ["charge.cancelled", "charge.created", "charge.errored", "charge.failed", "charge.processing", "charge.requires_capture", "charge.requires_confirmation", "charge.requires_review", "charge.settlement_failed", "charge.succeeded", "customer.created", "customer.updated", "external_bank_account.created", "legal_entity.active", "legal_entity.created", "legal_entity.updated", "legal_entity_principal.created", "legal_entity_principal.updated", "legal_entity_application.approved", "legal_entity_application.denied", "legal_entity_application.needs_information", "legal_entity_application.pending", "legal_entity_application.requirements_updated", "legal_entity_application.submitted", "legal_entity_application.under_review", "merchant.created", "merchant.updated", "payment_intent.cancelled", "payment_intent.created", "payment_intent.errored_authorization", "payment_intent.errored_capture", "payment_intent.errored_sale", "payment_intent.processing_authorization", "payment_intent.processing_capture", "payment_intent.processing_sale", "payment_intent.requires_capture", "payment_intent.requires_confirmation", "payment_intent.requires_payment_method", "payment_intent.requires_review", "payment_intent.succeeded", "payment_method.updated", "payout.failed", "payout.notification_of_change", "payout.pending", "payout.processing", "payout.returned", "payout.same_day_missed", "payout.succeeded", "processor_transaction.completed", "reconciliation.created", "refund.cancelled", "refund.created", "refund.failed", "refund.pending", "refund.processing", "refund.requires_review", "refund.succeeded", "setup_intent.cancelled", "setup_intent.created", "setup_intent.errored", "setup_intent.failed", "setup_intent.requires_confirmation", "setup_intent.requires_payment_method", "setup_intent.requires_review", "setup_intent.succeeded", "setup_intent.verifying", "void.created", "void.failed", "void.pending", "void.processing", "void.requires_review", "void.succeeded"];
 export const organizationKindValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["Organization"]["kind"]> = ["direct", "payfac"];
 export const originApplepayRegistrationStateTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["OriginApplepayRegistrationStateType"]> = ["pending", "skipped", "registered", "failed"];
 export const paymentIntentStateValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["PaymentIntent"]["state"]> = ["requires_payment_method", "requires_confirmation", "requires_capture", "processing_authorization", "processing_capture", "processing_sale", "requires_review", "succeeded", "cancelled", "errored_authorization", "errored_capture", "errored_sale"];
