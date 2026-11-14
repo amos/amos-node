@@ -385,6 +385,41 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/application_surveys": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create an application survey */
+        post: operations["CreateApplicationSurvey"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/application_surveys/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieve an application survey by ID */
+        get: operations["GetApplicationSurvey"];
+        /** Update an application survey */
+        put: operations["UpdateApplicationSurvey"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/legal_entity_application_principals": {
         parameters: {
             query?: never;
@@ -1121,6 +1156,25 @@ export interface paths {
          * @description Attaches an available file upload with purpose `identity` or `business` to the application. Dispute evidence cannot be attached with an onboarding token.
          */
         post: operations["CreateEmbedLegalEntityApplicationDocument"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/embed/legal_entity_applications/{legal_entity_application_id}/application_survey": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieve the survey for the embedded application */
+        get: operations["GetEmbedApplicationSurvey"];
+        /** Update the survey for the embedded application */
+        put: operations["UpdateEmbedApplicationSurvey"];
+        /** Create a survey for the embedded application */
+        post: operations["CreateEmbedApplicationSurvey"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2009,6 +2063,93 @@ export interface components {
         /** @enum {string} */
         LegalEntityDocumentType: "irs_cp_575";
         /** @enum {string} */
+        ApplicationSurveyChannel: "website" | "email" | "internal" | "social_media";
+        /** @enum {string} */
+        ApplicationSurveyWebsiteStatus: "Already live" | "This week" | "1-2 weeks" | "3-4 weeks" | "1-2 months" | "3+ months";
+        ApplicationSurvey: {
+            /** Format: uuid */
+            id?: string;
+            /** Format: uuid */
+            legal_entity_application_id?: string;
+            previous_platform?: string | null;
+            previous_processor?: string | null;
+            /**
+             * @description Free-text referral source. Current options are Advertisement, A customer,
+             *     A team member, Capterra, Consultant, Existing user / used previously, Friend,
+             *     G2, Google Search, AI tool (e.g., ChatGPT, Grok, Gemini), Podcast, Social media,
+             *     Software Advice, YouTube, and Other.
+             */
+            referral_source?: string;
+            /** @description Required when referral_source is A customer, A team member, Consultant, Friend, or Other. */
+            referral_name?: string | null;
+            channels?: components["schemas"]["ApplicationSurveyChannel"][];
+            /** @description Required when channels includes website. */
+            website_status?: components["schemas"]["ApplicationSurveyWebsiteStatus"] | null;
+            /** @description Required when channels includes website. */
+            website_url?: string | null;
+            /** @default false */
+            religious_affiliation: boolean;
+            /** Format: date-time */
+            created_at?: string;
+            /** Format: date-time */
+            updated_at?: string;
+        };
+        CreateApplicationSurveyInput: {
+            /** Format: uuid */
+            legal_entity_application_id: string;
+            previous_platform?: string;
+            previous_processor?: string;
+            referral_source: string;
+            referral_name?: string;
+            channels?: components["schemas"]["ApplicationSurveyChannel"][];
+            website_status?: components["schemas"]["ApplicationSurveyWebsiteStatus"];
+            website_url?: string;
+            religious_affiliation?: boolean;
+        };
+        CreateApplicationSurveyRequest: {
+            application_survey: components["schemas"]["CreateApplicationSurveyInput"];
+        };
+        UpdateApplicationSurveyInput: {
+            previous_platform?: string;
+            previous_processor?: string;
+            referral_source?: string;
+            referral_name?: string;
+            channels?: components["schemas"]["ApplicationSurveyChannel"][];
+            website_status?: components["schemas"]["ApplicationSurveyWebsiteStatus"];
+            website_url?: string;
+            religious_affiliation?: boolean;
+        };
+        UpdateApplicationSurveyRequest: {
+            application_survey: components["schemas"]["UpdateApplicationSurveyInput"];
+        };
+        /**
+         * @description Annual transaction volume range stored on a merchant application.
+         *     `under_500` is Less than $500.
+         *     `500_to_5000` is $500–$5,000.
+         *     `5000_to_10000` is $5,000–$10,000.
+         *     `10000_to_50000` is $10,000–$50,000.
+         *     `50000_to_100000` is $50,000–$100,000.
+         *     `100000_to_250000` is $100,000–$250,000.
+         *     `250000_to_500000` is $250,000–$500,000.
+         *     `500000_to_1000000` is $500,000–$1 million.
+         *     `1000000_and_up` is $1 million+.
+         * @enum {string}
+         */
+        AnnualTransactionVolume: "under_500" | "500_to_5000" | "5000_to_10000" | "10000_to_50000" | "50000_to_100000" | "100000_to_250000" | "250000_to_500000" | "500000_to_1000000" | "1000000_and_up";
+        /**
+         * @description Average transaction (ticket) range stored on a merchant application.
+         *     `under_10` is Under $10.
+         *     `10_to_24_99` is $10.00–$24.99.
+         *     `25_to_49_99` is $25.00–$49.99.
+         *     `50_to_74_99` is $50.00–$74.99.
+         *     `75_to_99_99` is $75.00–$99.99.
+         *     `100_to_199_99` is $100.00–$199.99.
+         *     `200_to_499_99` is $200.00–$499.99.
+         *     `500_and_up` is $500.00 and up.
+         * @enum {string}
+         */
+        AverageTransactionAmount: "under_10" | "10_to_24_99" | "25_to_49_99" | "50_to_74_99" | "75_to_99_99" | "100_to_199_99" | "200_to_499_99" | "500_and_up";
+        /** @enum {string} */
         MerchantBusinessCategoryType: "business_association" | "charity" | "church" | "county" | "federal" | "fraternal_org" | "government" | "higher_education" | "k12" | "labor_union" | "local" | "ministry" | "pac" | "parachurch" | "party" | "preschool" | "social_club" | "social_welfare" | "state" | "tribal" | "vendor" | "veterans_org";
         /**
          * @description How funds are captured after payment confirmation.
@@ -2324,7 +2465,8 @@ export interface components {
             requirements?: components["schemas"]["LegalEntityApplicationRequirement"][];
         };
         CreateMerchantApplicationInput: {
-            annual_credit_card_sales_volume?: number;
+            annual_transaction_volume?: components["schemas"]["AnnualTransactionVolume"];
+            average_transaction_amount?: components["schemas"]["AverageTransactionAmount"];
             allowed_payment_methods?: components["schemas"]["AllowedPaymentMethodInput"][];
             bank_account_number?: string;
             bank_routing_number?: string;
@@ -2337,6 +2479,7 @@ export interface components {
             /** Format: uuid */
             legal_entity_application_id?: string;
             max_transaction_amount?: number;
+            max_transaction_amount_reason?: string;
             postal_code?: string;
             primary_contact_email_address?: string;
             primary_contact_first_name?: string;
@@ -2353,7 +2496,8 @@ export interface components {
         MerchantApplication: {
             /** Format: uuid */
             id?: string;
-            annual_credit_card_sales_volume?: number;
+            annual_transaction_volume?: components["schemas"]["AnnualTransactionVolume"];
+            average_transaction_amount?: components["schemas"]["AverageTransactionAmount"];
             business_category?: components["schemas"]["MerchantBusinessCategoryType"];
             business_description?: string;
             city?: string;
@@ -2373,6 +2517,7 @@ export interface components {
             max_monthly_debits_amount?: number;
             max_single_debit_amount?: number;
             max_transaction_amount?: string;
+            max_transaction_amount_reason?: string;
             mcc?: string;
             postal_code?: string;
             primary_contact_email_address?: string;
@@ -2399,7 +2544,6 @@ export interface components {
             organization_id?: string;
             /** Format: uuid */
             legal_entity_id?: string;
-            annual_credit_card_sales_volume?: number;
             allowed_payment_methods?: components["schemas"]["AllowedPaymentMethod"][];
             business_category?: components["schemas"]["MerchantBusinessCategoryType"];
             business_description?: string;
@@ -2689,7 +2833,8 @@ export interface components {
             legal_entity_application_principal: components["schemas"]["UpdateLegalEntityApplicationPrincipalInput"];
         };
         UpdateMerchantApplicationInput: {
-            annual_credit_card_sales_volume?: number;
+            annual_transaction_volume?: components["schemas"]["AnnualTransactionVolume"];
+            average_transaction_amount?: components["schemas"]["AverageTransactionAmount"];
             bank_account_number?: string;
             bank_routing_number?: string;
             business_category?: components["schemas"]["MerchantBusinessCategoryType"];
@@ -2699,6 +2844,7 @@ export interface components {
             customer_service_number?: string;
             dba_name?: string;
             max_transaction_amount?: number;
+            max_transaction_amount_reason?: string;
             postal_code?: string;
             primary_contact_email_address?: string;
             primary_contact_first_name?: string;
@@ -4162,6 +4308,103 @@ export interface operations {
             };
             /** @description Legal entity application not found */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    CreateApplicationSurvey: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateApplicationSurveyRequest"];
+            };
+        };
+        responses: {
+            /** @description Application survey created successfully */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApplicationSurvey"];
+                };
+            };
+            /** @description Legal entity application not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Error creating application survey */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    GetApplicationSurvey: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Application survey retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApplicationSurvey"];
+                };
+            };
+        };
+    };
+    UpdateApplicationSurvey: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateApplicationSurveyRequest"];
+            };
+        };
+        responses: {
+            /** @description Application survey updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApplicationSurvey"];
+                };
+            };
+            /** @description Unprocessable entity */
+            422: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -6121,6 +6364,105 @@ export interface operations {
             };
         };
     };
+    GetEmbedApplicationSurvey: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                legal_entity_application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Application survey retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApplicationSurvey"];
+                };
+            };
+            /** @description Application survey not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    UpdateEmbedApplicationSurvey: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                legal_entity_application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateApplicationSurveyRequest"];
+            };
+        };
+        responses: {
+            /** @description Application survey updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApplicationSurvey"];
+                };
+            };
+            /** @description Unprocessable entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    CreateEmbedApplicationSurvey: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                legal_entity_application_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateApplicationSurveyRequest"];
+            };
+        };
+        responses: {
+            /** @description Application survey created successfully */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApplicationSurvey"];
+                };
+            };
+            /** @description Error creating application survey */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
     ListEmbedMerchantApplications: {
         parameters: {
             query?: {
@@ -7080,6 +7422,10 @@ export const legalEntityApplicationStateTypeValues: ReadonlyArray<FlattenedDeepR
 export const legalEntityEntityTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["LegalEntityEntityType"]> = ["individual_sole_proprietorship", "corporation", "limited_liability_company", "partnership", "limited_partnership", "general_partnership", "tax_exempt_organization", "government_agency"];
 export const legalEntityOwnershipTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["LegalEntityOwnershipType"]> = ["public", "private"];
 export const legalEntityDocumentTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["LegalEntityDocumentType"]> = ["irs_cp_575"];
+export const applicationSurveyChannelValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["ApplicationSurveyChannel"]> = ["website", "email", "internal", "social_media"];
+export const applicationSurveyWebsiteStatusValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["ApplicationSurveyWebsiteStatus"]> = ["Already live", "This week", "1-2 weeks", "3-4 weeks", "1-2 months", "3+ months"];
+export const annualTransactionVolumeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["AnnualTransactionVolume"]> = ["under_500", "500_to_5000", "5000_to_10000", "10000_to_50000", "50000_to_100000", "100000_to_250000", "250000_to_500000", "500000_to_1000000", "1000000_and_up"];
+export const averageTransactionAmountValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["AverageTransactionAmount"]> = ["under_10", "10_to_24_99", "25_to_49_99", "50_to_74_99", "75_to_99_99", "100_to_199_99", "200_to_499_99", "500_and_up"];
 export const merchantBusinessCategoryTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["MerchantBusinessCategoryType"]> = ["business_association", "charity", "church", "county", "federal", "fraternal_org", "government", "higher_education", "k12", "labor_union", "local", "ministry", "pac", "parachurch", "party", "preschool", "social_club", "social_welfare", "state", "tribal", "vendor", "veterans_org"];
 export const paymentIntentCaptureMethodTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["PaymentIntentCaptureMethodType"]> = ["automatic", "automatic_async", "manual"];
 export const paymentLinkAmountTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["PaymentLinkAmountType"]> = ["fixed", "open"];
