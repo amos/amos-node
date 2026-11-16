@@ -2483,6 +2483,7 @@ export interface components {
             dba_name?: string;
             /** Format: uuid */
             legal_entity_application_id?: string;
+            /** @description Maximum single transaction amount in cents. Defaults to 1000000. */
             max_transaction_amount?: number;
             max_transaction_amount_reason?: string;
             postal_code?: string;
@@ -2526,7 +2527,8 @@ export interface components {
             max_monthly_credits_amount?: number;
             max_monthly_debits_amount?: number;
             max_single_debit_amount?: number;
-            max_transaction_amount?: string;
+            /** @description Maximum single transaction amount in cents. */
+            max_transaction_amount?: number;
             max_transaction_amount_reason?: string;
             mcc?: string;
             postal_code?: string;
@@ -2566,6 +2568,7 @@ export interface components {
             echeck_company_name?: string;
             echeck_enabled?: boolean;
             hard_coded_billing_descriptor?: string;
+            /** @description Maximum single transaction amount in cents. */
             max_transaction_amount?: number;
             /** Format: uuid */
             merchant_application_id?: string;
@@ -2853,6 +2856,7 @@ export interface components {
             country_code?: string;
             customer_service_number?: string;
             dba_name?: string;
+            /** @description Maximum single transaction amount in cents. Defaults to 1000000. */
             max_transaction_amount?: number;
             max_transaction_amount_reason?: string;
             postal_code?: string;
