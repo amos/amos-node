@@ -1871,6 +1871,11 @@ export interface components {
             updated_at?: string;
         };
         CreateExternalAccountInput: {
+            /**
+             * Format: uuid
+             * @description When creating a bank account, links it as this merchant application's settlement account. The account is not verified.
+             */
+            merchant_application_id?: string;
             metadata?: components["schemas"]["Metadata"];
             external_billing_address_attributes?: components["schemas"]["BillingAddressInput"];
             external_bank_account_profile_attributes?: components["schemas"]["BankAccountProfileInput"];
@@ -2507,6 +2512,11 @@ export interface components {
             echeck_billing_descriptor?: string;
             echeck_company_name?: string;
             echeck_enabled?: string;
+            /**
+             * Format: uuid
+             * @description Bank account linked for this merchant application. Absent until the embedded connect succeeds.
+             */
+            external_account_id?: string | null;
             hard_coded_billing_descriptor?: string;
             has_accepted_credit_cards?: boolean;
             /** Format: uuid */
