@@ -1096,7 +1096,7 @@ export interface paths {
         put?: never;
         /**
          * Submit a legal entity application from the onboarding iframe
-         * @description Submits an application in `pending` or `needs_information` once every requirement is satisfied. Responds 403 when the token belongs to a different application.
+         * @description Submits an application in `pending` or `needs_information` once every requirement is satisfied and every principal's email is verified, either with an emailed code or by accepting an invitation. An unverified principal responds 422 with `legal_entity_application_principals.<id>.email` set to `["must be verified"]`. Applications submitted with an API key don't need verified principals. Responds 403 when the token belongs to a different application.
          */
         post: operations["SubmitEmbedLegalEntityApplication"];
         delete?: never;
@@ -1130,11 +1130,97 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Retrieve a principal for the embedded application */
+        /**
+         * Retrieve a principal for the embedded application
+         * @description Accepts a principal token for its own principal; any other principal responds 403.
+         */
         get: operations["GetEmbedLegalEntityApplicationPrincipal"];
-        /** Update a principal for the embedded application */
+        /**
+         * Update a principal for the embedded application
+         * @description Accepts a principal token for its own principal; any other principal responds 403. A principal token can't change `email` (422), since the email is what the invitation verified. Changing the email with an application token resets `email_verified_at` and revokes the principal's invitation.
+         */
         put: operations["UpdateEmbedLegalEntityApplicationPrincipal"];
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/embed/legal_entity_applications/{legal_entity_application_id}/principals/{principal_id}/email_verification": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Email a verification code to a principal
+         * @description For the person filling in the embed. Emails a six-digit code to the principal's email; confirm it with the confirm route. The code expires after 10 minutes, and sending a new one replaces it. Another code can't be sent for 60 seconds. Sends are limited to 5 a day per principal and 20 an hour per application. Responds 422 when the email is missing, invalid, or already verified, or the application is no longer pending or needs information.
+         */
+        post: operations["SendEmbedLegalEntityApplicationPrincipalEmailVerification"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/embed/legal_entity_applications/{legal_entity_application_id}/principals/{principal_id}/email_verification/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Confirm a principal's email with the emailed code
+         * @description Sets `email_verified_at` when the code matches. Responds 422 when the code is wrong or expired, the email is already verified, 5 wrong codes have been entered (request a new code to try again), or the application is no longer pending or needs information.
+         */
+        post: operations["ConfirmEmbedLegalEntityApplicationPrincipalEmailVerification"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/embed/legal_entity_applications/{legal_entity_application_id}/principals/{principal_id}/invitation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Email an invitation link to a principal
+         * @description For principals other than the person filling in the embed. Emails a link that lets the principal confirm their email and fill in their own details; see `AcceptEmbedPrincipalInvitation`. The link works once and expires after 72 hours. Sending again replaces the earlier link and ends any session it started. Sends are limited to 5 a day per principal and 20 an hour per application. Responds 422 when the email is missing, invalid, or already verified, or the application is no longer pending or needs information.
+         */
+        post: operations["SendEmbedLegalEntityApplicationPrincipalInvitation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/embed/principal_invitations/accept": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Accept a principal invitation
+         * @description Called by the invite page with the token from the emailed link. No authentication: the invitation token is the credential. Accepting verifies the principal's email, uses up the link, and returns a principal token for filling in that principal's details. Limited to 10 requests a minute per IP address.
+         */
+        post: operations["AcceptEmbedPrincipalInvitation"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1193,7 +1279,7 @@ export interface paths {
         put?: never;
         /**
          * Create a merchant application for the embedded application
-         * @description Creates the merchant profile on the application in the embed token. Does not open an additional merchant on an already approved legal entity.
+         * @description Creates the merchant profile on the application in the embed token. Does not open an additional merchant on an already approved legal entity. The settlement account is linked separately, on the flat external bank account intent and external account routes, by sending merchant_application_id. Plaid marks the account verified. Account and routing numbers do not.
          */
         post: operations["CreateEmbedMerchantApplication"];
         delete?: never;
@@ -1568,8 +1654,11 @@ export interface components {
          *     Payment intent tokens include `account_id` and `payment_intent_id`.
          *     Setup intent tokens include `organization_id` and `setup_intent_id`
          *     and do not use `account_id`. Legal entity application tokens include
-         *     `organization_id` and `legal_entity_application_id`. Unused fields
-         *     are null.
+         *     `organization_id` and `legal_entity_application_id`. Principal tokens,
+         *     issued when an invitation is accepted, add
+         *     `legal_entity_application_principal_id` and
+         *     `legal_entity_application_principal_invitation_id`. Unused fields are
+         *     null.
          */
         EmbedTokenJwt: {
             /**
@@ -1597,6 +1686,16 @@ export interface components {
              * @description Present for legal entity application embed tokens. Null for other embed tokens.
              */
             legal_entity_application_id?: string | null;
+            /**
+             * Format: uuid
+             * @description Present for principal tokens, which can only retrieve and update this principal. Null for other embed tokens.
+             */
+            legal_entity_application_principal_id?: string | null;
+            /**
+             * Format: uuid
+             * @description Present for principal tokens. The token stops working when this invitation is revoked, for example when a new invitation is sent or the principal's email changes. Null for other embed tokens.
+             */
+            legal_entity_application_principal_invitation_id?: string | null;
         };
         /** @description Decoded JWT payload for render token responses. */
         RenderTokenJwt: {
@@ -1615,6 +1714,8 @@ export interface components {
              *     `setup_intent_id`). Payment intent tokens remain account-scoped
              *     (`account_id` + `payment_intent_id`). Legal entity application
              *     tokens are organization-scoped and add `legal_entity_application_id`.
+             *     Principal tokens come from `AcceptEmbedPrincipalInvitation`, not
+             *     this route.
              */
             token?: string;
             ttl?: number;
@@ -1873,7 +1974,7 @@ export interface components {
         CreateExternalAccountInput: {
             /**
              * Format: uuid
-             * @description When creating a bank account, links it as this merchant application's settlement account. The account is not verified.
+             * @description When creating a bank account, links it as this merchant application's settlement account. The account is not verified. Ignored verification fields cannot be set by the client.
              */
             merchant_application_id?: string;
             metadata?: components["schemas"]["Metadata"];
@@ -1997,6 +2098,7 @@ export interface components {
             title?: string;
             first_name?: string;
             last_name?: string;
+            /** @description Stored lowercase. The embed routes reject an email that isn't 10 to 50 characters in the form `name@domain.tld`; the API key routes don't check the format. */
             email?: string;
             tax_id?: string;
             date_of_birth?: string;
@@ -2031,10 +2133,47 @@ export interface components {
             contact_phone?: string;
             tax_id_last4?: string;
             title?: string;
+            /**
+             * Format: date-time
+             * @description When the principal confirmed their email, by entering an emailed code or accepting an invitation. Reset to null when the email changes. Applications submitted from the embed need every principal verified.
+             */
+            email_verified_at?: string | null;
+            /**
+             * Format: date-time
+             * @description When the principal's open invitation was sent. Null when there is none.
+             */
+            invitation_sent_at?: string | null;
+            /**
+             * Format: date-time
+             * @description When the principal's open invitation expires. Null when there is none.
+             */
+            invitation_expires_at?: string | null;
             /** Format: date-time */
             created_at?: string;
             /** Format: date-time */
             updated_at?: string;
+        };
+        ConfirmLegalEntityApplicationPrincipalEmailVerificationRequest: {
+            /** @description The six-digit code emailed to the principal. */
+            code: string;
+        };
+        AcceptLegalEntityApplicationPrincipalInvitationRequest: {
+            /** @description The invitation token from the emailed link. The link carries it after `#token=`, so the invite page reads it in the browser and sends it here. */
+            token: string;
+        };
+        LegalEntityApplicationPrincipalInvitationAcceptance: {
+            /** @description Principal-scoped embed token. Send it as `Authorization: Embed <token>` to the retrieve and update principal routes; every other embed route responds 403. It lasts `ttl` seconds unless the invitation is revoked first. */
+            token: string;
+            /** @description Seconds until the token expires (one week). */
+            ttl: number;
+            /** Format: uuid */
+            legal_entity_application_id: string;
+            /** Format: uuid */
+            legal_entity_application_principal_id: string;
+            /** @description Name of the organization that invited the principal, for display. */
+            organization_name: string;
+            /** @description Legal name of the business on the application, for display. Null until it's entered. */
+            business_name: string | null;
         };
         LegalEntityPrincipal: {
             /** Format: uuid */
@@ -2830,6 +2969,7 @@ export interface components {
             title?: string;
             first_name?: string;
             last_name?: string;
+            /** @description Stored lowercase. The embed routes reject an email that isn't 10 to 50 characters in the form `name@domain.tld`; the API key routes don't check the format. */
             email?: string;
             tax_id?: string;
             date_of_birth?: string;
@@ -6232,6 +6372,15 @@ export interface operations {
                     "application/json": components["schemas"]["LegalEntityApplicationPrincipal"];
                 };
             };
+            /** @description The principal token's invitation has been revoked */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
             /** @description Forbidden */
             403: {
                 headers: {
@@ -6268,6 +6417,15 @@ export interface operations {
                     "application/json": components["schemas"]["LegalEntityApplicationPrincipal"];
                 };
             };
+            /** @description The principal token's invitation has been revoked */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
             /** @description Forbidden */
             403: {
                 headers: {
@@ -6279,6 +6437,229 @@ export interface operations {
             };
             /** @description Unprocessable entity */
             422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    SendEmbedLegalEntityApplicationPrincipalEmailVerification: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                legal_entity_application_id: string;
+                principal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Verification code sent */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalEntityApplicationPrincipal"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Principal not found on this application */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Verification code could not be sent */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Too many verification codes sent */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    ConfirmEmbedLegalEntityApplicationPrincipalEmailVerification: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                legal_entity_application_id: string;
+                principal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConfirmLegalEntityApplicationPrincipalEmailVerificationRequest"];
+            };
+        };
+        responses: {
+            /** @description Email verified */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalEntityApplicationPrincipal"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Principal not found on this application */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Email could not be verified */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    SendEmbedLegalEntityApplicationPrincipalInvitation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                legal_entity_application_id: string;
+                principal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Invitation sent; `invitation_sent_at` and `invitation_expires_at` are set */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalEntityApplicationPrincipal"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Principal not found on this application */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Invitation could not be sent */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Too many invitations sent */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    AcceptEmbedPrincipalInvitation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AcceptLegalEntityApplicationPrincipalInvitationRequest"];
+            };
+        };
+        responses: {
+            /** @description Invitation accepted */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalEntityApplicationPrincipalInvitationAcceptance"];
+                };
+            };
+            /** @description The invitation is invalid, expired, revoked, or already accepted. The error is the same in every case. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description The token is missing */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Too many requests */
+            429: {
                 headers: {
                     [name: string]: unknown;
                 };
