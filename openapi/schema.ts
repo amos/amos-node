@@ -1188,6 +1188,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/embed/legal_entity_applications/{legal_entity_application_id}/principals/{principal_id}/identity_verification/link_token": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create a Plaid Identity Verification Link token
+         * @description Returns a link token the embed opens in Plaid Link. The template decides the steps. When it includes Selfie Check, Link captures a live face with the camera and compares it to the ID photo when Documentary Verification is also on. Known principal data is prefilled so Link can skip those screens. Responds 422 when the application is no longer pending or needs information, the template is not configured, or Plaid rejects the request. Limited to 10 link tokens and recorded sessions an hour per principal. An invited principal's token can start a session only for that principal.
+         */
+        post: operations["CreateEmbedLegalEntityApplicationPrincipalIdentityVerificationLinkToken"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/embed/legal_entity_applications/{legal_entity_application_id}/principals/{principal_id}/identity_verification": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Record a completed Plaid Identity Verification Link session
+         * @description Call this from Plaid Link's onSuccess callback with `metadata.link_session_id` as `session_id`. The session is fetched from Plaid and stored for underwriting. The response is the principal, including `identity_verification_status`. It does not include captured document or selfie media. Completing Link means the applicant submitted the requested steps; check the status for the outcome. Responds 422 when `session_id` is missing, the session belongs to another principal, or the application is no longer pending or needs information. Shares the hourly limit with the link token route.
+         */
+        post: operations["RecordEmbedLegalEntityApplicationPrincipalIdentityVerification"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/embed/legal_entity_applications/{legal_entity_application_id}/principals/{principal_id}/invitation": {
         parameters: {
             query?: never;
@@ -2154,10 +2194,24 @@ export interface components {
              * @description When the principal accepted the invitation that still backs their embed session. Null when there is no live session. Revoking the invitation clears it. The email can stay verified.
              */
             invitation_accepted_at?: string | null;
+            /**
+             * @description Status of the principal's latest Plaid Identity Verification. Null until a Link session is recorded. Completing Link means the applicant submitted the steps the template asked for, including a camera selfie when the template includes Selfie Check. `success` means those checks passed.
+             * @enum {string|null}
+             */
+            identity_verification_status?: "active" | "success" | "failed" | "expired" | "canceled" | "pending_review" | null;
             /** Format: date-time */
             created_at?: string;
             /** Format: date-time */
             updated_at?: string;
+        };
+        /** @description Short-lived Plaid Link token for Identity Verification. Initialize Plaid Link with `link_token`. When the template includes Selfie Check, Link uses the device camera (or a QR handoff from desktop) to capture a live face. Link's onSuccess `metadata.link_session_id` is the `session_id` to record. */
+        IdentityVerificationLinkToken: {
+            /** @description Short-lived Plaid Link token used to open Link. */
+            link_token: string;
+        };
+        RecordLegalEntityApplicationPrincipalIdentityVerificationRequest: {
+            /** @description Link session id from Plaid Link's onSuccess metadata (`metadata.link_session_id`). Plaid uses that value as the identity verification id. */
+            session_id: string;
         };
         ConfirmLegalEntityApplicationPrincipalEmailVerificationRequest: {
             /** @description The six-digit code emailed to the principal. */
@@ -2168,7 +2222,7 @@ export interface components {
             token: string;
         };
         LegalEntityApplicationPrincipalInvitationAcceptance: {
-            /** @description Principal-scoped embed token. Send it as `Authorization: Embed <token>` to the retrieve and update principal routes; every other embed route responds 403. It lasts `ttl` seconds unless the invitation is revoked first. */
+            /** @description Principal-scoped embed token. Send it as `Authorization: Embed <token>` to retrieve or update that principal, and to start or record their Plaid Identity Verification. Every other embed route responds 403. It lasts `ttl` seconds unless the invitation is revoked first. */
             token: string;
             /** @description Seconds until the token expires (one week). */
             ttl: number;
@@ -6556,6 +6610,146 @@ export interface operations {
             };
             /** @description Email could not be verified */
             422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    CreateEmbedLegalEntityApplicationPrincipalIdentityVerificationLinkToken: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                legal_entity_application_id: string;
+                principal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Link token created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IdentityVerificationLinkToken"];
+                };
+            };
+            /** @description The principal token's invitation has been revoked */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Principal not found on this application */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Link token could not be created */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Too many identity verification attempts */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    RecordEmbedLegalEntityApplicationPrincipalIdentityVerification: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                legal_entity_application_id: string;
+                principal_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RecordLegalEntityApplicationPrincipalIdentityVerificationRequest"];
+            };
+        };
+        responses: {
+            /** @description Identity verification recorded */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalEntityApplicationPrincipal"];
+                };
+            };
+            /** @description The principal token's invitation has been revoked */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Principal not found on this application */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Identity verification could not be recorded */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Too many identity verification attempts */
+            429: {
                 headers: {
                     [name: string]: unknown;
                 };
