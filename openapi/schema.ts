@@ -2148,6 +2148,11 @@ export interface components {
              * @description When the principal's open invitation expires. Null when there is none.
              */
             invitation_expires_at?: string | null;
+            /**
+             * Format: date-time
+             * @description When the principal accepted the invitation that still backs their embed session. Null when there is no live session. Revoking the invitation clears it. The email can stay verified.
+             */
+            invitation_accepted_at?: string | null;
             /** Format: date-time */
             created_at?: string;
             /** Format: date-time */
