@@ -356,7 +356,8 @@ export interface paths {
          *     When the application is `under_review`, this creates the legal entity,
          *     merchants, accounts, and principals and moves the application to
          *     `approved`, only if every application principal has a successful
-         *     identity verification.
+         *     identity verification. This legacy route does not require verified principal
+         *     emails.
          */
         post: operations["ApproveLegalEntityApplication"];
         delete?: never;
@@ -1096,7 +1097,7 @@ export interface paths {
         put?: never;
         /**
          * Submit a legal entity application from the onboarding iframe
-         * @description Submits an application in `pending` or `needs_information` once every requirement is satisfied and every principal's email is verified, either with an emailed code or by accepting an invitation. An unverified principal responds 422 with `legal_entity_application_principals.<id>.email` set to `["must be verified"]`. Applications submitted with an API key don't need verified principals. Responds 403 when the token belongs to a different application.
+         * @description Submits an application in `pending` or `needs_information` once every requirement is satisfied and at least one principal's email is verified, either with an emailed code or by accepting an invitation. Other principals can still be waiting on an invitation. Responds 422 with `base` set to `["At least one principal must verify their email"]` when none have. Their other required details still have to be present. Applications submitted or approved with an API key don't need verified principals. Admin approval requires every principal's email to be verified. Responds 403 when the token belongs to a different application.
          */
         post: operations["SubmitEmbedLegalEntityApplication"];
         delete?: never;
@@ -2135,7 +2136,7 @@ export interface components {
             title?: string;
             /**
              * Format: date-time
-             * @description When the principal confirmed their email, by entering an emailed code or accepting an invitation. Reset to null when the email changes. Applications submitted from the embed need every principal verified.
+             * @description When the principal confirmed their email, by entering an emailed code or accepting an invitation. Reset to null when the email changes. The embed can be submitted once one principal is verified. Admin approval requires every principal to be verified. The API-key approve route does not.
              */
             email_verified_at?: string | null;
             /**
