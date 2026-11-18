@@ -1101,7 +1101,7 @@ export interface paths {
         put?: never;
         /**
          * Submit a legal entity application from the onboarding iframe
-         * @description Submits an application in `pending` or `needs_information` once every requirement is satisfied, one principal has verified their email and finished identity verification, and an external bank account is verified. The same principal has to have done both. Identity verification is finished at `success` or `pending_review`. The bank account is verified when a merchant application has an active external bank account that Plaid verified, or one that was entered manually with Plaid skipped. Other principals can still be waiting on an invitation. Responds 422 with `base` including `At least one principal must verify their email and identity` or `An external bank account must be verified`. Their other required details still have to be present. Applications submitted or approved with an API key don't need these checks. Admin approval requires every principal's email to be verified. Responds 403 when the token belongs to a different application.
+         * @description Submits an application in `pending` or `needs_information` once every requirement is satisfied and an external bank account is verified. Principal email and identity verification are not required to submit. The bank account is verified when a merchant application has an active external bank account that Plaid verified, or one that was entered manually with Plaid skipped. Responds 422 with `base` including `An external bank account must be verified`. Their other required details still have to be present. Applications submitted with an API key don't need the bank account check. Admin approval requires every principal to have verified their email and finished identity verification (`success` or `pending_review`), unless the underwriter sets `skip_principal_verification`. The API-key approve route does not require principal verification. Responds 403 when the token belongs to a different application.
          */
         post: operations["SubmitEmbedLegalEntityApplication"];
         delete?: never;
@@ -2184,7 +2184,7 @@ export interface components {
             title?: string;
             /**
              * Format: date-time
-             * @description When the principal confirmed their email, by entering an emailed code or accepting an invitation. Reset to null when the email changes. The embed can be submitted once one principal is verified. Admin approval requires every principal to be verified. The API-key approve route does not.
+             * @description When the principal confirmed their email, by entering an emailed code or accepting an invitation. Reset to null when the email changes. Verification is not required to submit. Admin approval requires every principal to have verified their email and finished identity verification, unless the underwriter skips that check. The API-key approve route does not.
              */
             email_verified_at?: string | null;
             /**
