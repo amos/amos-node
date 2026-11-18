@@ -450,7 +450,11 @@ export interface paths {
         /** Update a legal entity application principal */
         put: operations["UpdateLegalEntityApplicationPrincipal"];
         post?: never;
-        delete?: never;
+        /**
+         * Delete a legal entity application principal
+         * @description Deletes the principal while the legal entity application is pending. Responds 422 once the application has left pending, including when it needs information. Removing the last principal reopens the principal requirement.
+         */
+        delete: operations["DeleteLegalEntityApplicationPrincipal"];
         options?: never;
         head?: never;
         patch?: never;
@@ -1142,7 +1146,11 @@ export interface paths {
          */
         put: operations["UpdateEmbedLegalEntityApplicationPrincipal"];
         post?: never;
-        delete?: never;
+        /**
+         * Delete a principal for the embedded application
+         * @description Deletes the principal while the application is pending or needs information. A principal token cannot delete a principal. Removing the last principal reopens the principal requirement.
+         */
+        delete: operations["DeleteEmbedLegalEntityApplicationPrincipal"];
         options?: never;
         head?: never;
         patch?: never;
@@ -4725,6 +4733,42 @@ export interface operations {
             };
         };
     };
+    DeleteLegalEntityApplicationPrincipal: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Legal entity application principal deleted successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Legal entity application principal not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Principal can only be deleted when the application is pending */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
     ListLegalEntityPrincipals: {
         parameters: {
             query: {
@@ -6496,6 +6540,54 @@ export interface operations {
                 };
             };
             /** @description Unprocessable entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    DeleteEmbedLegalEntityApplicationPrincipal: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                legal_entity_application_id: string;
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Legal entity application principal deleted successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Principal not found on this application */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Application is no longer pending or needs information */
             422: {
                 headers: {
                     [name: string]: unknown;
