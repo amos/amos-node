@@ -1075,7 +1075,7 @@ export interface paths {
         get: operations["GetEmbedLegalEntityApplication"];
         /**
          * Update a pending or needs-information legal entity application
-         * @description Saves the application. When its requirements and principals are ready, the application moves to submitted. Otherwise it stays where it is.
+         * @description Saves the application. When its requirements and principals are ready and at least one principal has verified their email and identity, the application moves to submitted. Otherwise it stays where it is.
          */
         put: operations["UpdateEmbedLegalEntityApplication"];
         post?: never;
@@ -2159,7 +2159,7 @@ export interface components {
             title?: string;
             /**
              * Format: date-time
-             * @description When the principal confirmed their email, by entering an emailed code or accepting an invitation. Reset to null when the email changes. Verification is not required to submit. Admin approval requires every principal to have verified their email and finished identity verification, unless the underwriter skips that check. The API-key approve route does not.
+             * @description When the principal confirmed their email, by entering an emailed code or accepting an invitation. Reset to null when the email changes. The embedded application moves to submitted only once at least one principal has verified both email and identity. Admin approval requires every principal to have verified their email and identity, unless the underwriter skips that check. The API-key approve route does not.
              */
             email_verified_at?: string | null;
             /**
@@ -2182,6 +2182,13 @@ export interface components {
              * @enum {string|null}
              */
             identity_verification_status?: "active" | "success" | "failed" | "expired" | "canceled" | "pending_review" | null;
+            /**
+             * Format: date-time
+             * @description When an admin marked the principal's identity verified after a check done outside Plaid. Null otherwise.
+             */
+            identity_manually_verified_at?: string | null;
+            /** @description True when Plaid identity verification is `success` or `pending_review`, or an admin verified the identity. Email is tracked separately in `email_verified_at`. */
+            identity_verified?: boolean;
             /** Format: date-time */
             created_at?: string;
             /** Format: date-time */
