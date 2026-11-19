@@ -369,7 +369,7 @@ export interface paths {
         put?: never;
         /**
          * Mint an embed token for a legal entity application
-         * @description Mints an embed token scoped to this application. Create the application with the API key first. The iframe then uses only this token on the embed routes to read and update the application, add principals, merchant applications, and documents, and submit. No request body. Embed tokens are short-lived, so call this again for each iframe request, including when an application that needs information is resumed.
+         * @description Mints an embed token scoped to this application. Create the application with the API key first. The iframe then uses only this token on the embed routes to read and update the application, add principals, merchant applications, and documents. No request body. Embed tokens are short-lived, so call this again for each iframe request, including when an application that needs information is resumed.
          */
         post: operations["CreateLegalEntityApplicationEmbedToken"];
         delete?: never;
@@ -1073,29 +1073,12 @@ export interface paths {
         };
         /** Retrieve the legal entity application for an embed token */
         get: operations["GetEmbedLegalEntityApplication"];
-        /** Update a pending or needs-information legal entity application */
+        /**
+         * Update a pending or needs-information legal entity application
+         * @description Saves the application. When its requirements and principals are ready, the application moves to submitted. Otherwise it stays where it is.
+         */
         put: operations["UpdateEmbedLegalEntityApplication"];
         post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/embed/legal_entity_applications/{id}/submit": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Submit a legal entity application from the onboarding iframe
-         * @description Submits an application in `pending` or `needs_information` once every requirement is satisfied and an external bank account is verified. Principal email and identity verification are not required to submit. The bank account is verified when a merchant application has an active external bank account that Plaid verified, or one that was entered manually with Plaid skipped. Responds 422 with `base` including `An external bank account must be verified`. Their other required details still have to be present. Applications submitted with an API key don't need the bank account check. Admin approval requires every principal to have verified their email and finished identity verification (`success` or `pending_review`), unless the underwriter sets `skip_principal_verification`. The API-key approve route does not require principal verification. Responds 403 when the token belongs to a different application.
-         */
-        post: operations["SubmitEmbedLegalEntityApplication"];
         delete?: never;
         options?: never;
         head?: never;
@@ -6314,46 +6297,6 @@ export interface operations {
                 };
             };
             /** @description Unprocessable entity */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    SubmitEmbedLegalEntityApplication: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Legal entity application submitted successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["LegalEntityApplication"];
-                };
-            };
-            /** @description Forbidden */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description Legal entity application could not be submitted */
             422: {
                 headers: {
                     [name: string]: unknown;
