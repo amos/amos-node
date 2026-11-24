@@ -2197,9 +2197,14 @@ export interface components {
             title?: string;
             /**
              * Format: date-time
-             * @description When the principal confirmed their email, by entering an emailed code or accepting an invitation. Reset to null when the email changes. The embedded application moves to submitted only once at least one principal has verified both email and identity. Admin approval requires every principal to have verified their email and identity, unless the underwriter skips that check. The API-key approve route does not.
+             * @description When the principal's email was confirmed, by entering an emailed code, accepting an invitation, or an admin marking it verified. Reset to null when the email changes. The embedded application moves to submitted only once at least one principal has verified both email and identity. Admin approval requires every principal to have verified their email and identity, unless the underwriter skips that check. The API-key approve route does not.
              */
             email_verified_at?: string | null;
+            /**
+             * Format: date-time
+             * @description When an admin marked the principal's email verified after a check done outside the emailed code. Null when the principal confirmed it themselves, or it is not verified. Changing the email clears it.
+             */
+            email_manually_verified_at?: string | null;
             /**
              * Format: date-time
              * @description When the principal's open invitation was sent. Null when there is none.
@@ -2733,6 +2738,8 @@ export interface components {
             state_province?: string;
             street_address1?: string;
             street_address2?: string;
+            support_email?: string;
+            support_phone?: string;
             website_url?: string;
         };
         CreateMerchantApplicationRequest: {
@@ -2781,6 +2788,8 @@ export interface components {
             state_province?: string;
             street_address1?: string;
             street_address2?: string;
+            support_email?: string;
+            support_phone?: string;
             website_url?: string;
             /** Format: date-time */
             created_at?: string;
@@ -2829,6 +2838,8 @@ export interface components {
             street_address1?: string;
             street_address2?: string;
             sub_merchant_id?: string;
+            support_email?: string;
+            support_phone?: string;
             website_url?: string;
             /** Format: date-time */
             created_at?: string;
@@ -3102,6 +3113,8 @@ export interface components {
             state_province?: string;
             street_address1?: string;
             street_address2?: string;
+            support_email?: string;
+            support_phone?: string;
             website_url?: string;
         };
         UpdateMerchantApplicationRequest: {
