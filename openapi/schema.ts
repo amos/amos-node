@@ -422,7 +422,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Create a legal entity application principal */
+        /**
+         * Create a legal entity application principal
+         * @description Adds a principal to an application. For an approved application, the principal is approved immediately and an active legal entity membership is created. For a pending application, the principal remains part of the parent application's legacy approval flow.
+         */
         post: operations["CreateLegalEntityApplicationPrincipal"];
         delete?: never;
         options?: never;
@@ -447,6 +450,23 @@ export interface paths {
          * @description Deletes the principal while the legal entity application is pending. Responds 422 once the application has left pending, including when it needs information. Removing the last principal reopens the principal requirement.
          */
         delete: operations["DeleteLegalEntityApplicationPrincipal"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/legal_entity_application_principals/{id}/submit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Submit an independent principal application */
+        post: operations["SubmitLegalEntityApplicationPrincipal"];
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -480,7 +500,11 @@ export interface paths {
         get: operations["GetLegalEntityPrincipal"];
         put?: never;
         post?: never;
-        delete?: never;
+        /**
+         * Deactivate a legal entity principal
+         * @description Ends the principal's active membership on the given legal entity without deleting its record. Memberships on other legal entities are unchanged.
+         */
+        delete: operations["DeactivateLegalEntityPrincipal"];
         options?: never;
         head?: never;
         patch?: never;
@@ -2143,6 +2167,20 @@ export interface components {
             id?: string;
             /** Format: uuid */
             legal_entity_application_id?: string;
+            /** Format: uuid */
+            legal_entity_id?: string | null;
+            /** @enum {string} */
+            application_state?: "pending" | "submitted" | "needs_information" | "approved" | "denied";
+            checks?: {
+                email?: {
+                    /** Format: date-time */
+                    verified_at?: string | null;
+                };
+                identity?: {
+                    /** Format: date-time */
+                    verified_at?: string | null;
+                };
+            };
             first_name?: string;
             last_name?: string;
             email?: string;
@@ -2228,8 +2266,16 @@ export interface components {
         LegalEntityPrincipal: {
             /** Format: uuid */
             id?: string;
-            /** Format: uuid */
-            legal_entity_id?: string;
+            /** @description Active legal entity memberships, oldest first. */
+            memberships?: {
+                /** Format: uuid */
+                legal_entity_id?: string;
+                /**
+                 * Format: decimal
+                 * @example 25.0
+                 */
+                stake_percent?: string;
+            }[];
             title?: string;
             first_name?: string;
             last_name?: string;
@@ -4630,7 +4676,9 @@ export interface operations {
     CreateLegalEntityApplicationPrincipal: {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                "X-Idempotency-Key"?: components["parameters"]["XIdempotencyHeader"];
+            };
             path?: never;
             cookie?: never;
         };
@@ -4760,6 +4808,44 @@ export interface operations {
             };
         };
     };
+    SubmitLegalEntityApplicationPrincipal: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Principal application submitted */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalEntityApplicationPrincipal"];
+                };
+            };
+            /** @description Principal application not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Principal application is incomplete or cannot be submitted */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
     ListLegalEntityPrincipals: {
         parameters: {
             query: {
@@ -4809,6 +4895,45 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["LegalEntityPrincipal"];
+                };
+            };
+        };
+    };
+    DeactivateLegalEntityPrincipal: {
+        parameters: {
+            query: {
+                /** @description The legal entity whose membership should end */
+                legal_entity_id: string;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Principal membership deactivated */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Legal entity not found, or the principal has no active membership on it */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description legal_entity_id is missing */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
                 };
             };
         };
@@ -8056,6 +8181,7 @@ export const chargeAllowed_reverse_actionValues: ReadonlyArray<FlattenedDeepRequ
 export const chargeStateValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["Charge"]["state"]> = ["cancelled", "errored", "failed", "processing", "requires_capture", "requires_confirmation", "requires_review", "settlement_failed", "succeeded"];
 export const externalAccountTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["ExternalAccount"]["type"]> = ["external_card", "external_bank_account"];
 export const legalEntityApplicationDocumentStatusValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["LegalEntityApplicationDocumentStatus"]> = ["unreviewed", "verified", "rejected"];
+export const legalEntityApplicationPrincipalApplication_stateValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["LegalEntityApplicationPrincipal"]["application_state"]> = ["pending", "submitted", "needs_information", "approved", "denied"];
 export const legalEntityApplicationStateTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["LegalEntityApplicationStateType"]> = ["pending", "provisionally_approved", "submitted", "needs_information", "approved", "denied"];
 export const legalEntityEntityTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["LegalEntityEntityType"]> = ["individual_sole_proprietorship", "corporation", "limited_liability_company", "partnership", "limited_partnership", "general_partnership", "tax_exempt_organization", "government_agency"];
 export const legalEntityOwnershipTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["LegalEntityOwnershipType"]> = ["public", "private"];
