@@ -2904,16 +2904,6 @@ export interface components {
         ConfirmPaymentIntentWithPaymentMethodRequest: {
             payment_intent: components["schemas"]["ConfirmPaymentIntentWithPaymentMethodInput"];
         };
-        UpdatePaymentIntentInput: {
-            /** Format: uuid */
-            payment_method_id?: string;
-            amount?: number;
-            metadata?: components["schemas"]["Metadata"];
-            recurring_payment?: components["schemas"]["RecurringPayment"];
-        };
-        UpdatePaymentIntentRequest: {
-            payment_intent: components["schemas"]["UpdatePaymentIntentInput"];
-        };
         PaymentIntent: {
             /** Format: uuid */
             id?: string;
